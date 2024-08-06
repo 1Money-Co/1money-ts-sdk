@@ -1,0 +1,7 @@
+# client
+
+## Example
+
+```typescript
+client()
+```

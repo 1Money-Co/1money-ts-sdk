@@ -1,0 +1,7 @@
+# api
+
+## Example
+
+```typescript
+api()
+```

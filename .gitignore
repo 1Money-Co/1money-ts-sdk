@@ -1,0 +1,17 @@
+.idea
+.DS_Store
+*~
+~*
+
+.nyc_output
+.docz
+node_modules
+lib
+es
+umd
+dist
+dist.zip
+.dumi
+src/.umi
+
+*.log
