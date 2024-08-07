@@ -10,11 +10,11 @@ const { request, setting } = new Request({
 
 export function get<T>(
   url: string,
-  options?: Omit<Options<T>, 'baseUrl' | 'method' | 'url'>
+  options?: Omit<Options<T>, 'method' | 'url'>
 ) {
   return request<T>({
-    ...options,
     baseURL: location.origin,
+    ...options,
     method: 'get',
     url
   });
@@ -23,11 +23,11 @@ export function get<T>(
 export function post<T>(
   url: string,
   data: Record<string, any>,
-  options?: Omit<Options<T>, 'baseUrl' | 'method' | 'url' | 'data'>
+  options?: Omit<Options<T>, 'method' | 'url' | 'data'>
 ) {
   return request<T>({
-    ...options,
     baseURL: location.origin,
+    ...options,
     method: 'post',
     url,
     data,
@@ -41,11 +41,11 @@ export function post<T>(
 export function postForm<T>(
   url: string,
   data: Record<string, any>,
-  options?: Omit<Options<T>, 'baseUrl' | 'method' | 'url' | 'data'>
+  options?: Omit<Options<T>, 'method' | 'url' | 'data'>
 ) {
   return request<T>({
-    ...options,
     baseURL: location.origin,
+    ...options,
     method: 'post',
     url,
     data
@@ -55,11 +55,11 @@ export function postForm<T>(
 export function put<T>(
   url: string,
   data: Record<string, any>,
-  options?: Omit<Options<T>, 'baseUrl' | 'method' | 'url' | 'data'>
+  options?: Omit<Options<T>, 'method' | 'url' | 'data'>
 ) {
   return request<T>({
-    ...options,
     baseURL: location.origin,
+    ...options,
     method: 'put',
     url,
     data,
@@ -73,11 +73,11 @@ export function put<T>(
 export function patch<T>(
   url: string,
   data: Record<string, any>,
-  options?: Omit<Options<T>, 'baseUrl' | 'method' | 'url' | 'data'>
+  options?: Omit<Options<T>, 'method' | 'url' | 'data'>
 ) {
   return request<T>({
-    ...options,
     baseURL: location.origin,
+    ...options,
     method: 'patch',
     url,
     data,
@@ -91,11 +91,11 @@ export function patch<T>(
 export function del<T>(
   url: string,
   data: Record<string, any>,
-  options?: Omit<Options<T>, 'baseUrl' | 'method' | 'url' | 'data'>
+  options?: Omit<Options<T>, 'method' | 'url' | 'data'>
 ) {
   return request<T>({
-    ...options,
     baseURL: location.origin,
+    ...options,
     method: 'delete',
     url,
     data,
