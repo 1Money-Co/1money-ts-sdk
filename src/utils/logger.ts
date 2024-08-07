@@ -129,9 +129,9 @@ export class Logger {
         return chalk[colors[level]](`<${this._prefix
           ? `${this._prefix}, ${this._appName}`
           : `${this._appName}`
-        }, ${chalk.bold(level.toUpperCase())}, ${date.format(
-          'ZZ YYYY-MM-DD HH:mm:ss:SSS'
-        )}> | ${this._suffix ? `${chalk.underline(msg)} | <${this._suffix}>` : chalk.underline(msg)}`);
+          }, ${chalk.bold(level.toUpperCase())}, ${date.format(
+            'ZZ YYYY-MM-DD HH:mm:ss:SSS'
+          )}> | ${this._suffix ? `${chalk.underline(msg)} | <${this._suffix}>` : chalk.underline(msg)}`);
       case 'json':
       default:
         return JSON.stringify({
@@ -228,6 +228,20 @@ export class Logger {
         level
       })
     );
+  }
+
+  public clone(options?: {
+    appName?: string;
+    prefix?: string;
+    suffix?: string;
+  }) {
+    const newLogger = new Logger();
+    newLogger.logLevel = this._logLevel;
+    newLogger.appName = options?.appName || this._appName;
+    newLogger.format = this._format;
+    newLogger.prefix = options?.prefix || this._prefix || '';
+    newLogger.suffix = options?.suffix || this._suffix || '';
+    return this;
   }
 }
 

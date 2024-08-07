@@ -11,9 +11,6 @@ importers:
 
   .:
     dependencies:
-      ajax-maker:
-        specifier: ^1.2.3
-        version: 1.2.3(axios@1.7.3)
       axios:
         specifier: ^1.7.3
         version: 1.7.3
@@ -779,10 +776,6 @@ packages:
 
   '@babel/regjsgen@0.8.0':
     resolution: {integrity: sha512-x/rqGMdzj+fWZvCOYForTghzbtqPDZ5gPwaoNGHdgDfF2QA/XZbCBp4Moo5scrkAMPhB7z26XM/AaHuIJdgauA==}
-
-  '@babel/runtime-corejs2@7.25.0':
-    resolution: {integrity: sha512-aoYVE3tm+vgAoezmXFWmVcp+NlSdsUqQMPL7c6zRxq8KDHCf570pamC7005Q/UkSlTuoL6oeE16zIw/9J3YFyw==}
-    engines: {node: '>=6.9.0'}
 
   '@babel/runtime-corejs3@7.24.8':
     resolution: {integrity: sha512-DXG/BhegtMHhnN7YPIvxWd303/9aXvYFD1TjNL3CD6tUrhI2LVsg3Lck0aql5TRH29n4sj3emcROypkZVUfSuA==}
@@ -2434,11 +2427,6 @@ packages:
   aggregate-error@3.1.0:
     resolution: {integrity: sha512-4I7Td01quW/RpocfNayFdFVk1qSuoh0E7JrbRJ16nH01HhKFQ88INq9Sd+nd72zqRySlr9BmDA8xlEJ6vJMrYA==}
     engines: {node: '>=8'}
-
-  ajax-maker@1.2.3:
-    resolution: {integrity: sha512-00afhgmOh2Ry12XVS8FUhtBC1SDJHr1TDLV9k7Kbyjv5RWXOvUhZJ5qN4qV9cf7HG7jw6B+vSnoMFgK32l3Ebw==}
-    peerDependencies:
-      axios: ^1.7.2
 
   ajv-keywords@3.5.2:
     resolution: {integrity: sha512-5p6WTN0DdTGVQk6VjcEju19IgaHudalcfabD7yhDGeA6bcQnmL+CpveLJq/3hvfwd1aof6L386Ougkx6RfyMIQ==}
@@ -6305,9 +6293,6 @@ packages:
   peberminta@0.9.0:
     resolution: {integrity: sha512-XIxfHpEuSJbITd1H3EeQwpcZbTLHc+VVr8ANI9t5sit565tsI4/xK3KWTUFE2e6QiangUkh3B0jihzmGnNrRsQ==}
 
-  peeler-js@0.4.2:
-    resolution: {integrity: sha512-/uP6qhytnITt6XngB5iquyKWnV4xjtkJTEv8eWYdmA2O3hJ/CHx1NSmyDl1JRx+zjjnU4VcPMFOIuJcmXV5WqA==}
-
   picocolors@1.0.1:
     resolution: {integrity: sha512-anP1Z8qwhkbmu7MFP5iTt+wQKXgwzf7zTyGlcdzabySa9vd0Xt392U0rVmz9poOaBj0uHJKyyo9/upk0HrEQew==}
 
@@ -9324,11 +9309,6 @@ snapshots:
 
   '@babel/regjsgen@0.8.0': {}
 
-  '@babel/runtime-corejs2@7.25.0':
-    dependencies:
-      core-js: 2.6.12
-      regenerator-runtime: 0.14.1
-
   '@babel/runtime-corejs3@7.24.8':
     dependencies:
       core-js-pure: 3.37.1
@@ -11240,11 +11220,6 @@ snapshots:
     dependencies:
       clean-stack: 2.2.0
       indent-string: 4.0.0
-
-  ajax-maker@1.2.3(axios@1.7.3):
-    dependencies:
-      axios: 1.7.3
-      peeler-js: 0.4.2
 
   ajv-keywords@3.5.2(ajv@6.12.6):
     dependencies:
@@ -16167,10 +16142,6 @@ snapshots:
       sha.js: 2.4.11
 
   peberminta@0.9.0: {}
-
-  peeler-js@0.4.2:
-    dependencies:
-      '@babel/runtime-corejs2': 7.25.0
 
   picocolors@1.0.1: {}
 

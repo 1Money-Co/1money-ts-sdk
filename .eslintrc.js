@@ -25,7 +25,6 @@ module.exports = {
     'prettier'
   ],
   rules: {
-    '@typescript-eslint/indent': ['warn', 2],
     '@typescript-eslint/no-empty-interface': ['off'],
     '@typescript-eslint/camelcase': ['off'],
     '@typescript-eslint/restrict-plus-operands': ['warn'],

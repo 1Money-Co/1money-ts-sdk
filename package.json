@@ -109,7 +109,6 @@
     "webpack": "~5.93.0"
   },
   "dependencies": {
-    "ajax-maker": "^1.2.3",
     "axios": "^1.7.3",
     "chalk": "^5.3.0",
     "dayjs": "^1.11.12"

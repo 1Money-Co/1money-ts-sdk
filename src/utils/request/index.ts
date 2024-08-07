@@ -1,6 +1,6 @@
-import Request from 'ajax-maker';
+import Request from './request';
 
-import type { InitConfig, Options } from 'ajax-maker';
+import type { InitConfig, Options } from './request';
 
 const { request, setting } = new Request({
   isSuccess: (res, status) => status === 200 && res.code === 0,
