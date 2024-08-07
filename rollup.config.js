@@ -6,15 +6,17 @@ const commonjs = require('@rollup/plugin-commonjs');
 const { babel } = require('@rollup/plugin-babel');
 const json = require('@rollup/plugin-json');
 const { terser } = require('rollup-plugin-terser');
+const nodePolyfills = require('rollup-plugin-polyfill-node');
 
 module.exports = function (config) {
   const extensions = ['.ts', '.js'];
 
   config.forEach(v => {
     // just keep the reference for third-party libs
-    v.external = [];
+    v.external = ['axios'];
 
     v.plugins.push(
+      nodePolyfills(),
       alias({
         entries: [
           { find: '@/', replacement: path.resolve(__dirname, 'src/') }
@@ -33,6 +35,7 @@ module.exports = function (config) {
       exports: 'named',
       compact: true
     },
+    external: ['axios'],
     plugins: [
       nodeResolve({
         extensions,
@@ -53,7 +56,8 @@ module.exports = function (config) {
         extensions
       }),
       json(),
-      terser()
+      terser(),
+      nodePolyfills()
     ]
   });
 

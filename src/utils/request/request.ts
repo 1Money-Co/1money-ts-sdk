@@ -3,7 +3,7 @@ import { logger as _logger } from '../logger';
 
 import type { AxiosStatic, AxiosRequestConfig, AxiosError, RawAxiosResponseHeaders, AxiosResponseHeaders, RawAxiosRequestHeaders, AxiosRequestHeaders, AxiosResponse } from 'axios';
 
-const logger = _logger.clone({ prefix: 'request' });
+const logger = _logger.clone({ prefix: 'utils-request' });
 
 export type ParsedError<T extends string = string> = {
   name: T;
@@ -534,7 +534,7 @@ export class Request {
         }
       };
 
-      let timer: null | NodeJS.Timeout = null;
+      let timer: any = null;
       let isTimeout = false;
       const _timeout = timeout ?? initTimeout;
       if (_timeout) {
