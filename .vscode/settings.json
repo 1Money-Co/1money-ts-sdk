@@ -1,7 +1,7 @@
 {
   "editor.tabSize": 2,
   "editor.formatOnSave": false,
-  "javascript.format.enable": false,
+  "eslint.enable": true,
   "[css]": {
     "editor.formatOnSave": true,
     "editor.formatOnPaste": true
@@ -22,14 +22,27 @@
     "editor.formatOnSave": true,
     "editor.formatOnPaste": true
   },
+  "[javascriptreact]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    },
+    "editor.formatOnSave": false,
+    "editor.formatOnPaste": false
+  },
   "[typescript]": {
-    "editor.formatOnSave": true,
-    "editor.formatOnPaste": true
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    },
+    "editor.formatOnSave": false,
+    "editor.formatOnPaste": false
   },
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
+  "[typescriptreact]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit"
+    },
+    "editor.formatOnSave": false,
+    "editor.formatOnPaste": false
   },
-  "prettier.eslintIntegration": true,
   "files.exclude": {
     "**/.vscode": true,
     "**/.git": true,

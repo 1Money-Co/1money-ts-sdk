@@ -19,7 +19,7 @@ module.exports = {
     // the build source directory
     // must be a absolute path
     srcDir: path.resolve('src'),
-    
+
     // the directory for compiled project
     // must be a absolute path
     outDir: path.resolve('lib'),
@@ -29,7 +29,7 @@ module.exports = {
     esmDir: path.resolve('es'),
 
     // build tool, support tsc and rollup
-    tool: 'rollup', 
+    tool: 'rollup',
 
     // The callback will be call in the build-process
     // You can return your custom build configuration
@@ -58,7 +58,7 @@ module.exports = {
     git: 'git@github.com:1Money-Co/1money-js-sdk.git',
 
     // npm depository url
-    npm: '', 
+    npm: '',
 
     preflight: {
       test: true, // whether or not process unit-test
