@@ -10,7 +10,7 @@ on:
       - 'src/**'
       - '*.md'
       - '**/*.md'
-      - '.umirc.ts'
+      - '.dumirc.ts'
 
 jobs:
   Build-Deploy:

@@ -67,7 +67,7 @@
     "node_modules",
     "**/__test__/",
     "src/.umi",
-    ".umirc.*",
+    ".dumirc.*",
     "configs/",
     "lib/",
     "es/",
