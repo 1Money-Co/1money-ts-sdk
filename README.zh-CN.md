@@ -27,7 +27,7 @@ import { logger } from '@1money/js-sdk';
 
 ### CDN
 ```html
-<script src="https://unpkg.com/1money-js-sdk@latest/umd/1money-js-sdk.min.js"></script>
+<script src="https://unpkg.com/@1money/js-sdk@0.1.0/umd/1money-js-sdk.min.js"></script>
 ```
 
 ## 开发
