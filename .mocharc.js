@@ -2,7 +2,7 @@ module.exports = {
   color: true,
   diff: true,
   require: [
-    'tsx',
+    'mocha.tsx.js',
     'tsconfig-paths/register'
   ],
   extension: ['ts', 'js'],

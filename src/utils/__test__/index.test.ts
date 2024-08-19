@@ -10,6 +10,7 @@ import {
   getEnv,
   logger,
   LogLevel,
+  Logger,
   tsCalculator,
   plus,
   minus,
@@ -44,7 +45,7 @@ describe("utils test", function () {
     it("call methods", function (done) {
       setInitConfig({
         isSuccess: (res, status) => status === 200 && !!res?.result,
-      })
+      });
       expect(post<{
         id: number;
         result: string;
@@ -73,6 +74,11 @@ describe("utils test", function () {
   });
 
   describe("logger test", function () {
+    const logger = new Logger({
+      appName: "TEST-APP",
+      prefix: "TEST-PREFIX",
+      suffix: "TEST-SUFFIX",
+    })
     logger.prefix = "TEST-PREFIX";
     logger.suffix = "TEST-SUFFIX";
 
