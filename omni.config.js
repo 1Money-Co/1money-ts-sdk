@@ -65,7 +65,7 @@ module.exports = {
       eslint: true, // whether or not process eslint checking
       prettier: true, // whether or not process prettier checking
       commitlint: true, // whether or not process commitlint checking
-      branch: 'master' // only can release in this branch, set empty string to ignore this check
+      // branch: 'master' // only can release in this branch, set empty string to ignore this check
     }
   },
 

@@ -2,7 +2,7 @@
 import chalk from 'chalk';
 import dayjs from 'dayjs';
 
-import { APP_NAME, ENV } from '@/constants';
+import { APP_NAME, ENV } from '../constants';
 import { _typeof } from './type';
 
 export enum LogLevel {
