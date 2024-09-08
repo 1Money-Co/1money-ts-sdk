@@ -13,15 +13,15 @@ module.exports = function (config) {
 
   config.forEach(v => {
     // just keep the reference for third-party libs
-    v.external = ['axios'];
-
-    v.plugins.push(
-      nodePolyfills(),
+    v.external = ['axios', 'bignumber.js', 'dayjs', 'chalk'];
+    v.plugins.unshift(
       alias({
         entries: [
+          // !todo not working (such as @/constants in utils/logger.ts for commonjs export)
           { find: '@/', replacement: path.resolve(__dirname, 'src/') }
         ]
-      })
+      }),
+      nodePolyfills()
     )
   });
 
@@ -37,6 +37,12 @@ module.exports = function (config) {
     },
     external: ['axios'],
     plugins: [
+      alias({
+        entries: [
+          { find: '@/', replacement: path.resolve(__dirname, 'src/') }
+        ]
+      }),
+      nodePolyfills(),
       nodeResolve({
         extensions,
         preferBuiltins: true,
@@ -56,8 +62,7 @@ module.exports = function (config) {
         extensions
       }),
       json(),
-      terser(),
-      nodePolyfills()
+      terser()
     ]
   });
 
