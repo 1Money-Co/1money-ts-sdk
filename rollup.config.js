@@ -10,6 +10,21 @@ const nodePolyfills = require('rollup-plugin-polyfill-node');
 
 module.exports = function (config) {
   const extensions = ['.ts', '.js'];
+
+  config.forEach(v => {
+    // just keep the reference for third-party libs
+    v.external = ['axios', 'bignumber.js', 'dayjs', 'chalk'];
+    v.plugins.unshift(
+      alias({
+        entries: [
+          // !todo not working (such as @/constants in utils/logger.ts for commonjs export)
+          { find: '@/', replacement: path.resolve(__dirname, 'src/') }
+        ]
+      }),
+      nodePolyfills()
+    )
+  });
+
   // umd
   config.push({
     input: 'src/index.ts',
@@ -20,7 +35,14 @@ module.exports = function (config) {
       exports: 'named',
       compact: true
     },
+    external: ['axios'],
     plugins: [
+      alias({
+        entries: [
+          { find: '@/', replacement: path.resolve(__dirname, 'src/') }
+        ]
+      }),
+      nodePolyfills(),
       nodeResolve({
         extensions,
         preferBuiltins: true,
@@ -42,21 +64,6 @@ module.exports = function (config) {
       json(),
       terser()
     ]
-  });
-
-  config.forEach(v => {
-    // just keep the reference for third-party libs
-    v.external = ['axios'];
-
-    v.plugins.unshift(
-      nodePolyfills(),
-      alias({
-        entries: [
-          // !todo not working (such as @/constants in utils/logger.ts)
-          { find: '@/', replacement: path.resolve(__dirname, 'src/') }
-        ]
-      })
-    )
   });
 
   return config;
