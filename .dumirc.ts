@@ -10,8 +10,11 @@ export default defineConfig({
       { type: 'docs', dir: 'src' },
     ]
   },
+  favicons: [
+    '/1money-js-sdk/favicon.ico',
+  ],
   themeConfig: {
-    logo: '/logo.png',
+    logo: '/1money-js-sdk/logo.png',
     name: '@1money/js-sdk',
     editLink: false,
     nav: [
