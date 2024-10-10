@@ -3,7 +3,7 @@ import { defineConfig } from 'dumi';
 export default defineConfig({
   title: '@1money/js-sdk',
   outputPath: 'dist',
-  publicPath: '/',
+  publicPath: '/1money-js-sdk/',
   history: { type: 'hash' },
   resolve: {
     atomDirs: [
