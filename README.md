@@ -9,7 +9,7 @@ The JS-SDK for @1money co
 
 English | [简体中文](./README.zh-CN.md)
 
-[Online Docs](https://fantastic-adventure-5key49y.pages.github.io/)
+[Online Docs](https://1money-co.github.io/1money-js-sdk/)
 
 ## Quick start
 ### NPM

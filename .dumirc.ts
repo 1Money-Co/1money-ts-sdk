@@ -11,7 +11,7 @@ export default defineConfig({
     ]
   },
   themeConfig: {
-    logo: 'https://omnidoor.org/img/logo.png',
+    logo: '/logo.png',
     name: '@1money/js-sdk',
     editLink: false,
     nav: [
