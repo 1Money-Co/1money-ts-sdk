@@ -374,7 +374,7 @@ export class Request {
 
   public axios: AxiosStatic;
 
-  constructor(config?: InitConfig) {
+  public constructor(config?: InitConfig) {
     this._config = config || {};
 
     this.axios = axios;

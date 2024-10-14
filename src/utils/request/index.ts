@@ -2,7 +2,7 @@ import Request from './request';
 
 import type { InitConfig, Options } from './request';
 
-const { request, setting } = new Request({
+const { request, setting, axios } = new Request({
   isSuccess: (res, status) => status === 200 && res.code === 0,
   isLogin: (res, status) => status === 401 || res.code === 401,
   timeout: 10000
@@ -106,6 +106,8 @@ export function del<T>(
   });
 }
 
-export function setInitConfig(config: InitConfig) {
-  setting(config);
+export function setInitConfig(config: InitConfig & { baseURL?: string }) {
+  const { baseURL, ...rest } = config;
+  if (baseURL) axios.defaults.baseURL = baseURL;
+  setting(rest);
 }
