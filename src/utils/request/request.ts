@@ -78,6 +78,7 @@ export interface InitConfig<T = any> {
   isSuccess?: (res: T, status: number, headers: AxiosResHeaders) => boolean;
   isLogin?: (res: T, status: number, headers: AxiosResHeaders) => boolean;
   timeout?: number;
+  baseURL?: string;
 }
 
 export interface Options<T> extends InitConfig<T>, AxiosRequestConfig { }
@@ -314,7 +315,7 @@ class ResponsePromise<T = any> {
 
   public _restScope: RestScope;
 
-  constructor() {
+  public constructor() {
     this.promiseWrapper = new Promise<T>((resolve, reject) => {
       this._resolve = resolve;
       this._reject = reject;

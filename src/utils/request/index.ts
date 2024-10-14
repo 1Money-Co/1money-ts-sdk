@@ -13,7 +13,6 @@ export function get<T>(
   options?: Omit<Options<T>, 'method' | 'url'>
 ) {
   return request<T>({
-    baseURL: typeof window !== 'undefined' ? location.origin : void 0,
     ...options,
     method: 'get',
     url
@@ -26,7 +25,6 @@ export function post<T>(
   options?: Omit<Options<T>, 'method' | 'url' | 'data'>
 ) {
   return request<T>({
-    baseURL: typeof window !== 'undefined' ? location.origin : void 0,
     ...options,
     method: 'post',
     url,
@@ -44,7 +42,6 @@ export function postForm<T>(
   options?: Omit<Options<T>, 'method' | 'url' | 'data'>
 ) {
   return request<T>({
-    baseURL: typeof window !== 'undefined' ? location.origin : void 0,
     ...options,
     method: 'post',
     url,
@@ -58,7 +55,6 @@ export function put<T>(
   options?: Omit<Options<T>, 'method' | 'url' | 'data'>
 ) {
   return request<T>({
-    baseURL: typeof window !== 'undefined' ? location.origin : void 0,
     ...options,
     method: 'put',
     url,
@@ -76,7 +72,6 @@ export function patch<T>(
   options?: Omit<Options<T>, 'method' | 'url' | 'data'>
 ) {
   return request<T>({
-    baseURL: typeof window !== 'undefined' ? location.origin : void 0,
     ...options,
     method: 'patch',
     url,
@@ -94,7 +89,6 @@ export function del<T>(
   options?: Omit<Options<T>, 'method' | 'url' | 'data'>
 ) {
   return request<T>({
-    baseURL: typeof window !== 'undefined' ? location.origin : void 0,
     ...options,
     method: 'delete',
     url,
@@ -106,8 +100,8 @@ export function del<T>(
   });
 }
 
-export function setInitConfig(config: InitConfig & { baseURL?: string }) {
+export function setInitConfig(config: InitConfig) {
   const { baseURL, ...rest } = config;
-  if (baseURL) axios.defaults.baseURL = baseURL;
+  axios.defaults.baseURL = baseURL || (typeof window !== 'undefined' ? location.origin : void 0);
   setting(rest);
 }
