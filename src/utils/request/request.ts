@@ -11,6 +11,22 @@ export type ParsedError<T extends string = string> = {
   stack: string;
 };
 
+export type ResponseData<T = null> = {
+  code: number | `${number}` | string;
+  data: T;
+  msg: null | string;
+}
+
+export type CustomResponseData<T, U, Y = T> = T extends 'custom'
+  ? CheckAny<T> extends false
+  ? unknown extends U
+  ? CheckAny<U> extends false
+  ? ResponseData<Y>
+  : U
+  : U
+  : ResponseData<Y>
+  : ResponseData<Y>
+
 export type CheckNever<T> = T extends never ? true : false;
 
 export type CheckAny<T> = CheckNever<T> extends false ? false : true;
@@ -56,32 +72,32 @@ export interface ChainName {
   withLT: ChainName['login'] | ChainName['timeout'];
 }
 
-export interface ChainReturn<T> {
-  success: T;
-  failure: WithFailureData | ParsedError;
+export interface ChainReturn<T, U> {
+  success: CustomResponseData<T, U>;
+  failure: CustomResponseData<T, U, ParsedError<'request failed'> & WithFailureData>;
   error: ParsedError;
-  login: WithFailureData | ParsedError;
+  login: CustomResponseData<T, U, ParsedError<'need login'> & WithFailureData>;
   timeout: ParsedError<'timeout'>;
-  successOrFailure: WithFailureData<T>;
-  all: WithFailureData<T> | ParsedError | ParsedError<'timeout'>;
+  successOrFailure: CustomResponseData<T, U, WithFailureData<T>>;
+  all: CustomResponseData<T, U, WithFailureData<T>> | ParsedError | ParsedError<'timeout'> | ParsedError<'request failed'> | ParsedError<'need login'>;
 }
 
 export type AxiosReqHeaders = RawAxiosRequestHeaders | AxiosRequestHeaders;
 export type AxiosResHeaders = RawAxiosResponseHeaders | AxiosResponseHeaders;
 
-export interface InitConfig<T = any> {
-  onSuccess?: (res: ChainReturn<T>['success'], headers: AxiosResHeaders) => any;
-  onFailure?: (res: ChainReturn<T>['failure'], headers: AxiosResHeaders) => any;
-  onLogin?: (res: ChainReturn<T>['login'], headers: AxiosResHeaders) => any;
-  onError?: (res: ChainReturn<T>['error'], headers: AxiosReqHeaders | AxiosResHeaders) => any;
-  onTimeout?: (e: ChainReturn<T>['timeout'], headers: AxiosReqHeaders) => any;
-  isSuccess?: (res: T, status: number, headers: AxiosResHeaders) => boolean;
-  isLogin?: (res: T, status: number, headers: AxiosResHeaders) => boolean;
+export interface InitConfig<T = any, U = unknown> {
+  onSuccess?: (res: ChainReturn<T, U>['success'], headers: AxiosResHeaders) => any;
+  onFailure?: (res: ChainReturn<T, U>['failure'], headers: AxiosResHeaders) => any;
+  onLogin?: (res: ChainReturn<T, U>['login'], headers: AxiosResHeaders) => any;
+  onError?: (res: ChainReturn<T, U>['error'], headers: AxiosReqHeaders | AxiosResHeaders) => any;
+  onTimeout?: (e: ChainReturn<T, U>['timeout'], headers: AxiosReqHeaders) => any;
+  isSuccess?: (res: ResponseData<WithFailureData<T>>, status: number, headers: AxiosResHeaders) => boolean;
+  isLogin?: (res: ResponseData<WithFailureData<T>>, status: number, headers: AxiosResHeaders) => boolean;
   timeout?: number;
   baseURL?: string;
 }
 
-export interface Options<T> extends InitConfig<T>, AxiosRequestConfig { }
+export interface Options<T, U = unknown> extends InitConfig<T, U>, AxiosRequestConfig { }
 
 export type FactoryType = 'success' | 'failure' | 'error' | 'login';
 
@@ -110,43 +126,44 @@ type Tuple2Record<T extends readonly any[]> = {
 
 export interface PromiseWrapper<
   T,
-  TSuc = ChainReturn<T>['success'],
-  TFail = ChainReturn<T>['failure'],
-  TErr = ChainReturn<T>['error'],
-  TLogin = ChainReturn<T>['login'],
-  TTime = ChainReturn<T>['timeout'],
+  U,
+  TSuc = ChainReturn<T, U>['success'],
+  TFail = ChainReturn<T, U>['failure'],
+  TErr = ChainReturn<T, U>['error'],
+  TLogin = ChainReturn<T, U>['login'],
+  TTime = ChainReturn<T, U>['timeout'],
   HadCall extends string = ''
 > {
   success<TRes = TSuc, Delete extends string = HadCall | 'success'>(
-    onSuccess?: (res: ChainReturn<T>['success'], headers: AxiosResHeaders) => TRes,
+    onSuccess?: (res: ChainReturn<T, U>['success'], headers: AxiosResHeaders) => TRes,
   ): Omit<
     PromiseWrapper<T, TRes, TFail, TErr, TLogin, TTime, Delete>,
     ChainName['withoutS'] extends HadCall ? Delete | 'rest' : Delete
   > &
     Promise<TRes | TFail | TErr | TLogin | TTime>;
   failure<TRes = TFail, Delete extends string = HadCall | 'failure'>(
-    onFailure?: (res: ChainReturn<T>['failure'], headers: AxiosResHeaders) => TRes,
+    onFailure?: (res: ChainReturn<T, U>['failure'], headers: AxiosResHeaders) => TRes,
   ): Omit<
     PromiseWrapper<T, TSuc, TRes, TErr, TLogin, TTime, Delete>,
     ChainName['withoutF'] extends HadCall ? Delete | 'rest' : Delete
   > &
     Promise<TSuc | TRes | TErr | TLogin | TTime>;
   error<TRes = TErr, Delete extends string = HadCall | 'error'>(
-    onError?: (err: ChainReturn<T>['error'], headers: AxiosReqHeaders | AxiosResHeaders) => TRes,
+    onError?: (err: ChainReturn<T, U>['error'], headers: AxiosReqHeaders | AxiosResHeaders) => TRes,
   ): Omit<
     PromiseWrapper<T, TSuc, TFail, TRes, TLogin, TTime, Delete>,
     ChainName['withoutE'] extends HadCall ? Delete | 'rest' : Delete
   > &
     Promise<TSuc | TFail | TRes | TLogin | TTime>;
   login<TRes = TLogin, Delete extends string = HadCall | 'login'>(
-    onLogin?: (res: ChainReturn<T>['login'], headers: AxiosResHeaders) => TRes,
+    onLogin?: (res: ChainReturn<T, U>['login'], headers: AxiosResHeaders) => TRes,
   ): Omit<
     PromiseWrapper<T, TSuc, TFail, TErr, TRes, TTime, Delete>,
     ChainName['withoutL'] extends HadCall ? Delete | 'rest' : Delete
   > &
     Promise<TSuc | TFail | TErr | TRes | TTime>;
   timeout<TRes = TTime, Delete extends string = HadCall | 'timeout'>(
-    onTimeout?: (err: ChainReturn<T>['timeout'], headers: AxiosReqHeaders) => TRes,
+    onTimeout?: (err: ChainReturn<T, U>['timeout'], headers: AxiosReqHeaders) => TRes,
   ): Omit<
     PromiseWrapper<T, TSuc, TFail, TErr, TLogin, TRes, Delete>,
     ChainName['withoutT'] extends HadCall ? Delete | 'rest' : Delete
@@ -163,66 +180,66 @@ export interface PromiseWrapper<
       val: ChainName['all'] extends THadCallWithNotInScope
         ? unknown
         : ChainName['withoutS'] extends THadCallWithNotInScope
-        ? ChainReturn<T>['success']
+        ? ChainReturn<T, U>['success']
         : ChainName['withoutF'] extends THadCallWithNotInScope
-        ? ChainReturn<T>['failure']
+        ? ChainReturn<T, U>['failure']
         : ChainName['withoutE'] extends THadCallWithNotInScope
-        ? ChainReturn<T>['error']
+        ? ChainReturn<T, U>['error']
         : ChainName['withoutL'] extends THadCallWithNotInScope
-        ? ChainReturn<T>['login']
+        ? ChainReturn<T, U>['login']
         : ChainName['withoutT'] extends THadCallWithNotInScope
-        ? ChainReturn<T>['timeout']
+        ? ChainReturn<T, U>['timeout']
         : ChainName['withoutSF'] extends THadCallWithNotInScope
-        ? ChainReturn<T>['successOrFailure']
+        ? ChainReturn<T, U>['successOrFailure']
         : ChainName['withoutSE'] extends THadCallWithNotInScope
-        ? ChainReturn<T>['success' | 'error']
+        ? ChainReturn<T, U>['success' | 'error']
         : ChainName['withoutSL'] extends THadCallWithNotInScope
-        ? ChainReturn<T>['success' | 'login']
+        ? ChainReturn<T, U>['success' | 'login']
         : ChainName['withoutST'] extends THadCallWithNotInScope
-        ? ChainReturn<T>['success' | 'timeout']
+        ? ChainReturn<T, U>['success' | 'timeout']
         : ChainName['withoutFE'] extends THadCallWithNotInScope
-        ? ChainReturn<T>['failure' | 'error']
+        ? ChainReturn<T, U>['failure' | 'error']
         : ChainName['withoutFL'] extends THadCallWithNotInScope
-        ? ChainReturn<T>['failure' | 'login']
+        ? ChainReturn<T, U>['failure' | 'login']
         : ChainName['withoutFT'] extends THadCallWithNotInScope
-        ? ChainReturn<T>['failure' | 'timeout']
+        ? ChainReturn<T, U>['failure' | 'timeout']
         : ChainName['withoutEL'] extends THadCallWithNotInScope
-        ? ChainReturn<T>['error' | 'login']
+        ? ChainReturn<T, U>['error' | 'login']
         : ChainName['withoutET'] extends THadCallWithNotInScope
-        ? ChainReturn<T>['error' | 'timeout']
+        ? ChainReturn<T, U>['error' | 'timeout']
         : ChainName['withoutLT'] extends THadCallWithNotInScope
-        ? ChainReturn<T>['login' | 'timeout']
+        ? ChainReturn<T, U>['login' | 'timeout']
         : ChainName['withSF'] extends THadCallWithNotInScope
-        ? ChainReturn<T>['error' | 'login' | 'timeout']
+        ? ChainReturn<T, U>['error' | 'login' | 'timeout']
         : ChainName['withSE'] extends THadCallWithNotInScope
-        ? ChainReturn<T>['failure' | 'login' | 'timeout']
+        ? ChainReturn<T, U>['failure' | 'login' | 'timeout']
         : ChainName['withSL'] extends THadCallWithNotInScope
-        ? ChainReturn<T>['failure' | 'error' | 'timeout']
+        ? ChainReturn<T, U>['failure' | 'error' | 'timeout']
         : ChainName['withST'] extends THadCallWithNotInScope
-        ? ChainReturn<T>['failure' | 'error' | 'login']
+        ? ChainReturn<T, U>['failure' | 'error' | 'login']
         : ChainName['withFE'] extends THadCallWithNotInScope
-        ? ChainReturn<T>['success' | 'login' | 'timeout']
+        ? ChainReturn<T, U>['success' | 'login' | 'timeout']
         : ChainName['withFL'] extends THadCallWithNotInScope
-        ? ChainReturn<T>['success' | 'error' | 'timeout']
+        ? ChainReturn<T, U>['success' | 'error' | 'timeout']
         : ChainName['withFT'] extends THadCallWithNotInScope
-        ? ChainReturn<T>['success' | 'error' | 'login']
+        ? ChainReturn<T, U>['success' | 'error' | 'login']
         : ChainName['withEL'] extends THadCallWithNotInScope
-        ? ChainReturn<T>['successOrFailure' | 'timeout']
+        ? ChainReturn<T, U>['successOrFailure' | 'timeout']
         : ChainName['withET'] extends THadCallWithNotInScope
-        ? ChainReturn<T>['successOrFailure' | 'login']
+        ? ChainReturn<T, U>['successOrFailure' | 'login']
         : ChainName['withLT'] extends THadCallWithNotInScope
-        ? ChainReturn<T>['successOrFailure' | 'error']
+        ? ChainReturn<T, U>['successOrFailure' | 'error']
         : ChainName['success'] extends THadCallWithNotInScope
-        ? ChainReturn<T>['failure' | 'error' | 'login' | 'timeout']
+        ? ChainReturn<T, U>['failure' | 'error' | 'login' | 'timeout']
         : ChainName['failure'] extends THadCallWithNotInScope
-        ? ChainReturn<T>['success' | 'error' | 'login' | 'timeout']
+        ? ChainReturn<T, U>['success' | 'error' | 'login' | 'timeout']
         : ChainName['error'] extends THadCallWithNotInScope
-        ? ChainReturn<T>['successOrFailure' | 'login' | 'timeout']
+        ? ChainReturn<T, U>['successOrFailure' | 'login' | 'timeout']
         : ChainName['login'] extends THadCallWithNotInScope
-        ? ChainReturn<T>['successOrFailure' | 'error' | 'timeout']
+        ? ChainReturn<T, U>['successOrFailure' | 'error' | 'timeout']
         : ChainName['timeout'] extends THadCallWithNotInScope
-        ? ChainReturn<T>['successOrFailure' | 'error' | 'login']
-        : ChainReturn<T>['all'],
+        ? ChainReturn<T, U>['successOrFailure' | 'error' | 'login']
+        : ChainReturn<T, U>['all'],
       headers: AxiosReqHeaders | AxiosResHeaders
     ) => TRes,
     scope?: TRestScope,
@@ -294,24 +311,24 @@ export interface PromiseWrapper<
     >;
 }
 
-class ResponsePromise<T = any> {
-  public _success: Parameters<PromiseWrapper<T>['success']>[0];
+class ResponsePromise<T, U> {
+  public _success: Parameters<PromiseWrapper<T, U>['success']>[0];
 
-  public _failure: Parameters<PromiseWrapper<T>['failure']>[0];
+  public _failure: Parameters<PromiseWrapper<T, U>['failure']>[0];
 
-  public _error: Parameters<PromiseWrapper<T>['error']>[0];
+  public _error: Parameters<PromiseWrapper<T, U>['error']>[0];
 
-  public _login: Parameters<PromiseWrapper<T>['login']>[0];
+  public _login: Parameters<PromiseWrapper<T, U>['login']>[0];
 
-  public _timeout: Parameters<PromiseWrapper<T>['timeout']>[0];
+  public _timeout: Parameters<PromiseWrapper<T, U>['timeout']>[0];
 
-  public _rest?: Parameters<PromiseWrapper<T>['rest']>[0];
+  public _rest?: Parameters<PromiseWrapper<T, U>['rest']>[0];
 
   public _resolve?: ((value: any) => void);
 
   public _reject?: ((reason?: any) => void);
 
-  public promiseWrapper: PromiseWrapper<T> & Promise<T>;
+  public promiseWrapper: PromiseWrapper<T, U> & Promise<CustomResponseData<T, U, WithFailureData<T>>>;
 
   public _restScope: RestScope;
 
@@ -402,7 +419,7 @@ export class Request {
     this._config = { ...this._config, ...config };
   }
 
-  public request<T>(options: Options<T>): PromiseWrapper<T> & Promise<T | ParsedError> {
+  public request<T, U = unknown>(options: Options<T, U>): PromiseWrapper<T, U> & Promise<CustomResponseData<T, U, WithFailureData<T>>> {
     options.withCredentials = typeof options.withCredentials === 'boolean' ? options.withCredentials : true;
     options.headers = options.headers || {};
     options.headers['Accept'] = options.headers['Accept'] || '*/*';
@@ -431,7 +448,7 @@ export class Request {
       login: isLogin ?? initIsLogin,
     };
 
-    const ResPromise = new ResponsePromise<T>();
+    const ResPromise = new ResponsePromise<T, U>();
 
     Promise.resolve().then(() => {
       const callbacks = {
@@ -554,7 +571,7 @@ export class Request {
         }, _timeout);
       }
 
-      this.axios<any, AxiosResponse<T, any>, any>(options).then(async response => {
+      this.axios<any, AxiosResponse<ResponseData<WithFailureData<T>>, any>, any>(options).then(async response => {
         if (isTimeout) return;
         if (timer !== null) {
           clearTimeout(timer);
@@ -568,13 +585,19 @@ export class Request {
 
           let res = data;
           if (doLogin) {
-            const result = await Promise.resolve(callbacks.login({ ...this.parseError('need login'), ...data }, headers));
+            const result = await Promise.resolve(callbacks.login({
+              ...this.parseError('need login') as ParsedError<'need login'>,
+              ...data as any
+            }, headers));
             if (existedChainHandler.login) res = result;
           } else if (doSuccess) {
-            const result = await Promise.resolve(callbacks.success(data, headers));
+            const result = await Promise.resolve(callbacks.success(data as any, headers));
             if (existedChainHandler.success) res = result;
           } else {
-            const result = await Promise.resolve(callbacks.failure({ ...this.parseError('request failed'), ...data }, headers));
+            const result = await Promise.resolve(callbacks.failure({
+              ...this.parseError('request failed') as ParsedError<'request failed'>,
+              ...data as any
+            }, headers));
             if (existedChainHandler.failure) res = result;
           }
           ResPromise._resolve!(res);

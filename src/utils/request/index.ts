@@ -3,28 +3,28 @@ import Request from './request';
 import type { InitConfig, Options } from './request';
 
 const { request, setting, axios } = new Request({
-  isSuccess: (res, status) => status === 200 && res.code === 0,
-  isLogin: (res, status) => status === 401 || res.code === 401,
+  isSuccess: (res, status) => status === 200 && res.code == 0,
+  isLogin: (res, status) => status === 401 || res.code == 401,
   timeout: 10000
 });
 
-export function get<T>(
+export function get<T, U = unknown>(
   url: string,
-  options?: Omit<Options<T>, 'method' | 'url'>
+  options?: Omit<Options<T, U>, 'method' | 'url'>
 ) {
-  return request<T>({
+  return request<T, U>({
     ...options,
     method: 'get',
     url
   });
 }
 
-export function post<T>(
+export function post<T, U = unknown>(
   url: string,
   data: Record<string, any>,
-  options?: Omit<Options<T>, 'method' | 'url' | 'data'>
+  options?: Omit<Options<T, U>, 'method' | 'url' | 'data'>
 ) {
-  return request<T>({
+  return request<T, U>({
     ...options,
     method: 'post',
     url,
@@ -36,12 +36,12 @@ export function post<T>(
   });
 }
 
-export function postForm<T>(
+export function postForm<T, U = unknown>(
   url: string,
   data: Record<string, any>,
-  options?: Omit<Options<T>, 'method' | 'url' | 'data'>
+  options?: Omit<Options<T, U>, 'method' | 'url' | 'data'>
 ) {
-  return request<T>({
+  return request<T, U>({
     ...options,
     method: 'post',
     url,
@@ -49,12 +49,12 @@ export function postForm<T>(
   });
 }
 
-export function put<T>(
+export function put<T, U = unknown>(
   url: string,
   data: Record<string, any>,
-  options?: Omit<Options<T>, 'method' | 'url' | 'data'>
+  options?: Omit<Options<T, U>, 'method' | 'url' | 'data'>
 ) {
-  return request<T>({
+  return request<T, U>({
     ...options,
     method: 'put',
     url,
@@ -66,12 +66,12 @@ export function put<T>(
   });
 }
 
-export function patch<T>(
+export function patch<T, U = unknown>(
   url: string,
   data: Record<string, any>,
-  options?: Omit<Options<T>, 'method' | 'url' | 'data'>
+  options?: Omit<Options<T, U>, 'method' | 'url' | 'data'>
 ) {
-  return request<T>({
+  return request<T, U>({
     ...options,
     method: 'patch',
     url,
@@ -83,12 +83,12 @@ export function patch<T>(
   });
 }
 
-export function del<T>(
+export function del<T, U = unknown>(
   url: string,
   data: Record<string, any>,
-  options?: Omit<Options<T>, 'method' | 'url' | 'data'>
+  options?: Omit<Options<T, U>, 'method' | 'url' | 'data'>
 ) {
-  return request<T>({
+  return request<T, U>({
     ...options,
     method: 'delete',
     url,
