@@ -74,9 +74,9 @@ export interface ChainName {
 
 export interface ChainReturn<T, U> {
   success: CustomResponseData<T, U>;
-  failure: CustomResponseData<T, U, ParsedError<'request failed'> & WithFailureData>;
+  failure: CustomResponseData<T, U, WithFailureData>;
   error: ParsedError;
-  login: CustomResponseData<T, U, ParsedError<'need login'> & WithFailureData>;
+  login: CustomResponseData<T, U, WithFailureData> | ParsedError;
   timeout: ParsedError<'timeout'>;
   successOrFailure: CustomResponseData<T, U, WithFailureData<T>>;
   all: CustomResponseData<T, U, WithFailureData<T>> | ParsedError | ParsedError<'timeout'> | ParsedError<'request failed'> | ParsedError<'need login'>;
@@ -432,7 +432,7 @@ export class Request {
       isSuccess: initIsSuccess,
       isLogin: initIsLogin,
       timeout: initTimeout,
-    } = this._config;
+    } = this._config as InitConfig<T, U>;
     const {
       onSuccess,
       onFailure,
@@ -457,31 +457,31 @@ export class Request {
           (~ResPromise._restScope.indexOf('success') ? ResPromise._rest : undefined) ??
           onSuccess ??
           initOnSuccess ??
-          ((r: T, h: AxiosResHeaders) => r),
+          ((r: ChainReturn<T, U>['success'], h: AxiosResHeaders) => r),
         failure:
           ResPromise._failure ??
           (~ResPromise._restScope.indexOf('failure') ? ResPromise._rest : undefined) ??
           onFailure ??
           initOnFailure ??
-          ((v: T, h: AxiosResHeaders) => v),
+          ((v: ChainReturn<T, U>['failure'], h: AxiosResHeaders) => v),
         error:
           ResPromise._error ??
           (~ResPromise._restScope.indexOf('error') ? ResPromise._rest : undefined) ??
           onError ??
           initOnError ??
-          ((v: T, h: AxiosResHeaders) => v),
+          ((v: ChainReturn<T, U>['error'], h: AxiosResHeaders) => v),
         login:
           ResPromise._login ??
           (~ResPromise._restScope.indexOf('login') ? ResPromise._rest : undefined) ??
           onLogin ??
           initOnLogin ??
-          ((v: T, h: AxiosResHeaders) => v),
+          ((v: ChainReturn<T, U>['login'], h: AxiosResHeaders) => v),
         timeout:
           ResPromise._timeout ??
           (~ResPromise._restScope.indexOf('timeout') ? ResPromise._rest : undefined) ??
           onTimeout ??
           initOnTimeout ??
-          ((v: T, h: AxiosReqHeaders) => v),
+          ((v: ChainReturn<T, U>['timeout'], h: AxiosReqHeaders) => v),
       };
 
       const existedHandler = {
@@ -585,19 +585,13 @@ export class Request {
 
           let res = data;
           if (doLogin) {
-            const result = await Promise.resolve(callbacks.login({
-              ...this.parseError('need login') as ParsedError<'need login'>,
-              ...data as any
-            }, headers));
+            const result = await Promise.resolve(callbacks.login(data as ChainReturn<T, U>['login'], headers));
             if (existedChainHandler.login) res = result;
           } else if (doSuccess) {
-            const result = await Promise.resolve(callbacks.success(data as any, headers));
+            const result = await Promise.resolve(callbacks.success(data as ChainReturn<T, U>['success'], headers));
             if (existedChainHandler.success) res = result;
           } else {
-            const result = await Promise.resolve(callbacks.failure({
-              ...this.parseError('request failed') as ParsedError<'request failed'>,
-              ...data as any
-            }, headers));
+            const result = await Promise.resolve(callbacks.failure(data as ChainReturn<T, U>['failure'], headers));
             if (existedChainHandler.failure) res = result;
           }
           ResPromise._resolve!(res);
