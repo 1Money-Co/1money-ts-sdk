@@ -79,7 +79,7 @@ export interface ChainReturn<T, U> {
   login: CustomResponseData<T, U, WithFailureData> | ParsedError;
   timeout: ParsedError<'timeout'>;
   successOrFailure: CustomResponseData<T, U, WithFailureData<T>>;
-  all: CustomResponseData<T, U, WithFailureData<T>> | ParsedError | ParsedError<'timeout'> | ParsedError<'request failed'> | ParsedError<'need login'>;
+  all: CustomResponseData<T, U, WithFailureData<T>> | ParsedError | ParsedError<'timeout'>;
 }
 
 export type AxiosReqHeaders = RawAxiosRequestHeaders | AxiosRequestHeaders;
@@ -137,35 +137,35 @@ export interface PromiseWrapper<
   success<TRes = TSuc, Delete extends string = HadCall | 'success'>(
     onSuccess?: (res: ChainReturn<T, U>['success'], headers: AxiosResHeaders) => TRes,
   ): Omit<
-    PromiseWrapper<T, TRes, TFail, TErr, TLogin, TTime, Delete>,
+    PromiseWrapper<T, U, TRes, TFail, TErr, TLogin, TTime, Delete>,
     ChainName['withoutS'] extends HadCall ? Delete | 'rest' : Delete
   > &
     Promise<TRes | TFail | TErr | TLogin | TTime>;
   failure<TRes = TFail, Delete extends string = HadCall | 'failure'>(
     onFailure?: (res: ChainReturn<T, U>['failure'], headers: AxiosResHeaders) => TRes,
   ): Omit<
-    PromiseWrapper<T, TSuc, TRes, TErr, TLogin, TTime, Delete>,
+    PromiseWrapper<T, U, TSuc, TRes, TErr, TLogin, TTime, Delete>,
     ChainName['withoutF'] extends HadCall ? Delete | 'rest' : Delete
   > &
     Promise<TSuc | TRes | TErr | TLogin | TTime>;
   error<TRes = TErr, Delete extends string = HadCall | 'error'>(
     onError?: (err: ChainReturn<T, U>['error'], headers: AxiosReqHeaders | AxiosResHeaders) => TRes,
   ): Omit<
-    PromiseWrapper<T, TSuc, TFail, TRes, TLogin, TTime, Delete>,
+    PromiseWrapper<T, U, TSuc, TFail, TRes, TLogin, TTime, Delete>,
     ChainName['withoutE'] extends HadCall ? Delete | 'rest' : Delete
   > &
     Promise<TSuc | TFail | TRes | TLogin | TTime>;
   login<TRes = TLogin, Delete extends string = HadCall | 'login'>(
     onLogin?: (res: ChainReturn<T, U>['login'], headers: AxiosResHeaders) => TRes,
   ): Omit<
-    PromiseWrapper<T, TSuc, TFail, TErr, TRes, TTime, Delete>,
+    PromiseWrapper<T, U, TSuc, TFail, TErr, TRes, TTime, Delete>,
     ChainName['withoutL'] extends HadCall ? Delete | 'rest' : Delete
   > &
     Promise<TSuc | TFail | TErr | TRes | TTime>;
   timeout<TRes = TTime, Delete extends string = HadCall | 'timeout'>(
     onTimeout?: (err: ChainReturn<T, U>['timeout'], headers: AxiosReqHeaders) => TRes,
   ): Omit<
-    PromiseWrapper<T, TSuc, TFail, TErr, TLogin, TRes, Delete>,
+    PromiseWrapper<T, U, TSuc, TFail, TErr, TLogin, TRes, Delete>,
     ChainName['withoutT'] extends HadCall ? Delete | 'rest' : Delete
   > &
     Promise<TSuc | TFail | TErr | TLogin | TRes>;
@@ -243,7 +243,7 @@ export interface PromiseWrapper<
       headers: AxiosReqHeaders | AxiosResHeaders
     ) => TRes,
     scope?: TRestScope,
-  ): Omit<PromiseWrapper<T, TSuc, TFail, TErr, TLogin, TTime, Delete>, Delete> &
+  ): Omit<PromiseWrapper<T, U, TSuc, TFail, TErr, TLogin, TTime, Delete>, Delete> &
     Promise<
       ChainName['all'] extends THadCallWithNotInScope
       ? TSuc | TFail | TErr | TLogin | TTime
