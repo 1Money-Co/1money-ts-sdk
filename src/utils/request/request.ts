@@ -605,7 +605,11 @@ export class Request {
           timer = null;
         }
 
-        logger.error(`Error - ${err}`);
+        logger.error(`Error(${err.code}) - ${err.message};
+          \n Config: ${err.config};
+          \n Request: ${err.request};
+          \n Response: ${err.response};
+        `);
 
         const status = err.response?.status;
         const data = err.response?.data;
