@@ -606,7 +606,7 @@ export class Request {
         }
 
         logger.error(`Error(${err.status ?? 500}, ${err.code ?? 'UNKNOWN'}) - ${err.message};
-          Config: ${err.config?.method}, ${err.config?.url}, ${JSON.stringify(err.config?.headers)}, ${JSON.stringify(err.config?.params)};
+          Config: ${err.config?.method}, ${err.config?.baseURL ?? ''}${err.config?.url ?? ''}, ${JSON.stringify(err.config?.headers ?? {})}, ${JSON.stringify(err.config?.params ?? {})};
           Request: ${JSON.stringify(err.request ?? {})};
           Response: ${JSON.stringify(err.response ?? {})};
         `);
