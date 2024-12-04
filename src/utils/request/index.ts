@@ -38,14 +38,18 @@ export function post<T, U = unknown>(
 
 export function postForm<T, U = unknown>(
   url: string,
-  data: Record<string, any>,
+  data: FormData | (FormData[]),
   options?: Omit<Options<T, U>, 'method' | 'url' | 'data'>
 ) {
   return request<T, U>({
     ...options,
     method: 'post',
     url,
-    data
+    data,
+    headers: {
+      ...options?.headers,
+      'Content-Type': 'multipart/form-data'
+    }
   });
 }
 
