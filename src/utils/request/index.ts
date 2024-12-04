@@ -38,7 +38,7 @@ export function post<T, U = unknown>(
 
 export function postForm<T, U = unknown>(
   url: string,
-  data: FormData | (FormData[]),
+  data: FormData,
   options?: Omit<Options<T, U>, 'method' | 'url' | 'data'>
 ) {
   return request<T, U>({

@@ -1,6 +1,6 @@
 {
   "name": "@1money/js-sdk",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "js sdk for 1money co",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -70,7 +70,7 @@
     "@babel/preset-typescript": "~7.24.7",
     "@babel/runtime-corejs3": "~7.24.8",
     "@commitlint/cli": "8.3.5",
-    "@omni-door/cli": "^2.9.16",
+    "@omni-door/cli": "^2.9.17",
     "@rollup/plugin-alias": "~5.1.0",
     "@rollup/plugin-babel": "~6.0.4",
     "@rollup/plugin-commonjs": "~26.0.1",
