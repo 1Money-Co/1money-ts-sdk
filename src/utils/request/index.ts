@@ -30,8 +30,8 @@ export function post<T, U = unknown>(
     url,
     data,
     headers: {
+      'Content-Type': 'application/json',
       ...options?.headers,
-      'Content-Type': 'application/json'
     }
   });
 }
@@ -47,8 +47,8 @@ export function postForm<T, U = unknown>(
     url,
     data,
     headers: {
+      'Content-Type': 'multipart/form-data',
       ...options?.headers,
-      'Content-Type': 'multipart/form-data'
     }
   });
 }
@@ -64,8 +64,8 @@ export function put<T, U = unknown>(
     url,
     data,
     headers: {
+      'Content-Type': 'application/json',
       ...options?.headers,
-      'Content-Type': 'application/json'
     }
   });
 }
@@ -81,8 +81,8 @@ export function patch<T, U = unknown>(
     url,
     data,
     headers: {
+      'Content-Type': 'application/json',
       ...options?.headers,
-      'Content-Type': 'application/json'
     }
   });
 }
@@ -98,8 +98,8 @@ export function del<T, U = unknown>(
     url,
     data,
     headers: {
+      'Content-Type': 'application/json',
       ...options?.headers,
-      'Content-Type': 'application/json'
     }
   });
 }
