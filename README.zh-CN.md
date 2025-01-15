@@ -1,11 +1,11 @@
 # @1money/ts-sdk
-The JS-SDK for @1money co
+The TS-SDK for @1money co
 
 [![Build Status](https://github.com/1Money-Co/1money-ts-sdk/actions/workflows/cicd-npm.yml/badge.svg)](https://github.com/1Money-Co/1money-ts-sdk/actions/workflows/cicd-npm.yml)
-[![NPM downloads](http://img.shields.io/npm/dm/%401money%2Fjs-sdk.svg?style=flat-square)](https://www.npmjs.com/package/@1money/ts-sdk)
-[![npm version](https://badge.fury.io/js/%401money%2Fjs-sdk.svg)](https://badge.fury.io/js/%401money%2Fjs-sdk)
-[![install size](https://packagephobia.now.sh/badge?p=%401money%2Fjs-sdk)](https://packagephobia.now.sh/result?p=%401money%2Fjs-sdk)
-[![license](http://img.shields.io/npm/l/%401money%2Fjs-sdk.svg)](https://github.com/1money/tpls/blob/master/packages/js-sdk/LICENSE)
+[![NPM downloads](http://img.shields.io/npm/dm/%401money%2Fts-sdk.svg?style=flat-square)](https://www.npmjs.com/package/@1money/ts-sdk)
+[![npm version](https://badge.fury.io/js/%401money%2Fts-sdk.svg)](https://badge.fury.io/js/%401money%2Fts-sdk)
+[![install size](https://packagephobia.now.sh/badge?p=%401money%2Fts-sdk)](https://packagephobia.now.sh/result?p=%401money%2Fts-sdk)
+[![license](http://img.shields.io/npm/l/%401money%2Fts-sdk.svg)](https://github.com/1money/tpls/blob/master/packages/ts-sdk/LICENSE)
 
 [English](./README.md) | 简体中文
 
