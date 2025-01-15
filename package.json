@@ -1,5 +1,5 @@
 {
-  "name": "@1money/js-sdk",
+  "name": "@1money/ts-sdk",
   "version": "0.1.14",
   "description": "js sdk for 1money co",
   "main": "lib/index.js",
@@ -27,7 +27,7 @@
     },
     "./package.json": "./package.json"
   },
-  "unpkg": "umd/1money-js-sdk.min.js",
+  "unpkg": "umd/1money-ts-sdk.min.js",
   "scripts": {
     "start": "omni dev",
     "dev": "omni dev",

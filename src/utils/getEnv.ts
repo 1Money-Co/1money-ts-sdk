@@ -1,10 +1,9 @@
 import type { APP_ENV } from '@/constants';
 
 export const domainCheck = (hostname: string) => ({
-  local: /(localhost|127\.0\.0\.1|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/g.test(hostname),
-  dev: /dev\.1money\.com/g.test(hostname),
-  preview: /preview\.1money\.com/g.test(hostname),
-  prod: /1money\.com/g.test(hostname),
+  local: /^(localhost|127\.0\.0\.1|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$/g.test(hostname),
+  staging: /^www\.1money-staging\.com$/g.test(hostname),
+  prod: /^(www\.)?(1money|1moneynetwork){1,1}\.com$/g.test(hostname),
 } as const);
 
 export function getEnv(): APP_ENV {

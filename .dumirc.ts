@@ -1,9 +1,9 @@
 import { defineConfig } from 'dumi';
 
 export default defineConfig({
-  title: '@1money/js-sdk',
+  title: '@1money/ts-sdk',
   outputPath: 'dist',
-  publicPath: '/1money-js-sdk/',
+  publicPath: '/1money-ts-sdk/',
   history: { type: 'hash' },
   resolve: {
     atomDirs: [
@@ -11,11 +11,11 @@ export default defineConfig({
     ]
   },
   favicons: [
-    '/1money-js-sdk/favicon.ico',
+    '/1money-ts-sdk/favicon.ico',
   ],
   themeConfig: {
-    logo: '/1money-js-sdk/logo.png',
-    name: '@1money/js-sdk',
+    logo: '/1money-ts-sdk/logo.png',
+    name: '@1money/ts-sdk',
     editLink: false,
     nav: [
       { title: 'Docs', link: '/docs' }

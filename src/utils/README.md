@@ -7,7 +7,7 @@ The `getEnv` function is used to determine the current environment of the applic
 ### Usage
 
 ```typescript
-import { getEnv } from '@1money/js-sdk/utils';
+import { getEnv } from '@1money/ts-sdk/utils';
 
 const env = getEnv();
 
@@ -20,7 +20,7 @@ The `logger` utility is a centralized logging system designed to handle and form
 ### Usage
 
 ```typescript
-import { logger } from '@1money/js-sdk/utils';
+import { logger } from '@1money/ts-sdk/utils';
 import { ENV } from '@/constants';
 
 logger.appName = 'MyAppName';
@@ -92,7 +92,7 @@ The `safePromiseAll` function is used to handle an array of promises concurrentl
 
 ### Usage
 ```typescript
-import { safePromiseAll } from '@1money/js-sdk/utils';
+import { safePromiseAll } from '@1money/ts-sdk/utils';
 
 async function fetchData() {
   try {
@@ -115,7 +115,7 @@ The `safePromiseLine` function is used to execute an array of promise-returning 
 
 ### Usage
 ```typescript
-import { safePromiseLine } from '@1money/js-sdk/utils';
+import { safePromiseLine } from '@1money/ts-sdk/utils';
 
 async function processTasks() {
   const results = await safePromiseLine([
@@ -144,7 +144,7 @@ The `_typeof` utility function extends the functionality of JavaScript's native 
 
 ### Usage
 ```typescript
-import { _typeof } from '@1money/js-sdk/utils';
+import { _typeof } from '@1money/ts-sdk/utils';
 
 console.log(_typeof('Hello, World!')); // Output: 'string'
 console.log(_typeof(42));              // Output: 'number'
@@ -167,7 +167,7 @@ The `request` module is a comprehensive wrapper around `axios` for handling HTTP
 ### Usage
 #### Configuration
 ```typescript
-import { setInitConfig } from '@1money/js-sdk/utils';
+import { setInitConfig } from '@1money/ts-sdk/utils';
 
 setInitConfig({
   isSuccess: (res = {}, status) => status === 200 && res?.code == 0,
@@ -179,7 +179,7 @@ setInitConfig({
 
 #### Basic
 ```typescript
-import { get, post } from '@1money/js-sdk/utils';
+import { get, post } from '@1money/ts-sdk/utils';
 
 get('/api/data')
   .success(response => {
@@ -216,7 +216,7 @@ post('/api/data', { key: 'value' }, {
 The module also supports `PUT`, `PATCH`, and `DELETE` methods in a similar manner:
 
 ```typescript
-import { put, patch, del } from '@1money/js-sdk/utils';
+import { put, patch, del } from '@1money/ts-sdk/utils';
 
 put(url, data, options);
 
@@ -232,7 +232,7 @@ This utility set based on `bignumber.js` and is useful for applications requirin
 
 ### divided
 ```typescript
-import { divided } from '@1money/js-sdk/utils';
+import { divided } from '@1money/ts-sdk/utils';
 
 console.info(divided(10, 2).toString()); // "5"
 console.info(divided('100', '4').toString()); // "25"
@@ -240,7 +240,7 @@ console.info(divided('100', '4').toString()); // "25"
 
 ### plus
 ```typescript
-import { plus } from '@1money/js-sdk/utils';
+import { plus } from '@1money/ts-sdk/utils';
 
 // Adding two numbers
 console.info(plus(5, 10).toString()); // "15"
@@ -252,7 +252,7 @@ console.info(plus([5, 10, 20]).toString()); // "35"
 
 ### minus
 ```typescript
-import { minus } from '@1money/js-sdk/utils';
+import { minus } from '@1money/ts-sdk/utils';
 
 console.info(minus(20, 5).toString()); // "15"
 console.info(minus('100', '30').toString()); // "70"
@@ -260,7 +260,7 @@ console.info(minus('100', '30').toString()); // "70"
 
 ### multiply
 ```typescript
-import { multiply } from '@1money/js-sdk/utils';
+import { multiply } from '@1money/ts-sdk/utils';
 
 // Multiplying two numbers
 console.info(multiply(5, 10).toString()); // "50"
@@ -272,42 +272,42 @@ console.info(multiply(2, 3, ...[4, 5]).toString()); // "120"
 
 ### isGreaterThan
 ```typescript
-import { isGreaterThan } from '@1money/js-sdk/utils';
+import { isGreaterThan } from '@1money/ts-sdk/utils';
 
 console.info(isGreaterThan(10, 5)); // true
 ```
 
 ### isGreaterThanOrEqualTo
 ```typescript
-import { isGreaterThanOrEqualTo } from '@1money/js-sdk/utils';
+import { isGreaterThanOrEqualTo } from '@1money/ts-sdk/utils';
 
 console.info(isGreaterThanOrEqualTo(10, 10)); // true
 ```
 
 ### isLessThan
 ```typescript
-import { isLessThan } from '@1money/js-sdk/utils';
+import { isLessThan } from '@1money/ts-sdk/utils';
 
 console.info(isLessThan(5, 10)); // true
 ```
 
 ### isLessThanOrEqualTo
 ```typescript
-import { isLessThanOrEqualTo } from '@1money/js-sdk/utils';
+import { isLessThanOrEqualTo } from '@1money/ts-sdk/utils';
 
 console.info(isLessThanOrEqualTo(10, 10)); // true
 ```
 
 ### isEqualTo
 ```typescript
-import { isEqualTo } from '@1money/js-sdk/utils';
+import { isEqualTo } from '@1money/ts-sdk/utils';
 
 console.info(isEqualTo(100, '100')); // true
 ```
 
 ### getMedian
 ```typescript
-import { getMedian } from '@1money/js-sdk/utils';
+import { getMedian } from '@1money/ts-sdk/utils';
 
 // Odd number of elements
 console.info(getMedian([1, 3, 2]).toString()); // "2"
@@ -319,7 +319,7 @@ console.info(getMedian([42]).toString()); // "42"
 
 ### isNumberLike
 ```typescript
-import { isNumberLike } from '@1money/js-sdk/utils';
+import { isNumberLike } from '@1money/ts-sdk/utils';
 
 console.info(isNumberLike(42)); // true
 console.info(isNumberLike('42')); // true
@@ -332,7 +332,7 @@ console.info(isNumberLike(undefined)); // false
 
 ### toString
 ```typescript
-import { toString } from '@1money/js-sdk/utils';
+import { toString } from '@1money/ts-sdk/utils';
 
 console.info(toString(42)); // "42"
 console.info(toString('1000000000000000000')); // "1000000000000000000"
@@ -342,7 +342,7 @@ console.info(toString(BigInt(9007199254740991))); // "9007199254740991"
 
 ### getFirstAndLastItem
 ```typescript
-import { getFirstAndLastItem } from '@1money/js-sdk/utils';
+import { getFirstAndLastItem } from '@1money/ts-sdk/utils';
 
 console.info(getFirstAndLastItem([1, 2, 3, 4])); // { first: 1, last: 4 }
 console.info(getFirstAndLastItem([new BigNumber(10), new BigNumber(20)])); // { first: BigNumber(10), last: BigNumber(20) }
@@ -354,7 +354,7 @@ This module provides utility functions for working with strings.
 
 ### startsWithIgnoreCase
 ```typescript
-import { startsWithIgnoreCase } from '@1money/js-sdk/utils';
+import { startsWithIgnoreCase } from '@1money/ts-sdk/utils';
 
 startsWithIgnoreCase('HelloWorld', 'hello'); // true
 startsWithIgnoreCase('HelloWorld', 'world'); // false
@@ -362,7 +362,7 @@ startsWithIgnoreCase('HelloWorld', 'world'); // false
 
 ### equalIgnoreCase
 ```typescript
-import { equalIgnoreCase } from '@1money/js-sdk/utils';
+import { equalIgnoreCase } from '@1money/ts-sdk/utils';
 
 equalIgnoreCase('HelloWorld', 'helloworld'); // true
 equalIgnoreCase('HelloWorld', 'helloWorld!'); // false
@@ -373,7 +373,7 @@ This module provides utility functions for working with calculate the timestamp 
 
 ### tsCalculator
 ```typescript
-import { tsCalculator } from '@1money/js-sdk/utils';
+import { tsCalculator } from '@1money/ts-sdk/utils';
 
 const calcTs = tsCalculator();
 setTimeout(() => {
@@ -383,7 +383,7 @@ setTimeout(() => {
 
 ### timeslice
 ```typescript
-import { timeslice } from '@1money/js-sdk/utils';
+import { timeslice } from '@1money/ts-sdk/utils';
 
 function* gen () {
   const arr: number[] = Array.apply(null, ({ length: 50000 } as any)).map((v: unknown, k: number) => k)

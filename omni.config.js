@@ -55,7 +55,7 @@ module.exports = {
     autoTag: false,
 
     // project git repo url
-    git: 'git@github.com:1Money-Co/1money-js-sdk.git',
+    git: 'git@github.com:1Money-Co/1money-ts-sdk.git',
 
     // npm depository url
     npm: '',

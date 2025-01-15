@@ -29,9 +29,9 @@ module.exports = function (config) {
   config.push({
     input: 'src/index.ts',
     output: {
-      file: 'umd/1money-js-sdk.min.js',
+      file: 'umd/1money-ts-sdk.min.js',
       format: 'umd',
-      name: '$1money-js-sdk',
+      name: '$1money-ts-sdk',
       exports: 'named',
       compact: true
     },
