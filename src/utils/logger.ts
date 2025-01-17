@@ -16,6 +16,8 @@ export enum LogLevel {
 
 export type LogFormat = 'raw' | 'json' | 'string';
 
+export type BeforeLog = (level: keyof typeof LogLevel, msg: string) => any;
+
 export class Logger {
   private _logLevel: LogLevel;
 
@@ -29,18 +31,22 @@ export class Logger {
 
   private _suffix?: string;
 
+  private _beforeLog?: BeforeLog;
+
   public constructor(options?: {
     appName?: string;
     prefix?: string;
     suffix?: string;
+    beforeLog?: BeforeLog;
   }) {
-    const { appName = '', prefix, suffix } = options || {};
+    const { appName = '', prefix, suffix, beforeLog } = options || {};
     this._logLevel = LogLevel.info;
     this._preLevel = this._logLevel;
     this._appName = appName;
     this._format = ENV === 'local' ? 'string' : 'json';
     this._prefix = prefix;
     this._suffix = suffix;
+    this._beforeLog = beforeLog;
 
     this._handleMsg = this._handleMsg.bind(this);
     this._generateMessage = this._generateMessage.bind(this);
@@ -95,6 +101,10 @@ export class Logger {
     this._suffix = _suffix;
   }
 
+  public set beforeLog(_beforeLog: BeforeLog) {
+    this._beforeLog = _beforeLog;
+  }
+
   private _handleMsg(msg: any[]): string {
     return msg
       .map((v) => {
@@ -122,19 +132,23 @@ export class Logger {
       silent: 'black'
     } as const;
     const date = dayjs();
+
+    let _msg = '';
     switch (this._format) {
       case 'raw':
-        return msg;
+        _msg = msg;
+        break;
       case 'string':
-        return chalk[colors[level]](`<${this._prefix
+        _msg = chalk[colors[level]](`<${this._prefix
           ? `${this._prefix}, ${this._appName}`
           : `${this._appName}`
           }, ${chalk.bold(level.toUpperCase())}, ${date.format(
             'ZZ YYYY-MM-DD HH:mm:ss:SSS'
           )}> | ${this._suffix ? `${chalk.underline(msg)} | <${this._suffix}>` : chalk.underline(msg)}`);
+        break;
       case 'json':
       default:
-        return JSON.stringify({
+        _msg = JSON.stringify({
           appName: this._appName,
           level: level?.toUpperCase(),
           timestamp: date.valueOf(),
@@ -149,6 +163,12 @@ export class Logger {
                   : msg
         });
     }
+
+    if (this._beforeLog) {
+      _msg = this._beforeLog?.(level, _msg);
+    }
+
+    return _msg;
   }
 
   public debug(...msg: any[]) {
