@@ -1,6 +1,6 @@
 {
   "name": "@1money/ts-sdk",
-  "version": "0.1.16",
+  "version": "0.1.17",
   "description": "js sdk for 1money co",
   "main": "lib/index.js",
   "module": "es/index.js",
