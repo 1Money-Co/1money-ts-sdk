@@ -165,7 +165,10 @@ export class Logger {
     }
 
     if (this._beforeLog) {
-      _msg = this._beforeLog?.(level, _msg);
+      const _beforeMsg = this._beforeLog?.(level, _msg);
+      if (!!_beforeMsg && typeof _beforeMsg === 'string') {
+        _msg = _beforeMsg;
+      }
     }
 
     return _msg;
