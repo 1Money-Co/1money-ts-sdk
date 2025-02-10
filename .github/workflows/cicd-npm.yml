@@ -27,7 +27,7 @@ jobs:
       with:
         node-version: '20.16'
 
-    - run: npm install --global pnpm@9
+    - run: npm install --global pnpm@10
     - run: pnpm i --frozen-lockfile
     - run: pnpm build
 
