@@ -64,7 +64,7 @@
     "@babel/preset-typescript": "~7.25.9",
     "@babel/runtime-corejs3": "~7.25.9",
     "@commitlint/cli": "8.3.5",
-    "@omni-door/cli": "^3.0.0",
+    "@omni-door/cli": "~3.0.0",
     "@rollup/plugin-alias": "~5.1.0",
     "@rollup/plugin-babel": "~6.0.4",
     "@rollup/plugin-commonjs": "~26.0.1",
