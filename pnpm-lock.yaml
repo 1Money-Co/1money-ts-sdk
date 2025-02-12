@@ -43,8 +43,8 @@ importers:
         specifier: 8.3.5
         version: 8.3.5
       '@omni-door/cli':
-        specifier: ~3.0.0
-        version: 3.0.0
+        specifier: ~3.0.2
+        version: 3.0.2
       '@rollup/plugin-alias':
         specifier: ~5.1.0
         version: 5.1.1(rollup@4.34.6)
@@ -1615,8 +1615,8 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@omni-door/cli@3.0.0':
-    resolution: {integrity: sha512-O2mPWVEYIhSlyBKd70tpO6MCBaHLQcEt8H1CZMKtaOWREfiVKQVZyJ0bN1TyIMKIz+J+yNrMFQoBIuxr5uCrdw==}
+  '@omni-door/cli@3.0.2':
+    resolution: {integrity: sha512-IKO2l78ZFBgbTp4FUFWl6xWUp8tejQC7C3G99pFR1DgqB7ur0na9E5opX2bLcp3FAgDfHNH/2unMgoYNCeuHxQ==}
     hasBin: true
 
   '@omni-door/utils@1.4.0':
@@ -10359,7 +10359,7 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.19.0
 
-  '@omni-door/cli@3.0.0':
+  '@omni-door/cli@3.0.2':
     dependencies:
       '@omni-door/utils': 1.4.0
       '@types/express': 4.17.8
