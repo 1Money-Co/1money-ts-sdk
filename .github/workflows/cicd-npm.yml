@@ -31,9 +31,30 @@ jobs:
     - run: pnpm i --frozen-lockfile
     - run: pnpm build
 
+    - name: Get package version
+      id: pkg_version
+      run: |
+        version=$(node -p "require('./package.json').version")
+        echo "version=${version}" >> $GITHUB_OUTPUT
+
+    - name: Set npm tag based on version
+      id: set_tag
+      run: |
+        version=${{ steps.pkg_version.outputs.version }}
+        if [[ "$version" == *"-"* ]]; then
+          prerelease="${version#*-}"
+          tag="${prerelease%%.*}"
+          echo "Found prerelease portion: $prerelease, using tag: $tag"
+          echo "tag=$tag" >> $GITHUB_OUTPUT
+        else
+          echo "No prerelease found, using tag: latest"
+          echo "tag=latest" >> $GITHUB_OUTPUT
+        fi
+
     - name: Deploy Npm
       uses: JS-DevTools/npm-publish@v3
       with:
         token: ${{ secrets.NPM_TOKEN }}
         package: ./package.json
         access: 'public'
+        tag: ${{ steps.set_tag.outputs.tag }}
