@@ -1,10 +1,36 @@
 import { api } from './api';
 import { client } from './client';
-import { logger, getEnv, _typeof, get, post, del, put, patch, setInitConfig, safePromiseAll, safePromiseLine } from './utils';
+import {
+  logger,
+  getEnv,
+  _typeof,
+  get,
+  post,
+  del,
+  put,
+  patch,
+  setInitConfig,
+  safePromiseAll,
+  safePromiseLine,
+  filterEmpty
+} from './utils';
 
 export { api } from './api';
 export { client } from './client';
-export { logger, getEnv, _typeof, get, post, del, put, patch, setInitConfig, safePromiseAll, safePromiseLine } from './utils';
+export {
+  logger,
+  getEnv,
+  _typeof,
+  get,
+  post,
+  del,
+  put,
+  patch,
+  setInitConfig,
+  safePromiseAll,
+  safePromiseLine,
+  filterEmpty
+} from './utils';
 
 export default {
   api,
@@ -19,5 +45,6 @@ export default {
   patch,
   setInitConfig,
   safePromiseAll,
-  safePromiseLine
+  safePromiseLine,
+  filterEmpty
 };
