@@ -28,7 +28,8 @@ import {
   startsWithIgnoreCase,
   equalIgnoreCase,
   isNumberLike,
-  getFirstAndLastItem
+  getFirstAndLastItem,
+  filterEmpty
 } from "../";
 
 describe("utils test", function () {
@@ -44,7 +45,7 @@ describe("utils test", function () {
 
     it("call methods", function (done) {
       setInitConfig({
-        isSuccess: (res, status) => status === 200 && !!res?.result,
+        isSuccess: (res: any, status) => status === 200 && res?.id != null,
       });
       expect(post<{
         id: number;
@@ -316,6 +317,80 @@ describe("utils test", function () {
       expect(getFirstAndLastItem([3])).to.have.property('last').to.be.equal(3);
       expect(getFirstAndLastItem([55, 3412, 3231, 6634])).to.have.property('first').to.be.equal(55);
       expect(getFirstAndLastItem([55, 3412, 3231, 6634])).to.have.property('last').to.be.equal(6634);
+    });
+  });
+
+  describe("filterEmpty test", function () {
+    it("filterEmpty is a function", function () {
+      expect(filterEmpty).to.be.a("function");
+    });
+
+    it("filters out undefined and empty string values", function () {
+      const input = {
+        a: undefined,
+        b: '',
+        c: 'value',
+        d: 0,
+        e: false,
+        f: null,
+        g: []
+      };
+
+      const result = filterEmpty(input);
+      
+      expect(result).to.deep.equal({
+        c: 'value',
+        d: 0,
+        e: false,
+        g: []
+      });
+    });
+
+    it("handles nested objects", function () {
+      const input = {
+        a: {
+          b: undefined,
+          c: '',
+          d: 'value',
+          e: {
+            f: undefined,
+            g: 'nested'
+          }
+        },
+        h: 'top level'
+      };
+
+      const result = filterEmpty(input);
+      
+      expect(result).to.deep.equal({
+        a: {
+          d: 'value',
+          e: {
+            g: 'nested'
+          }
+        },
+        h: 'top level'
+      });
+    });
+
+    it("preserves arrays", function () {
+      const input = {
+        a: [1, 2, undefined, '', 3],
+        b: []
+      };
+
+      const result = filterEmpty(input);
+      
+      expect(result).to.deep.equal({
+        a: [1, 2, undefined, '', 3],
+        b: []
+      });
+    });
+
+    it("handles empty object", function () {
+      const input = {};
+      const result = filterEmpty(input);
+      expect(result).to.deep.equal({});
     });
   });
 });

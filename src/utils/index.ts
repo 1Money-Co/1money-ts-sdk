@@ -6,3 +6,4 @@ export * from './safePromise';
 export * from './string';
 export * from './time';
 export * from './type';
+export * from './filter';
