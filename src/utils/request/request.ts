@@ -9,6 +9,7 @@ export type ParsedError<T extends string = string> = {
   name: T;
   message: string;
   stack: string;
+  status: number;
 };
 
 export type ResponseData<T = null> = {
