@@ -407,10 +407,12 @@ export class Request {
     const message: string =
       err?.message ?? err?.toString?.() ?? err ?? '';
     const stack: string = err?.stack ?? '';
+    const status = err?.response?.status ?? 500;
     return {
       name,
       message,
-      stack
+      stack,
+      status
     };
   }
 
@@ -625,7 +627,7 @@ export class Request {
             errorHandler(err, headers);
           }
         } catch (e) {
-          errorHandler(err, headers);
+          errorHandler(e, headers);
         }
       });
     });
