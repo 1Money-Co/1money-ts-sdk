@@ -7,6 +7,7 @@ import {
   del,
   patch,
   setInitConfig,
+  clipboard,
   getEnv,
   logger,
   LogLevel,
@@ -391,6 +392,27 @@ describe("utils test", function () {
       const input = {};
       const result = filterEmpty(input);
       expect(result).to.deep.equal({});
+    });
+  });
+
+  describe("clipboard test", function () {
+    it("clipboard is a function", function () {
+      expect(clipboard).to.be.a("function");
+    });
+
+    it("copies text to clipboard", async function () {
+      const testString = "Test clipboard string";
+      await clipboard(testString);
+    });
+
+    it("handles empty strings", async function () {
+      await clipboard("");
+    });
+    
+    it("handles non-string inputs", async function () {
+      await clipboard(123);
+      // @ts-expect-error
+      await clipboard({ test: "object" });
     });
   });
 });
