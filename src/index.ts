@@ -10,6 +10,7 @@ import {
   put,
   patch,
   setInitConfig,
+  clipboard,
   safePromiseAll,
   safePromiseLine,
   filterEmpty
@@ -27,6 +28,7 @@ export {
   put,
   patch,
   setInitConfig,
+  clipboard,
   safePromiseAll,
   safePromiseLine,
   filterEmpty
@@ -44,6 +46,7 @@ export default {
   put,
   patch,
   setInitConfig,
+  clipboard,
   safePromiseAll,
   safePromiseLine,
   filterEmpty
