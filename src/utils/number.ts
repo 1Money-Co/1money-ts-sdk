@@ -97,3 +97,39 @@ export function getFirstAndLastItem<T = any>(list: T[]) {
     last: list?.[Math.max(0, list.length - 1)]
   };
 }
+
+export function formatNumber(num: BigNumber.Value | bigint): string;
+export function formatNumber(
+  num: BigNumber.Value | bigint,
+  decimals: number,
+  round?: boolean
+): string;
+
+export function formatNumber(
+  num: BigNumber.Value | bigint,
+  decimals?: number,
+  round = false
+): string {
+  if (typeof num === 'bigint') {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
+  const bn = new BigNumber(num);
+  const decimalPlaces = decimals !== undefined ? decimals : (bn.toString().split('.')[1]?.length ?? 0);
+
+  // dont round
+  if (!round) {
+    return bn.decimalPlaces(decimalPlaces, BigNumber.ROUND_DOWN).toFormat(decimalPlaces, {
+      decimalSeparator: '.',
+      groupSeparator: ',',
+      groupSize: 3
+    });
+  }
+
+  return bn.toFormat(decimalPlaces, {
+    decimalSeparator: '.',
+    groupSeparator: ',',
+    groupSize: 3
+  });
+}
+
