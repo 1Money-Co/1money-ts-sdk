@@ -98,9 +98,16 @@ export function getFirstAndLastItem<T = any>(list: T[]) {
   };
 }
 
+export function formatNumber(num: BigNumber.Value | bigint): string;
 export function formatNumber(
   num: BigNumber.Value | bigint,
-  decimals = 2,
+  decimals: number,
+  round?: boolean
+): string;
+
+export function formatNumber(
+  num: BigNumber.Value | bigint,
+  decimals?: number,
   round = false
 ): string {
   if (typeof num === 'bigint') {
@@ -108,31 +115,16 @@ export function formatNumber(
   }
 
   const bn = new BigNumber(num);
+  const decimalPlaces = decimals !== undefined ? decimals : (bn.toString().split('.')[1]?.length ?? 0);
+
+  // dont round
   if (!round) {
-    // dont round
-    return bn.decimalPlaces(decimals, BigNumber.ROUND_DOWN).toFormat(decimals, {
+    return bn.decimalPlaces(decimalPlaces, BigNumber.ROUND_DOWN).toFormat(decimalPlaces, {
       decimalSeparator: '.',
       groupSeparator: ',',
       groupSize: 3
     });
   }
-
-  return bn.toFormat(decimals, {
-    decimalSeparator: '.',
-    groupSeparator: ',',
-    groupSize: 3
-  });
-}
-
-export function formatOriginal(
-  num: BigNumber.Value | bigint
-): string {
-  if (typeof num === 'bigint') {
-    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  }
-
-  const bn = new BigNumber(num);
-  const decimalPlaces = bn.decimalPlaces() ?? 0;
 
   return bn.toFormat(decimalPlaces, {
     decimalSeparator: '.',
@@ -140,3 +132,4 @@ export function formatOriginal(
     groupSize: 3
   });
 }
+
