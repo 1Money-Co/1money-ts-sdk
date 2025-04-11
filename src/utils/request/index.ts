@@ -109,3 +109,5 @@ export function setInitConfig(config: InitConfig) {
   axios.defaults.baseURL = baseURL || (typeof window !== 'undefined' ? location.origin : void 0);
   setting(rest);
 }
+
+export const axiosStatic = axios;

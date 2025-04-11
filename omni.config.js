@@ -55,10 +55,10 @@ module.exports = {
     autoTag: false,
 
     // project git repo url
-    git: 'git@github.com:1Money-Co/1money-ts-sdk.git',
+    // git: 'git@github.com:1Money-Co/1money-ts-sdk.git',
 
     // npm depository url
-    npm: '',
+    // npm: 'https://registry.npmjs.org/',
 
     preflight: {
       test: true, // whether or not process unit-test
