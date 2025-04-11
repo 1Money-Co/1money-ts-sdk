@@ -28,6 +28,7 @@ export {
   put,
   patch,
   setInitConfig,
+  axiosStatic,
   clipboard,
   safePromiseAll,
   safePromiseLine,
