@@ -5,6 +5,13 @@ export const TESTNET_API_URL = 'https://api.testnet.1money.network';
 export const MAINNET_API_URL = 'https://api.1money.network';
 export const LOCAL_API_URL = 'http://localhost:18555';
 
+// Chain IDs for different networks
+export const CHAIN_IDS = {
+  MAINNET: 21210,
+  TESTNET: 1212101,
+  LOCAL: 1212101 // Using same chain ID as testnet for local development
+} as const;
+
 // Common response types
 export interface RESTErrorData {
   error_code: string;

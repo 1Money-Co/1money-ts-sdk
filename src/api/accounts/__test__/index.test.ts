@@ -22,8 +22,8 @@ describe('accounts API test', function () {
   });
 
   // Valid addresses for testing on the testnet
-  const testAddress = '0x17159df9c5e044b9191b0d80fb78ea6035bc9ee9';
-  const testToken = '0x91f66cb6c9b56c7e3bcdb9eff9da13da171e89f4';
+  const testAddress = '0x276dfcc7e502f4a3330857beee0fa574c499242b';
+  const testToken = '0x4e34917ebEc4df28CC5ad641637e321Aa590E53f';
 
   // Make real API calls to test the accounts API
   it('should fetch account nonce', function(done) {

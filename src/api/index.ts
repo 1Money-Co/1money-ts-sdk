@@ -1,5 +1,5 @@
 import { setInitConfig } from '../utils';
-import { TESTNET_API_URL, MAINNET_API_URL, LOCAL_API_URL } from './types';
+import { TESTNET_API_URL, MAINNET_API_URL, LOCAL_API_URL, CHAIN_IDS } from './types';
 
 // Import API modules
 import accountsApi from './accounts';
@@ -12,22 +12,28 @@ export * from './accounts/types';
 export * from './tokens/types';
 export * from './transactions/types';
 export * from './checkpoints/types';
-export { TESTNET_API_URL, MAINNET_API_URL, LOCAL_API_URL } from './types';
+export { TESTNET_API_URL, MAINNET_API_URL, LOCAL_API_URL, CHAIN_IDS } from './types';
 
 /**
  * API client for 1money network
  * @param options Configuration options
  * @param options.network Network to use (testnet, mainnet, local)
  * @param options.timeout Request timeout in milliseconds
+ * @param options.chainId Custom chain ID (overrides the default for the selected network)
  */
-export function api(options?: { network?: 'testnet' | 'mainnet' | 'local'; timeout?: number }): {
+export function api(options?: {
+  network?: 'testnet' | 'mainnet' | 'local';
+  timeout?: number;
+  chainId?: number;
+}): {
   accounts: typeof accountsApi;
   tokens: typeof tokensApi;
   transactions: typeof transactionsApi;
   checkpoints: typeof checkpointsApi;
+  chainId: number;
 } {
   const network = options?.network || 'testnet';
-  let baseURL = TESTNET_API_URL;
+  let baseURL = LOCAL_API_URL;
 
   // Set the base URL based on the network
   if (network === 'mainnet') {
@@ -35,6 +41,13 @@ export function api(options?: { network?: 'testnet' | 'mainnet' | 'local'; timeo
   } else if (network === 'local') {
     baseURL = LOCAL_API_URL;
   }
+
+  // Determine the chain ID based on the network or use the provided custom chain ID
+  const chainId = options?.chainId || (
+    network === 'mainnet' ? CHAIN_IDS.MAINNET :
+    network === 'local' ? CHAIN_IDS.LOCAL :
+    CHAIN_IDS.TESTNET
+  );
 
   // Initialize API configuration
   setInitConfig({
@@ -63,7 +76,12 @@ export function api(options?: { network?: 'testnet' | 'mainnet' | 'local'; timeo
     /**
      * Checkpoint API methods
      */
-    checkpoints: checkpointsApi
+    checkpoints: checkpointsApi,
+
+    /**
+     * Chain ID for the selected network
+     */
+    chainId
   };
 }
 
