@@ -1,12 +1,13 @@
-import { get, post } from '../../utils';
-import { Transaction } from '../checkpoints/types';
-import {
+import { get, post } from '@/utils';
+
+import type { Hash } from '@/api/types';
+import type { Transaction } from '@/api/checkpoints/types';
+import type {
   TransactionReceipt,
   EstimateFee,
   PaymentPayload,
   CancellationPayload
 } from './types';
-import { Hash } from '../types';
 
 /**
  * Transactions API methods

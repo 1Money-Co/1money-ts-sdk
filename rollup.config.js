@@ -17,7 +17,6 @@ module.exports = function (getConfig) {
     v.plugins.unshift(
       alias({
         entries: [
-          // !todo not working (such as @/constants in utils/logger.ts for commonjs export)
           { find: '@/', replacement: path.resolve(__dirname, 'src/') }
         ]
       }),

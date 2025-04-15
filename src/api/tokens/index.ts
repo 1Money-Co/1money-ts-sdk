@@ -1,5 +1,6 @@
-import { get, post } from '../../utils';
-import {
+import { get, post } from '@/utils';
+import type { Hash, HashWithToken } from '@/api/types';
+import type {
   MintInfo,
   AuthorityType,
   AuthorityAction,
@@ -8,7 +9,6 @@ import {
   KeyValuePair,
   RestSignature
 } from './types';
-import { Hash, HashWithToken } from '../types';
 
 // Request payload interfaces
 interface TokenBlacklistPayload {

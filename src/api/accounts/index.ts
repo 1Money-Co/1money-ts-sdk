@@ -1,5 +1,5 @@
-import { get } from '../../utils';
-import { AccountInfo, AssociatedTokenAccount } from './types';
+import { get } from '@/utils';
+import type { AccountInfo, AssociatedTokenAccount } from './types';
 
 /**
  * Accounts API methods

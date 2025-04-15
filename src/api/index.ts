@@ -1,4 +1,4 @@
-import { setInitConfig } from '../utils';
+import { setInitConfig } from '@/utils';
 import { TESTNET_API_URL, MAINNET_API_URL, LOCAL_API_URL, CHAIN_IDS } from './types';
 
 // Import API modules

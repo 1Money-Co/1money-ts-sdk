@@ -1,5 +1,5 @@
-import { get } from '../../utils';
-import { CheckpointNumberResponse, Checkpoint } from './types';
+import { get } from '@/utils';
+import type { CheckpointNumberResponse, Checkpoint } from './types';
 
 /**
  * Checkpoint API methods
