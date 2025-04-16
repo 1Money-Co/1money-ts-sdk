@@ -28,7 +28,7 @@ interface Signature {
  * @param privateKey Private key to sign with
  * @returns Signature object with r, s, v components
  */
-async function signMessage(msg: PaymentPayload, privateKey: string): Promise<Signature | null> {
+function signMessage(msg: PaymentPayload, privateKey: string): Signature | null {
   try {
       // 1. Convert values to hex and create RLP array
       const chainIdHex = ethers.toBeHex(msg.chainID);
@@ -59,7 +59,7 @@ async function signMessage(msg: PaymentPayload, privateKey: string): Promise<Sig
 
 describe('transactions API test', function () {
   // Set a longer timeout for all tests in this suite
-  this.timeout(30000);
+  this.timeout(1000);
 
   it('should have transactions API object', function () {
     const apiClient = api();
@@ -91,108 +91,13 @@ describe('transactions API test', function () {
    // Example values for testing
   // Private key for testing - DO NOT use this in production
   const privateKey = '0xce6ed4b68189c8e844fc245d3169df053fb9e05c13f168cd005a6a111ac67bee';
-  const testHash = '0x716ce7c894b3ea9791d986418428187c4678ee2e68cf993d9d7974f39f2cc1ba';
+  const testHash = '0xc0060068634dc33aed67678c852c394fed34c388ed7b0e735b017d6a3640dffb';
   const receipt = '0x1DFa71eC8284F0F835EDbfaEA458d38bCff446d6';
   const testValue = '888';
   const testToken = '0x461BeB67a74b68Eb60EAD561DdDFC870fD9835a0';
 
-  // Test for payment transaction with real signing
-  it('should submit payment transaction', async function() {
-    // We would need the API client if we were submitting the transaction
-    const apiClient = api();
-
-    // This test demonstrates how to create a payment transaction with ethers.js
-    // using real signing but without async/await
-
-    // Step 1: Set up the transaction parameters
-    const chainId = 1212101; // Testnet chain ID from the SDK
-    const nonce = 12;   // Account nonce (would be fetched from the API in a real app)
-    const recipient = receipt;
-    const value = testValue;
-    const token = testToken;
-
-    // Step 2: Create the transaction payload (without signature)
-    const transactionPayload = {
-      chain_id: chainId,
-      nonce: nonce,
-      recipient: recipient,
-      value: value,
-      token: token
-    };
-
-    try {
-      // Step 3: Create a payment payload and sign it
-      // The message format should match what the 1money network expects
-      // and match the Go implementation using github.com/ethereum/go-ethereum/rlp
-
-      // Create the payment payload for signing
-      const payloadToSign: PaymentPayload = {
-        chainID: chainId,
-        nonce: nonce,
-        recipient: recipient,
-        value: value,
-        token: token
-      };
-
-      // Sign the message using our signMessage function
-      const wallet = new ethers.Wallet(privateKey);
-
-      // Use the signMessage function to sign the payload
-      const signature = await signMessage(payloadToSign, privateKey);
-
-      // Create the signature object
-      const signatureObject = {
-        r: signature?.r ?? '',
-        s: signature?.s ?? '',
-        v: signature?.v ?? 0
-      };
-
-      // Step 5: Create the complete payment payload with signature
-      const paymentPayload = {
-        ...transactionPayload,
-        signature: signatureObject
-      };
-
-      // Log the payload for verification
-      console.log('Payment payload created with real signature:', paymentPayload);
-
-      // In a real application, you would submit the transaction like this:
-      
-      apiClient.transactions.payment(paymentPayload)
-        .success(response => {
-          console.log('Payment transaction submitted successfully:', response);
-          expect(response).to.be.an('object');
-          expect(response).to.have.property('hash');
-          console.log('Transaction hash:', response.hash);
-        })
-        .error(err => {
-          console.error('Error submitting payment transaction:', err);
-          // If the error is due to a duplicate transaction, consider it a success
-          if (err && err.message && err.message.includes('duplicate')) {
-            console.error('Duplicate transaction detected, considering test successful');
-          } else {
-            console.error('Test failed due to unexpected error');
-          }
-        });
-      
-
-      // Since we're not actually submitting, we'll just complete the test
-      // No need to call done() in an async function
-    } catch (error) {
-      console.error('Error in payment transaction test:', error);
-      throw error; // Throw the error to fail the test
-    }
-  });
-
-  it('should have cancel method', function () {
-    const apiClient = api();
-    expect(apiClient.transactions.cancel).to.be.a('function');
-  });
-
-
-
-  // Make real API calls to test the transactions API
-  it('should fetch transaction by hash', function(done) {
+   // Make real API calls to test the transactions API
+   it('should fetch transaction by hash', function(done) {
     const apiClient = api();
     apiClient.transactions.getByHash(testHash)
       .success(response => {
@@ -251,4 +156,98 @@ describe('transactions API test', function () {
         done(err);
       });
   });
+
+  // Test for payment transaction with real signing
+  it('should submit payment transaction', function(done) {
+    // We would need the API client if we were submitting the transaction
+    const apiClient = api();
+
+    // This test demonstrates how to create a payment transaction with ethers.js
+    // using real signing but without async/await
+
+    // Step 1: Set up the transaction parameters
+    const chainId = 1212101; // Testnet chain ID from the SDK
+    const nonce = 12;   // Account nonce (would be fetched from the API in a real app)
+    const recipient = receipt;
+    const value = testValue;
+    const token = testToken;
+
+    // Step 2: Create the transaction payload (without signature)
+    const transactionPayload = {
+      chain_id: chainId,
+      nonce: nonce,
+      recipient: recipient,
+      value: value,
+      token: token
+    };
+
+    try {
+      // Step 3: Create a payment payload and sign it
+      // The message format should match what the 1money network expects
+      // and match the Go implementation using github.com/ethereum/go-ethereum/rlp
+
+      // Create the payment payload for signing
+      const payloadToSign: PaymentPayload = {
+        chainID: chainId,
+        nonce: nonce,
+        recipient: recipient,
+        value: value,
+        token: token
+      };
+
+      // Use the signMessage function to sign the payload
+      const signature = signMessage(payloadToSign, privateKey);
+
+      // Create the signature object
+      const signatureObject = {
+        r: signature?.r ?? '',
+        s: signature?.s ?? '',
+        v: signature?.v ?? 0
+      };
+
+      // Step 5: Create the complete payment payload with signature
+      const paymentPayload = {
+        ...transactionPayload,
+        signature: signatureObject
+      };
+
+      // Log the payload for verification
+      console.log('Payment payload created with real signature:', paymentPayload);
+
+      // In a real application, you would submit the transaction like this:
+      
+        apiClient.transactions.payment(paymentPayload)
+          .success(response => {
+            console.log('Payment transaction submitted successfully:', response);
+            expect(response).to.be.an('object');
+            expect(response).to.have.property('hash');
+            console.log('Transaction hash:', response.hash);
+            done();
+          })
+          .failure(err => {
+            console.error('Error submitting payment transaction:', err);
+            // If the error is due to a duplicate transaction, consider it a success
+            if (err && err.message && err.message.includes('duplicate')) {
+              console.error('Duplicate transaction detected, considering test successful');
+            } else {
+            console.error('Test failed due to unexpected error');
+            }
+            done(err);
+      });
+      
+
+      // Since we're not actually submitting, we'll just complete the test
+      // No need to call done() in an async function
+    } catch (error) {
+      console.error('Error in payment transaction test:', error);
+      throw error; // Throw the error to fail the test
+    }
+  });
+
+  it('should have cancel method', function () {
+    const apiClient = api();
+    expect(apiClient.transactions.cancel).to.be.a('function');
+  });
+  
 });
+
