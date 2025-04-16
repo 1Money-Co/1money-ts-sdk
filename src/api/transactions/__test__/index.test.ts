@@ -38,11 +38,9 @@ async function signMessage(msg: PaymentPayload, privateKey: string): Promise<Sig
 
       // 2. RLP encode the message
       const encoded = encodeRlp(rlpData);
-      console.log('encoded:', encoded);
 
       // 3. Calculate Keccak256 hash
       const hash = keccak256(encoded);
-      console.log('Signature Hash:', hash);
 
       // 4. sign
       const signingKey = new ethers.SigningKey(privateKey);
@@ -136,11 +134,8 @@ describe('transactions API test', function () {
         token: token
       };
 
-      console.log('Payment payload to sign:', payloadToSign);
-
       // Sign the message using our signMessage function
       const wallet = new ethers.Wallet(privateKey);
-      console.log(`Signing with wallet address: ${wallet.address}`);
 
       // Use the signMessage function to sign the payload
       const signature = await signMessage(payloadToSign, privateKey);
@@ -163,7 +158,6 @@ describe('transactions API test', function () {
 
       // In a real application, you would submit the transaction like this:
       
-      console.log('Submitting payment transaction to API...');
       apiClient.transactions.payment(paymentPayload)
         .success(response => {
           console.log('Payment transaction submitted successfully:', response);
