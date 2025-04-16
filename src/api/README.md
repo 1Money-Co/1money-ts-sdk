@@ -193,25 +193,56 @@ const transactionPayload = {
   token: '0xTokenAddress'
 };
 
-// Create message hash to sign
-const messageHash = ethers.keccak256(
-  ethers.AbiCoder.defaultAbiCoder().encode(
-    ['uint256', 'uint256', 'address', 'uint256', 'address'],
-    [transactionPayload.chain_id, nonce, transactionPayload.recipient,
-     transactionPayload.value, transactionPayload.token]
-  )
-);
+// Define the payment payload interface
+interface PaymentPayload {
+  chainID: number;       // Chain ID (e.g., 1212101 for testnet)
+  nonce: number;         // Account nonce
+  recipient: string;     // Recipient address
+  value: BigNumberish;   // Transaction value
+  token: string;         // Token address
+  signature?: {          // Optional signature object
+    r: string;           // Signature r component
+    s: string;           // Signature s component
+    v: number;           // Signature v component
+  };
+}
 
-// Option 1: Asynchronous signing (requires await)
-const messageHashBytes = ethers.getBytes(messageHash);
-const signature = await wallet.signMessage(messageHashBytes);
+// Create the payment payload for signing
+const payloadToSign: PaymentPayload = {
+  chainID: transactionPayload.chain_id,
+  nonce: nonce,
+  recipient: transactionPayload.recipient,
+  value: transactionPayload.value,
+  token: transactionPayload.token
+};
 
-// Option 2: Synchronous signing (no await needed)
-// This approach can be used in synchronous contexts
-const syncSignature = wallet.signingKey.sign(messageHashBytes).serialized;
+// Sign the payload using the signMessage function
+async function signMessage(payload: PaymentPayload, privateKey: string) {
+  // Convert values to appropriate formats for RLP encoding
+  const chainIdHex = ethers.toBeHex(payload.chainID);
+  const nonceHex = ethers.toBeHex(payload.nonce);
+  const valueHex = ethers.toBeHex(payload.value);
 
-// Split signature into r, s, v components (works with either signature method)
-const sig = ethers.Signature.from(syncSignature || signature);
+  // Create an array of values to encode with RLP
+  const rlpData = [chainIdHex, nonceHex, payload.recipient, valueHex, payload.token];
+
+  // RLP encode the data (similar to Go's rlp.EncodeToBytes)
+  const encoded = ethers.encodeRlp(rlpData);
+
+  // Hash the RLP encoded data
+  const messageHash = ethers.keccak256(encoded);
+
+  // Rest of the signing process...
+}
+
+// Call the signMessage function to sign the payload
+const signature = await signMessage(payloadToSign, privateKey);
+
+// The signMessage function handles all the details of:
+// 1. RLP encoding the payload fields
+// 2. Hashing the encoded data
+// 3. Signing the hash with the private key
+// 4. Formatting the signature components
 
 // Create final payload with signature
 const paymentPayload = {

@@ -2,7 +2,70 @@
 // Note: This example requires a private key to sign the transaction
 
 import { api, CHAIN_IDS } from '../src/api';
-import * as ethers from 'ethers';
+import { ethers } from 'ethers';
+
+/**
+ * Payment transaction payload interface
+ * @typedef {Object} PaymentPayload
+ * @property {number} chainID - Chain ID
+ * @property {number} nonce - Account nonce
+ * @property {string} recipient - Recipient address
+ * @property {ethers.BigNumberish} value - Transaction value
+ * @property {string} token - Token address
+ * @property {Object} [signature] - Optional signature object
+ * @property {string} [signature.r] - Signature r component
+ * @property {string} [signature.s] - Signature s component
+ * @property {number} [signature.v] - Signature v component
+ */
+
+/**
+ * Sign a message using the provided private key
+ * @param {PaymentPayload} payload - Payment payload to sign
+ * @param {string} privateKey - Private key to sign with
+ * @returns {Promise<object>} - Signature object with r, s, v components
+ */
+async function signMessage(payload, privateKey) {
+  // Ensure private key has 0x prefix
+  if (!privateKey.startsWith('0x')) {
+    privateKey = '0x' + privateKey;
+  }
+
+  // Convert values to appropriate formats for RLP encoding
+  const chainIdHex = ethers.toBeHex(payload.chainID);
+  const nonceHex = ethers.toBeHex(payload.nonce);
+  const valueHex = ethers.toBeHex(payload.value);
+
+  // Create an array of values to encode with RLP
+  const rlpData = [chainIdHex, nonceHex, payload.recipient, valueHex, payload.token];
+
+  // RLP encode the message
+  const encoded = ethers.encodeRlp(rlpData);
+  console.log('encoded:', encoded);
+
+  // Calculate Keccak256 hash
+  const hash = ethers.keccak256(encoded);
+  console.log('Signature Hash:', hash);
+
+  // Create signing key
+  const signingKey = new ethers.SigningKey(privateKey);
+
+  // Sign the message
+  const signatureObj = signingKey.sign(ethers.getBytes(hash));
+  const signature = ethers.concat([
+    ethers.getBytes(signatureObj.r),
+    ethers.getBytes(signatureObj.s),
+    new Uint8Array([signatureObj.v === 28 ? 1 : 0])
+  ]);
+
+  console.log('Signature:', ethers.hexlify(signature));
+
+  // Return signature result
+  return {
+    r: signatureObj.r,
+    s: signatureObj.s,
+    v: signatureObj.v
+  };
+}
 
 // Initialize the API client
 const apiClient = api();
@@ -83,36 +146,30 @@ async function createPaymentTransaction(privateKey, recipient, token, value, cha
     token: token
   };
 
-  // Sign the typed data
+  // Sign the transaction
   // Note: In a real implementation, you would use the actual signing method required by 1money
   // This is just an example of how to use ethers.js for signing
-  let signature;
   try {
     // Method 1: EIP-712 signing (if supported by 1money)
-    signature = await wallet.signTypedData(domain, types, data);
-    console.log('EIP-712 signature:', signature);
+    // This is just for demonstration - we'll use the RLP method below
+    const eip712Signature = await wallet.signTypedData(domain, types, data);
+    console.log('EIP-712 signature:', eip712Signature);
 
-    // Method 2: Alternative approach using keccak256 hash (if EIP-712 is not supported)
-    const messageHash = ethers.keccak256(
-      ethers.AbiCoder.defaultAbiCoder().encode(
-        ['uint256', 'uint256', 'address', 'uint256', 'address'],
-        [chainId, nonce, recipient, value, token]
-      )
-    );
+    // Method 2: Using RLP encoding (matching the Go implementation)
+    // Create the payment payload for signing
+    const payloadToSign = {
+      chainID: chainId,
+      nonce: nonce,
+      recipient: recipient,
+      value: ethers.parseUnits(value, 0), // Convert string to BigNumber
+      token: token
+    };
 
-    // Option 1: Asynchronous signing (requires await)
-    const messageHashBytes = ethers.getBytes(messageHash);
-    const flatSignature = await wallet.signMessage(messageHashBytes);
-    console.log('Flat signature (async):', flatSignature);
+    // Use the signMessage function to sign the payload
+    const signature = await signMessage(payloadToSign, privateKey);
 
-    // Option 2: Synchronous signing using the wallet's signing key
-    // This approach doesn't require await and can be used in synchronous contexts
-    const syncSignature = wallet.signingKey.sign(messageHashBytes).serialized;
-    console.log('Flat signature (sync):', syncSignature);
-
-    // Split the signature into r, s, v components
-    // Works with either signature method
-    const sig = ethers.Signature.from(syncSignature);
+    // Get the signature components
+    const sig = signature;
     console.log('Signature components:', {
       r: sig.r,
       s: sig.s,

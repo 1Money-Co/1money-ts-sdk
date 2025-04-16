@@ -4,7 +4,7 @@ import { api, TESTNET_API_URL } from '../../';
 
 describe('checkpoint API test', function () {
   // Set a longer timeout for all tests in this suite
-  this.timeout(10000);
+  this.timeout(1000);
 
   it('should have checkpoints.getNumber method', function () {
     const apiClient = api();
