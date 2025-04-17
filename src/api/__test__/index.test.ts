@@ -8,8 +8,11 @@ describe('api test', function () {
     expect(apiFunction).to.be.a('function');
   });
 
+  const apiClient = api({
+    timeout: 3000,
+  });
+
   it('api returns an object with expected structure', function () {
-    const apiClient = api();
     expect(apiClient).to.be.an('object');
     expect(apiClient.accounts).to.be.an('object');
     expect(apiClient.tokens).to.be.an('object');
@@ -24,8 +27,6 @@ describe('api test', function () {
   });
 
   it('should have all required API methods', function () {
-    const apiClient = api();
-
     // Accounts API
     expect(apiClient.accounts.getNonce).to.be.a('function');
     expect(apiClient.accounts.getTokenAccount).to.be.a('function');

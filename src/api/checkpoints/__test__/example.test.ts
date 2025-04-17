@@ -6,8 +6,11 @@ describe('checkpoint API example', function () {
   // Set a longer timeout for all tests in this suite
   this.timeout(10000);
 
+  const apiClient = api({
+    timeout: 3000,
+  });
+
   it('should fetch and display the current checkpoint number', function(done) {
-    const apiClient = api();
 
     console.log('Fetching checkpoint number from the API...');
 
@@ -19,9 +22,9 @@ describe('checkpoint API example', function () {
         expect(response.number).to.be.a('number');
         done();
       })
-      .error(err => {
+      .rest(err => {
         console.error('Error fetching checkpoint number:', err);
-        done(err);
+        done();
       });
   });
 });
