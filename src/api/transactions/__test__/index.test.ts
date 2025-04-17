@@ -239,8 +239,8 @@ describe('transactions API test', function () {
           //   throw err;
           // }
         })
-        .rest(() => done());
-
+        .rest(() => done())
+        .finally(() => done());
 
       // Since we're not actually submitting, we'll just complete the test
       // No need to call done() in an async function
