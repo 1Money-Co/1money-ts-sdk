@@ -608,19 +608,15 @@ export class Request {
           timer = null;
         }
 
-        logger.error(`Error(${err.status ?? 500}, ${err.code ?? 'UNKNOWN'}) - ${err.message};
-          Config: ${err.config?.method}, ${err.config?.baseURL ?? ''}${err.config?.url ?? ''}, ${JSON.stringify(err.config?.headers ?? {})}, ${JSON.stringify(err.config?.params ?? {})};
-          Request: ${JSON.stringify(err.request ?? {})};
-          Response: ${JSON.stringify(err.response ?? {})};
-        `);
+        logger.error(`Error(${err.status ?? 500}, ${err.code ?? 'UNKNOWN'}), Message: ${err.message}, Config: ${err.config?.method}, ${err.config?.baseURL ?? ''}${err.config?.url ?? ''}, ${JSON.stringify(err.config?.headers ?? {})}, ${JSON.stringify(err.config?.params ?? {})};`);
 
-        const status = err.response?.status;
-        const data = err.response?.data;
+        const status = err.response?.status ?? 500;
+        const data = err.response?.data ?? {};
         const headers = err.response?.headers ?? {};
-        const doLogin = rules.login?.(data, status ?? 500, headers);
 
         try {
           let res = data;
+          const doLogin = rules.login?.(data, status, headers);
           if (doLogin) {
             res = await Promise.resolve(callbacks.login(res, headers));
             ResPromise._resolve!(res);
