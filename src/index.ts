@@ -19,23 +19,7 @@ import {
 
 export { api } from './api';
 export { client } from './client';
-export {
-  logger,
-  getEnv,
-  _typeof,
-  get,
-  post,
-  postForm,
-  del,
-  put,
-  patch,
-  setInitConfig,
-  axiosStatic,
-  clipboard,
-  safePromiseAll,
-  safePromiseLine,
-  filterEmpty
-} from './utils';
+export * from './utils';
 
 export default {
   api,
