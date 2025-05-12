@@ -10,6 +10,7 @@ describe('api test', function () {
 
   const apiClient = api({
     timeout: 3000,
+    network: 'testnet',
   });
 
   it('api returns an object with expected structure', function () {

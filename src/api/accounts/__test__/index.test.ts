@@ -1,6 +1,7 @@
 import 'mocha';
 import { expect } from 'chai';
 import { api } from '../../';
+import { logger } from '../../../utils';
 
 describe('accounts API test', function () {
   // Set a longer timeout for all tests in this suite
@@ -8,6 +9,7 @@ describe('accounts API test', function () {
 
   const apiClient = api({
     timeout: 3000,
+    network: 'testnet',
   });
 
   it('should have accounts API object', function () {
@@ -23,21 +25,21 @@ describe('accounts API test', function () {
   });
 
   // Valid addresses for testing on the testnet
-  const testAddress = '0x0b9f796233d871453d192b5b122f19ffa56d2acc';
-  const testToken = '0x461BeB67a74b68Eb60EAD561DdDFC870fD9835a0';
+  const testAddress = '0x179e3514e5afd76223d53c3d97117d66f217d087';
+  const testToken = '0x8a0e3fde2b52f63459b41c6c931382b5adb7aa0b';
 
   // Make real API calls to test the accounts API
   it('should fetch account nonce', function(done) {
     apiClient.accounts.getNonce(testAddress)
       .success(response => {
-        console.log(`Account nonce for ${testAddress}:`, response);
+        logger.log(`Account nonce for ${testAddress}:`, response);
         expect(response).to.be.an('object');
         expect(response).to.have.property('nonce');
         expect(response.nonce).to.be.a('number');
         done();
       })
       .rest(err => {
-        console.error('Error fetching account nonce:', err);
+        logger.error('Error fetching account nonce:', err);
         done();
       });
   });
@@ -45,7 +47,7 @@ describe('accounts API test', function () {
   it('should fetch associated token account', function(done) {
     apiClient.accounts.getTokenAccount(testAddress, testToken)
       .success(response => {
-        console.log(`Token account for ${testAddress} and token ${testToken}:`, response);
+        logger.log(`Token account for ${testAddress} and token ${testToken}:`, response);
         expect(response).to.be.an('object');
         expect(response).to.have.property('token_account_address');
         expect(response).to.have.property('balance');
@@ -53,7 +55,7 @@ describe('accounts API test', function () {
         done();
       })
       .rest(err => {
-        console.error('Error fetching token account:', err);
+        logger.error('Error fetching token account:', err);
         done();
       });
   });

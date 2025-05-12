@@ -1,4 +1,4 @@
-import { get } from '@/utils';
+import { get } from '@/client';
 import type { AccountInfo, AssociatedTokenAccount } from './types';
 
 /**

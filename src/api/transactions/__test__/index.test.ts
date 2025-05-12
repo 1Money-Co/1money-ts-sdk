@@ -1,6 +1,7 @@
 import 'mocha';
 import { expect } from 'chai';
-import { api, CHAIN_IDS } from '../../';
+import { api } from '../../';
+import { logger } from '../../../utils';
 import { ethers } from 'ethers';
 import { keccak256 } from 'ethers';
 import { encodeRlp } from 'ethers';
@@ -52,7 +53,7 @@ function signMessage(msg: PaymentPayload, privateKey: string): Signature | null 
       v: signatureData.v,
     };
   } catch (error) {
-    console.error('Error signing message:', error);
+    logger.error('Error signing message:', error);
     return null;
   }
 }
@@ -63,6 +64,7 @@ describe('transactions API test', function () {
 
   const apiClient = api({
     timeout: 3000,
+    network: 'testnet',
   });
 
   it('should have transactions API object', function () {
@@ -90,23 +92,23 @@ describe('transactions API test', function () {
   // Example values for testing
   // Private key for testing - DO NOT use this in production
   const privateKey = '0xce6ed4b68189c8e844fc245d3169df053fb9e05c13f168cd005a6a111ac67bee';
-  const testHash = '0xc0060068634dc33aed67678c852c394fed34c388ed7b0e735b017d6a3640dffb';
-  const receipt = '0x1DFa71eC8284F0F835EDbfaEA458d38bCff446d6';
-  const testValue = '888';
-  const testToken = '0x461BeB67a74b68Eb60EAD561DdDFC870fD9835a0';
+  const testHash = '0x76b1bb60b78db3506c0133649767c5faa89e8f8946412413502a6e56d3a5345b';
+  const from = '0x179e3514e5afd76223d53c3d97117d66f217d087';
+  const testValue = '176420000';
+  const testToken = '0x8a0e3fde2b52f63459b41c6c931382b5adb7aa0b';
 
   // Make real API calls to test the transactions API
   it('should fetch transaction by hash', function (done) {
     apiClient.transactions.getByHash(testHash)
       .success(response => {
-        console.log(`Transaction details for hash ${testHash}:`, response);
+        logger.log(`Transaction details for hash ${testHash}:`, response);
         expect(response).to.be.an('object');
         expect(response).to.have.property('hash');
         expect(response).to.have.property('from');
         done();
       })
       .error(err => {
-        console.error('Error fetching transaction by hash:', err);
+        logger.error('Error fetching transaction by hash:', err);
         // If the transaction doesn't exist, we'll consider the test passed
         expect(err).to.be.an('object');
         expect(err).to.have.property('message');
@@ -119,14 +121,14 @@ describe('transactions API test', function () {
   it('should fetch transaction receipt by hash', function (done) {
     apiClient.transactions.getReceiptByHash(testHash)
       .success(response => {
-        console.log(`Transaction receipt for hash ${testHash}:`, response);
+        logger.log(`Transaction receipt for hash ${testHash}:`, response);
         expect(response).to.be.an('object');
         expect(response).to.have.property('transaction_hash');
         expect(response).to.have.property('success');
         done();
       })
       .error(err => {
-        console.error('Error fetching transaction receipt by hash:', err);
+        logger.error('Error fetching transaction receipt by hash:', err);
         // If the transaction doesn't exist, we'll consider the test passed
         expect(err).to.be.an('object');
         expect(err).to.have.property('message');
@@ -137,16 +139,16 @@ describe('transactions API test', function () {
   });
 
   it('should estimate transaction fee', function (done) {
-    apiClient.transactions.estimateFee(receipt, testValue, testToken)
+    apiClient.transactions.estimateFee(from, testValue, testToken)
       .success(response => {
-        console.log(`Estimated fee for address ${receipt}, value ${testValue}, token ${testToken}:`, response);
+        logger.log(`Estimated fee for address ${from}, value ${testValue}, token ${testToken}:`, response);
         expect(response).to.be.an('object');
         expect(response).to.have.property('fee');
         expect(response.fee).to.be.a('string');
         done();
       })
       .rest(err => {
-        console.error('Error estimating transaction fee:', err);
+        logger.error('Error estimating transaction fee:', err);
         done();
       });
   });
@@ -161,7 +163,7 @@ describe('transactions API test', function () {
     // Step 1: Set up the transaction parameters
     const chainId = 1212101; // Testnet chain ID from the SDK
     const nonce = 12;   // Account nonce (would be fetched from the API in a real app)
-    const recipient = receipt;
+    const recipient = from;
     const value = testValue;
     const token = testToken;
 
@@ -205,39 +207,38 @@ describe('transactions API test', function () {
       };
 
       // Log the payload for verification
-      console.log('Payment payload created with real signature:', paymentPayload);
+      logger.log('Payment payload created with real signature:', paymentPayload);
 
       // In a real application, you would submit the transaction like this:
 
       apiClient.transactions.payment(paymentPayload)
         .success(response => {
-          console.log('Payment transaction submitted successfully:', response);
+          logger.log('Payment transaction submitted successfully:', response);
           expect(response).to.be.an('object');
           expect(response).to.have.property('hash');
-          console.log('Transaction hash:', response.hash);
+          logger.log('Transaction hash:', response.hash);
           done();
         })
         .error(err => {
           expect(err).to.be.an('object');
           expect(err).to.have.property('message');
-          // expect(err.message).to.include('duplicate');
+          expect(err?.data?.message).to.include('insufficient funds');
           done();
-          // console.error('Error submitting payment transaction:', err);
+          // logger.error('Error submitting payment transaction:', err);
           // If the error is due to a duplicate transaction, consider it a success
           // if (err && err.message && err.message.includes('duplicate')) {
-          //   console.error('Duplicate transaction detected, considering test successful');
+          //   logger.error('Duplicate transaction detected, considering test successful');
           // } else {
-          //   console.error('Test failed due to unexpected error');
+          //   logger.error('Test failed due to unexpected error');
           //   throw err;
           // }
         })
-        .rest(() => done())
-        .finally(() => done());
+        .rest(() => done());
 
       // Since we're not actually submitting, we'll just complete the test
       // No need to call done() in an async function
     } catch (error) {
-      console.error('Error in payment transaction test:', error);
+      logger.error('Error in payment transaction test:', error);
       throw error; // Throw the error to fail the test
     }
   });
@@ -245,6 +246,5 @@ describe('transactions API test', function () {
   it('should have cancel method', function () {
     expect(apiClient.transactions.cancel).to.be.a('function');
   });
-
 });
 

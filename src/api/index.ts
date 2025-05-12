@@ -1,5 +1,4 @@
-import { setInitConfig } from '@/utils';
-import { TESTNET_API_URL, MAINNET_API_URL, LOCAL_API_URL, CHAIN_IDS } from './types';
+import { setInitConfig } from '@/client';
 
 // Import API modules
 import accountsApi from './accounts';
@@ -12,7 +11,18 @@ export * from './accounts/types';
 export * from './tokens/types';
 export * from './transactions/types';
 export * from './checkpoints/types';
-export { TESTNET_API_URL, MAINNET_API_URL, LOCAL_API_URL, CHAIN_IDS } from './types';
+
+// Base URLs for the API
+export const TESTNET_API_URL = 'https://api.testnet.1money.network';
+export const MAINNET_API_URL = 'https://api.1money.network';
+export const LOCAL_API_URL = 'http://localhost:18555';
+
+// Chain IDs for different networks
+export const CHAIN_IDS = {
+  MAINNET: 21210,
+  TESTNET: 1212101,
+  LOCAL: 1212101 // Using same chain ID as testnet for local development
+} as const;
 
 /**
  * API client for 1money network
@@ -32,14 +42,20 @@ export function api(options?: {
   checkpoints: typeof checkpointsApi;
   chainId: number;
 } {
-  const network = options?.network || 'testnet';
-  let baseURL = LOCAL_API_URL;
+  const network = options?.network || 'mainnet';
+  let baseURL = MAINNET_API_URL;
 
   // Set the base URL based on the network
-  if (network === 'mainnet') {
-    baseURL = MAINNET_API_URL;
-  } else if (network === 'local') {
-    baseURL = LOCAL_API_URL;
+  switch (network) {
+    case 'mainnet':
+      baseURL = MAINNET_API_URL;
+      break;
+    case 'testnet':
+      baseURL = TESTNET_API_URL;
+      break;
+    case 'local':
+      baseURL = LOCAL_API_URL;
+      break;
   }
 
   // Determine the chain ID based on the network or use the provided custom chain ID

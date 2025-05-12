@@ -1,8 +1,6 @@
 /* eslint-disable no-console */
 import chalk from 'chalk';
-import dayjs from 'dayjs';
 
-import { APP_NAME, ENV } from '@/constants';
 import { _typeof } from './type';
 
 export enum LogLevel {
@@ -23,9 +21,9 @@ export class Logger {
 
   private _preLevel: LogLevel;
 
-  private _appName: string;
-
   private _format: LogFormat;
+
+  private _extra?: Record<string, any>;
 
   private _prefix?: string;
 
@@ -34,16 +32,18 @@ export class Logger {
   private _beforeLog?: BeforeLog;
 
   public constructor(options?: {
-    appName?: string;
+    level?: LogLevel;
+    format?: LogFormat;
+    extra?: Record<string, any>;
     prefix?: string;
     suffix?: string;
     beforeLog?: BeforeLog;
   }) {
-    const { appName = '', prefix, suffix, beforeLog } = options || {};
-    this._logLevel = LogLevel.info;
+    const { level = LogLevel.info, format = 'string', extra, prefix, suffix, beforeLog } = options || {};
+    this._logLevel = level;
     this._preLevel = this._logLevel;
-    this._appName = appName;
-    this._format = ENV === 'local' ? 'string' : 'json';
+    this._format = format;
+    this._extra = extra;
     this._prefix = prefix;
     this._suffix = suffix;
     this._beforeLog = beforeLog;
@@ -85,12 +85,12 @@ export class Logger {
     }
   }
 
-  public set appName(_appName: string) {
-    this._appName = _appName;
-  }
-
   public set format(_format: LogFormat) {
     this._format = _format;
+  }
+
+  public set extra(_extra: Record<string, any>) {
+    this._extra = _extra;
   }
 
   public set prefix(_prefix: string) {
@@ -131,7 +131,17 @@ export class Logger {
       error: 'red',
       silent: 'black'
     } as const;
-    const date = dayjs();
+    const date = new Date();
+    const formattedDate = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'UTC',
+      year: 'numeric',
+      month: '2-digit', 
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    }).format(date);
+    const formattedLevel = chalk.bold(level.toUpperCase());
 
     let _msg = '';
     switch (this._format) {
@@ -140,19 +150,17 @@ export class Logger {
         break;
       case 'string':
         _msg = chalk[colors[level]](`<${this._prefix
-          ? `${this._prefix}, ${this._appName}`
-          : `${this._appName}`
-          }, ${chalk.bold(level.toUpperCase())}, ${date.format(
-            'ZZ YYYY-MM-DD HH:mm:ss:SSS'
-          )}> | ${this._suffix ? `${chalk.underline(msg)} | <${this._suffix}>` : chalk.underline(msg)}`);
+          ? `${this._prefix}, ${formattedLevel}`
+          : formattedLevel
+          }, ${this._extra ? `${Object.values(this._extra).join(', ')}, ${formattedDate}` : formattedDate}> | ${this._suffix ? `${chalk.underline(msg)} | <${this._suffix}>` : chalk.underline(msg)}`);
         break;
       case 'json':
       default:
         _msg = JSON.stringify({
-          appName: this._appName,
+          ...this._extra,
           level: level?.toUpperCase(),
           timestamp: date.valueOf(),
-          datetime: date.format('YYYY.MM.DD HH:mm:ss.SSS'),
+          datetime: formattedDate,
           message:
             this._prefix && this._suffix
               ? `<${this._prefix}> | ${msg} | <${this._suffix}>`
@@ -252,31 +260,13 @@ export class Logger {
       })
     );
   }
-
-  public clone(options?: {
-    appName?: string;
-    prefix?: string;
-    suffix?: string;
-  }) {
-    const newLogger = new Logger();
-    newLogger.logLevel = this._logLevel;
-    newLogger.appName = options?.appName || this._appName;
-    newLogger.format = this._format;
-    newLogger.prefix = options?.prefix || this._prefix || '';
-    newLogger.suffix = options?.suffix || this._suffix || '';
-    return this;
-  }
 }
 
 export const logger = new Logger({
-  appName: APP_NAME
+  extra: {
+    name: '1money-ts-sdk'
+  },
+  level: LogLevel.log
 });
-
-logger.logLevel =
-  ENV === 'prod'
-    ? 2
-    : ENV === 'local'
-      ? 1
-      : 0;
 
 export default logger;

@@ -1,15 +1,14 @@
 import axios from 'axios';
-import { logger as _logger } from '../logger';
+import { logger } from '@/utils';
 
 import type { AxiosStatic, AxiosRequestConfig, AxiosError, RawAxiosResponseHeaders, AxiosResponseHeaders, RawAxiosRequestHeaders, AxiosRequestHeaders, AxiosResponse } from 'axios';
-
-const logger = _logger.clone({ prefix: 'utils-request' });
 
 export type ParsedError<T extends string = string> = {
   name: T;
   message: string;
   stack: string;
   status: number;
+  data?: any;
 };
 
 export type ResponseData<T = null> = {
@@ -413,7 +412,8 @@ export class Request {
       name,
       message,
       stack,
-      status
+      status,
+      data: err?.response?.data ?? void 0
     };
   }
 
@@ -546,7 +546,6 @@ export class Request {
       const errorHandler = async (e: any, headers: AxiosReqHeaders | AxiosResHeaders) => {
         try {
           let err = this.parseError(e);
-          // @ts-ignore
           const result = await Promise.resolve(callbacks.error(err, headers));
           if (existedChainHandler.error) err = result;
           existedHandler.error ? ResPromise._resolve!(err) : ResPromise._reject!(err);
@@ -608,7 +607,7 @@ export class Request {
           timer = null;
         }
 
-        logger.error(`Error(${err.status ?? 500}, ${err.code ?? 'UNKNOWN'}), Message: ${err.message}, Config: ${err.config?.method}, ${err.config?.baseURL ?? ''}${err.config?.url ?? ''}, ${JSON.stringify(err.config?.headers ?? {})}, ${JSON.stringify(err.config?.params ?? {})};`);
+        logger.error(`Error(${err.status ?? 500}, ${err.code ?? 'UNKNOWN'}), Message: ${err.message}, Config: ${err.config?.method}, ${err.config?.baseURL ?? ''}${err.config?.url ?? ''}, ${JSON.stringify(err.config?.headers ?? {})}, Request: ${JSON.stringify(err.config?.data ?? {})};`);
 
         const status = err.response?.status ?? 500;
         const data = err.response?.data ?? {};

@@ -1,4 +1,4 @@
-import { get, post } from '@/utils';
+import { get, post } from '@/client';
 
 import type { Hash } from '@/api/types';
 import type { Transaction } from '@/api/checkpoints/types';

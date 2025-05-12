@@ -1,4 +1,4 @@
-import { get, post } from '@/utils';
+import { get, post } from '@/client';
 import type { Hash, HashWithToken } from '@/api/types';
 import type {
   MintInfo,

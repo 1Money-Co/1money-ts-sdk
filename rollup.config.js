@@ -13,7 +13,7 @@ module.exports = function (getConfig) {
   const extensions = ['.ts', '.js'];
   config.forEach(v => {
     // just keep the reference for third-party libs
-    v.external = ['axios', 'bignumber.js', 'dayjs', 'chalk'];
+    v.external = ['axios', 'bignumber.js', 'chalk', 'ethers'];
     v.plugins.unshift(
       alias({
         entries: [

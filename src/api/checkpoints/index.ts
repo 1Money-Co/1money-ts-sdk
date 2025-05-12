@@ -1,4 +1,4 @@
-import { get } from '@/utils';
+import { get } from '@/client';
 import type { CheckpointNumberResponse, Checkpoint } from './types';
 
 /**
