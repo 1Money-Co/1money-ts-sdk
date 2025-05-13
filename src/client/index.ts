@@ -110,6 +110,8 @@ export function setInitConfig(config: InitConfig) {
   setting(rest);
 }
 
+export type { InitConfig, Options, ParsedError, PromiseWrapper } from './core';
+
 export const axiosStatic = axios;
 
 export default {

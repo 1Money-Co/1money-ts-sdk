@@ -9,11 +9,11 @@ const terser = require('@rollup/plugin-terser');
 const nodePolyfills = require('rollup-plugin-polyfill-node');
 
 module.exports = function (getConfig) {
-  const config = getConfig(false);
+  const config = getConfig(true);
   const extensions = ['.ts', '.js'];
   config.forEach(v => {
     // just keep the reference for third-party libs
-    v.external = ['axios', 'bignumber.js', 'chalk', 'ethers'];
+    v.external = ['axios', 'chalk'];
     v.plugins.unshift(
       alias({
         entries: [

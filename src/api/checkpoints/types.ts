@@ -39,5 +39,5 @@ export interface Header {
 // Checkpoint response type
 export interface Checkpoint extends Header {
   size?: number;
-  transactions: Transaction[] | B256Schema;
+  transactions: Transaction[] | B256Schema[];
 }
