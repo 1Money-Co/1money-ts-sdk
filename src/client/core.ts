@@ -1,15 +1,13 @@
 import axios from 'axios';
-import { logger as _logger } from '../logger';
 
 import type { AxiosStatic, AxiosRequestConfig, AxiosError, RawAxiosResponseHeaders, AxiosResponseHeaders, RawAxiosRequestHeaders, AxiosRequestHeaders, AxiosResponse } from 'axios';
-
-const logger = _logger.clone({ prefix: 'utils-request' });
 
 export type ParsedError<T extends string = string> = {
   name: T;
   message: string;
   stack: string;
   status: number;
+  data?: any;
 };
 
 export type ResponseData<T = null> = {
@@ -364,7 +362,7 @@ class ResponsePromise<T, U> {
       this._restScope = scope || this._restScope;
       // @ts-ignore
       if (this._restScope.length === 0) {
-        logger.warn('The ".rest(cb, scope)" scope is empty and will never be triggered!');
+        console.warn('[1Money client]: The ".rest(cb, scope)" scope is empty and will never be triggered!');
       } else {
         let deletedCounter = 0;
         this._restScope.forEach(method => {
@@ -376,8 +374,8 @@ class ResponsePromise<T, U> {
           }
         });
         if (deletedCounter === this._restScope.length) {
-          logger.warn(
-            `The "${this._restScope.join(
+          console.warn(
+            `[1Money client]: The "${this._restScope.join(
               ', ',
             )}" had been called and the "rest" will never be triggered!`,
           );
@@ -413,12 +411,13 @@ export class Request {
       name,
       message,
       stack,
-      status
+      status,
+      data: err?.response?.data ?? void 0
     };
   }
 
   public setting(config: InitConfig) {
-    if (!config) return logger.warn('setting method required correct parameters!');
+    if (!config) return console.warn('[1Money client]: setting method required correct parameters!');
     this._config = { ...this._config, ...config };
   }
 
@@ -546,7 +545,6 @@ export class Request {
       const errorHandler = async (e: any, headers: AxiosReqHeaders | AxiosResHeaders) => {
         try {
           let err = this.parseError(e);
-          // @ts-ignore
           const result = await Promise.resolve(callbacks.error(err, headers));
           if (existedChainHandler.error) err = result;
           existedHandler.error ? ResPromise._resolve!(err) : ResPromise._reject!(err);
@@ -608,7 +606,7 @@ export class Request {
           timer = null;
         }
 
-        logger.error(`Error(${err.status ?? 500}, ${err.code ?? 'UNKNOWN'}), Message: ${err.message}, Config: ${err.config?.method}, ${err.config?.baseURL ?? ''}${err.config?.url ?? ''}, ${JSON.stringify(err.config?.headers ?? {})}, ${JSON.stringify(err.config?.params ?? {})};`);
+        console.error(`[1Money client]: Error(${err.status ?? 500}, ${err.code ?? 'UNKNOWN'}), Message: ${err.message}, Config: ${err.config?.method}, ${err.config?.baseURL ?? ''}${err.config?.url ?? ''}, ${JSON.stringify(err.config?.headers ?? {})}, Request: ${JSON.stringify(err.config?.data ?? {})};`);
 
         const status = err.response?.status ?? 500;
         const data = err.response?.data ?? {};

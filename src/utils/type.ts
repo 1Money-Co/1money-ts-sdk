@@ -11,6 +11,16 @@ export type TypeofResult =
   | 'regexp'
   | 'set'
   | 'map'
+  | 'weakmap'
+  | 'weakset'
+  | 'error'
+  | 'promise'
+  | 'uint8array'
+  | 'uint16array'
+  | 'uint32array'
+  | 'int8array'
+  | 'int16array'
+  | 'int32array'
   | 'null'
   | 'undefined';
 

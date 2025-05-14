@@ -6,12 +6,6 @@ const rollup = require('./rollup.config');
 module.exports = {
   type: 'toolkit', // project type, please don't modify
 
-  dev: {
-    port: 6200, // dev-server port
-    // host: 'dev.domain.com', // dev-server host
-    serverType: 'dumi' // dev-server type
-  },
-
   build: {
     // auto release project after build success
     autoRelease: false,
@@ -49,7 +43,7 @@ module.exports = {
 
   release: {
     // auto build project before release process
-    autoBuild: false,
+    autoBuild: true,
 
     // auto set tag according to the current version
     autoTag: false,

@@ -3,7 +3,6 @@ const alias = require('@rollup/plugin-alias');
 const typescript = require('@rollup/plugin-typescript');
 const { nodeResolve } = require('@rollup/plugin-node-resolve');
 const commonjs = require('@rollup/plugin-commonjs');
-const { babel } = require('@rollup/plugin-babel');
 const json = require('@rollup/plugin-json');
 const terser = require('@rollup/plugin-terser');
 const nodePolyfills = require('rollup-plugin-polyfill-node');
@@ -11,10 +10,9 @@ const nodePolyfills = require('rollup-plugin-polyfill-node');
 module.exports = function (getConfig) {
   const config = getConfig(false);
   const extensions = ['.ts', '.js'];
-
   config.forEach(v => {
     // just keep the reference for third-party libs
-    v.external = ['axios', 'bignumber.js', 'dayjs', 'chalk'];
+    v.external = ['axios', 'chalk'];
     v.plugins.unshift(
       alias({
         entries: [
@@ -31,11 +29,10 @@ module.exports = function (getConfig) {
     output: {
       file: 'umd/1money-ts-sdk.min.js',
       format: 'umd',
-      name: '$1money-ts-sdk',
+      name: '$1money',
       exports: 'named',
       compact: true
     },
-    external: ['axios'],
     plugins: [
       alias({
         entries: [
@@ -57,12 +54,6 @@ module.exports = function (getConfig) {
           declaration: false,
           outDir: 'umd',
         }
-      }),
-      babel({
-        exclude: 'node_modules/**',
-        plugins: [['@babel/plugin-transform-runtime', { corejs: 3 }]],
-        babelHelpers: 'runtime',
-        extensions
       }),
       json(),
       terser()

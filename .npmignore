@@ -5,15 +5,17 @@
 
 .github
 .vscode
+.cursor
+.husky
 build
 src
 *test*
-node_modules
+./node_modules
 dist
 dist.zip
 docs
+examples
 DEV*.md
-.dumi
 
 # config files
 .eslintignore
@@ -24,7 +26,7 @@ DEV*.md
 *.config.js
 *.conf.js
 tsconfig.json
-.dumirc*
+.mocharc.*
 .env
 
 _config.yml

@@ -1,54 +1,14 @@
 import { api } from './api';
-import { client } from './client';
-import {
-  logger,
-  getEnv,
-  _typeof,
-  get,
-  post,
-  del,
-  put,
-  patch,
-  setInitConfig,
-  clipboard,
-  safePromiseAll,
-  safePromiseLine,
-  filterEmpty
-} from './utils';
+import client from './client';
 
 export { api } from './api';
-export { client } from './client';
-export {
-  logger,
-  getEnv,
-  _typeof,
-  get,
-  post,
-  del,
-  put,
-  patch,
-  setInitConfig,
-  axiosStatic,
-  clipboard,
-  safePromiseAll,
-  safePromiseLine,
-  filterEmpty
-} from './utils';
+export { default as client } from './client';
+export * from './utils';
+
+export type { AxiosStatic } from 'axios';
+export type { InitConfig, Options, ParsedError, PromiseWrapper } from './client/core';
 
 export default {
   api,
   client,
-  logger,
-  getEnv,
-  _typeof,
-  get,
-  post,
-  del,
-  put,
-  patch,
-  setInitConfig,
-  clipboard,
-  safePromiseAll,
-  safePromiseLine,
-  filterEmpty
 };
