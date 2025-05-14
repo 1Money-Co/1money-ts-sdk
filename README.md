@@ -10,11 +10,11 @@ The TS-SDK for 1Money Network Protocol
 ## Quick start
 ### Install
 ```shell
-npm i -S @1money/ts-sdk
+npm i -S @1money/ts-sdk axios
 # or
-yarn add @1money/ts-sdk
+yarn add @1money/ts-sdk axios
 # or
-pnpm i @1money/ts-sdk
+pnpm i @1money/ts-sdk axios
 ```
 
 ### Initialize the API Client

@@ -1,4 +1,5 @@
 import { get, post } from '@/client';
+import { API_VERSION } from '@/api/constants';
 
 import type { Hash } from '@/api/types';
 import type { Transaction } from '@/api/checkpoints/types';
@@ -8,6 +9,8 @@ import type {
   PaymentPayload,
   CancellationPayload
 } from './types';
+
+const API_PREFIX = `/${API_VERSION}/transactions`;
 
 /**
  * Transactions API methods
@@ -19,7 +22,7 @@ export const transactionsApi = {
    * @returns Promise with transaction response
    */
   getByHash: (hash: string) => {
-    return get<'custom', Transaction>(`/v1/transactions/by_hash?hash=${hash}`);
+    return get<'custom', Transaction>(`${API_PREFIX}/by_hash?hash=${hash}`);
   },
 
   /**
@@ -28,7 +31,7 @@ export const transactionsApi = {
    * @returns Promise with transaction receipt response
    */
   getReceiptByHash: (hash: string) => {
-    return get<'custom', TransactionReceipt>(`/v1/transactions/receipt/by_hash?hash=${hash}`);
+    return get<'custom', TransactionReceipt>(`${API_PREFIX}/receipt/by_hash?hash=${hash}`);
   },
 
   /**
@@ -39,7 +42,7 @@ export const transactionsApi = {
    * @returns Promise with fee estimate response
    */
   estimateFee: (from: string, value: string, token?: string) => {
-    let url = `/v1/transactions/estimate_fee?from=${from}&value=${value}`;
+    let url = `${API_PREFIX}/estimate_fee?from=${from}&value=${value}`;
     if (token) {
       url += `&token=${token}`;
     }
@@ -52,7 +55,7 @@ export const transactionsApi = {
    * @returns Promise with transaction hash response
    */
   payment: (payload: PaymentPayload) => {
-    return post<'custom', Hash>('/v1/transactions/payment', payload);
+    return post<'custom', Hash>(`${API_PREFIX}/payment`, payload);
   },
 
   /**
@@ -61,7 +64,7 @@ export const transactionsApi = {
    * @returns Promise with transaction hash response
    */
   cancel: (payload: CancellationPayload) => {
-    return post<'custom', Hash>('/v1/transactions/cancellation', payload);
+    return post<'custom', Hash>(`${API_PREFIX}/cancellation`, payload);
   }
 };
 

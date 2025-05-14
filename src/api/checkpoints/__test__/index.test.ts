@@ -1,6 +1,7 @@
 import 'mocha';
 import { expect } from 'chai';
-import { api, CHAIN_IDS } from '../../';
+import { api } from '../../';
+import { CHAIN_IDS } from '../../constants';
 
 describe('checkpoint API test', function () {
   // Set a longer timeout for all tests in this suite

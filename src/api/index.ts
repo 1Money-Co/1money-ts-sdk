@@ -2,27 +2,17 @@ import { setInitConfig } from '@/client';
 
 // Import API modules
 import accountsApi from './accounts';
+import checkpointsApi from './checkpoints';
 import tokensApi from './tokens';
 import transactionsApi from './transactions';
-import checkpointsApi from './checkpoints';
+
+import { CHAIN_IDS, MAINNET_API_URL, TESTNET_API_URL, LOCAL_API_URL } from './constants';
 
 // Re-export types from each module
 export * from './accounts/types';
 export * from './tokens/types';
 export * from './transactions/types';
 export * from './checkpoints/types';
-
-// Base URLs for the API
-export const TESTNET_API_URL = 'https://api.testnet.1money.network';
-export const MAINNET_API_URL = 'https://api.1money.network';
-export const LOCAL_API_URL = 'http://localhost:18555';
-
-// Chain IDs for different networks
-export const CHAIN_IDS = {
-  MAINNET: 21210,
-  TESTNET: 1212101,
-  LOCAL: 1212101 // Using same chain ID as testnet for local development
-} as const;
 
 /**
  * API client for 1money network
@@ -37,9 +27,9 @@ export function api(options?: {
   chainId?: number;
 }): {
   accounts: typeof accountsApi;
+  checkpoints: typeof checkpointsApi;
   tokens: typeof tokensApi;
   transactions: typeof transactionsApi;
-  checkpoints: typeof checkpointsApi;
   chainId: number;
 } {
   const network = options?.network || 'mainnet';
@@ -61,14 +51,14 @@ export function api(options?: {
   // Determine the chain ID based on the network or use the provided custom chain ID
   const chainId = options?.chainId || (
     network === 'mainnet' ? CHAIN_IDS.MAINNET :
-    network === 'local' ? CHAIN_IDS.LOCAL :
-    CHAIN_IDS.TESTNET
+      network === 'local' ? CHAIN_IDS.LOCAL :
+        CHAIN_IDS.TESTNET
   );
 
   // Initialize API configuration
   setInitConfig({
     baseURL,
-    // The API returns direct JSON without a wrapper structure
+    // Treat status code 200 as success
     isSuccess: (_res, status) => status === 200,
     timeout: options?.timeout || 10000
   });
@@ -80,6 +70,11 @@ export function api(options?: {
     accounts: accountsApi,
 
     /**
+     * Checkpoint API methods
+     */
+    checkpoints: checkpointsApi,
+
+    /**
      * Tokens API methods
      */
     tokens: tokensApi,
@@ -88,11 +83,6 @@ export function api(options?: {
      * Transactions API methods
      */
     transactions: transactionsApi,
-
-    /**
-     * Checkpoint API methods
-     */
-    checkpoints: checkpointsApi,
 
     /**
      * Chain ID for the selected network

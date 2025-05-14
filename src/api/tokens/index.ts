@@ -1,81 +1,19 @@
 import { get, post } from '@/client';
+import { API_VERSION } from '@/api/constants';
+
 import type { Hash, HashWithToken } from '@/api/types';
 import type {
   MintInfo,
-  AuthorityType,
-  AuthorityAction,
-  BlacklistAction,
-  PauseAction,
-  KeyValuePair,
-  RestSignature
+  TokenBlacklistPayload,
+  TokenBurnPayload,
+  TokenAuthorityPayload,
+  TokenIssuePayload,
+  TokenMintPayload,
+  TokenPausePayload,
+  TokenMetadataPayload,
 } from './types';
 
-// Request payload interfaces
-interface TokenBlacklistPayload {
-  chain_id: number;
-  nonce: number;
-  action: BlacklistAction;
-  address: string;
-  token: string;
-  signature: RestSignature;
-}
-
-interface TokenBurnPayload {
-  chain_id: number;
-  nonce: number;
-  recipient: string;
-  value: string;
-  token: string;
-  signature: RestSignature;
-}
-
-interface TokenAuthorityPayload {
-  chain_id: number;
-  nonce: number;
-  action: AuthorityAction;
-  authority_type: AuthorityType;
-  authority_address: string;
-  token: string;
-  value?: string;
-  signature: RestSignature;
-}
-
-interface TokenIssuePayload {
-  chain_id: number;
-  nonce: number;
-  symbol: string;
-  name: string;
-  decimals: number;
-  master_authority: string;
-  signature: RestSignature;
-}
-
-interface TokenMintPayload {
-  chain_id: number;
-  nonce: number;
-  recipient: string;
-  value: string;
-  token: string;
-  signature: RestSignature;
-}
-
-interface TokenPausePayload {
-  chain_id: number;
-  nonce: number;
-  action: PauseAction;
-  token: string;
-  signature: RestSignature;
-}
-
-interface TokenMetadataPayload {
-  chain_id: number;
-  nonce: number;
-  name: string;
-  uri: string;
-  token: string;
-  additional_metadata: KeyValuePair[];
-  signature: RestSignature;
-}
+const API_PREFIX = `/${API_VERSION}/tokens`;
 
 /**
  * Tokens API methods
@@ -87,7 +25,7 @@ export const tokensApi = {
    * @returns Promise with token metadata response
    */
   getTokenMetadata: (token: string) => {
-    return get<'custom', MintInfo>(`/v1/tokens/token_metadata?token=${token}`);
+    return get<'custom', MintInfo>(`${API_PREFIX}/token_metadata?token=${token}`);
   },
 
   /**
@@ -96,7 +34,7 @@ export const tokensApi = {
    * @returns Promise with transaction hash response
    */
   setBlacklist: (payload: TokenBlacklistPayload) => {
-    return post<'custom', Hash>('/v1/tokens/blacklist', payload);
+    return post<'custom', Hash>('${API_PREFIX}/blacklist', payload);
   },
 
   /**
@@ -105,7 +43,7 @@ export const tokensApi = {
    * @returns Promise with transaction hash response
    */
   burnToken: (payload: TokenBurnPayload) => {
-    return post<'custom', Hash>('/v1/tokens/burn', payload);
+    return post<'custom', Hash>(`${API_PREFIX}/burn`, payload);
   },
 
   /**
@@ -114,7 +52,7 @@ export const tokensApi = {
    * @returns Promise with transaction hash response
    */
   grantAuthority: (payload: TokenAuthorityPayload) => {
-    return post<'custom', Hash>('/v1/tokens/grant_authority', payload);
+    return post<'custom', Hash>(`${API_PREFIX}/grant_authority`, payload);
   },
 
   /**
@@ -123,7 +61,7 @@ export const tokensApi = {
    * @returns Promise with transaction hash and token address response
    */
   issueToken: (payload: TokenIssuePayload) => {
-    return post<'custom', HashWithToken>('/v1/tokens/issue', payload);
+    return post<'custom', HashWithToken>(`${API_PREFIX}/issue`, payload);
   },
 
   /**
@@ -132,7 +70,7 @@ export const tokensApi = {
    * @returns Promise with transaction hash response
    */
   mintToken: (payload: TokenMintPayload) => {
-    return post<'custom', Hash>('/v1/tokens/mint', payload);
+    return post<'custom', Hash>(`${API_PREFIX}/mint`, payload);
   },
 
   /**
@@ -141,7 +79,7 @@ export const tokensApi = {
    * @returns Promise with transaction hash response
    */
   pauseToken: (payload: TokenPausePayload) => {
-    return post<'custom', Hash>('/v1/tokens/pause', payload);
+    return post<'custom', Hash>(`${API_PREFIX}/pause`, payload);
   },
 
   /**
@@ -150,7 +88,7 @@ export const tokensApi = {
    * @returns Promise with transaction hash response
    */
   updateMetadata: (payload: TokenMetadataPayload) => {
-    return post<'custom', Hash>('/v1/tokens/update_metadata', payload);
+    return post<'custom', Hash>(`${API_PREFIX}/update_metadata`, payload);
   }
 };
 

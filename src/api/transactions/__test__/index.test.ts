@@ -2,8 +2,8 @@ import 'mocha';
 import { expect } from 'chai';
 import { api } from '../../';
 import { ethers } from 'ethers';
-import { keccak256 } from 'ethers';
-import { encodeRlp } from 'ethers';
+import { keccak256, encodeRlp } from 'ethers';
+import 'dotenv/config';
 
 /**
  * Payment transaction payload interface
@@ -90,11 +90,11 @@ describe('transactions API test', function () {
   // This is a real transaction hash from the testnet
   // Example values for testing
   // Private key for testing - DO NOT use this in production
-  const privateKey = '0xce6ed4b68189c8e844fc245d3169df053fb9e05c13f168cd005a6a111ac67bee';
+  const privateKey = process.env.TEST_PRIVATE_KEY || '0xce6ed4b68189c8e844fc245d3169df053fb9e05c13f168cd005a6a111ac67bee';
   const testHash = '0x76b1bb60b78db3506c0133649767c5faa89e8f8946412413502a6e56d3a5345b';
   const from = '0x179e3514e5afd76223d53c3d97117d66f217d087';
-  const testValue = '176420000';
-  const testToken = '0x8a0e3fde2b52f63459b41c6c931382b5adb7aa0b';
+  const testValue = '100';
+  const testToken = '0x8e9d1b45293e30ef38564582979195dd16a16e13';
 
   // Make real API calls to test the transactions API
   it('should fetch transaction by hash', function (done) {

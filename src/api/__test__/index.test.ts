@@ -1,6 +1,7 @@
 import 'mocha';
 import { expect } from 'chai';
-import api, { api as apiFunction, TESTNET_API_URL, MAINNET_API_URL, LOCAL_API_URL } from '../';
+import api, { api as apiFunction } from '../';
+import { TESTNET_API_URL, MAINNET_API_URL, LOCAL_API_URL } from '../constants';
 
 describe('api test', function () {
   it('api is a function', function () {

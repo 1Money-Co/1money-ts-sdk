@@ -74,3 +74,69 @@ export interface RestSignature {
   s: string;
   v: number;
 }
+
+export interface TokenBlacklistPayload {
+  chain_id: number;
+  nonce: number;
+  action: BlacklistAction;
+  address: string;
+  token: string;
+  signature: RestSignature;
+}
+
+export interface TokenBurnPayload {
+  chain_id: number;
+  nonce: number;
+  recipient: string;
+  value: string;
+  token: string;
+  signature: RestSignature;
+}
+
+export interface TokenAuthorityPayload {
+  chain_id: number;
+  nonce: number;
+  action: AuthorityAction;
+  authority_type: AuthorityType;
+  authority_address: string;
+  token: string;
+  value?: string;
+  signature: RestSignature;
+}
+
+export interface TokenIssuePayload {
+  chain_id: number;
+  nonce: number;
+  symbol: string;
+  name: string;
+  decimals: number;
+  master_authority: string;
+  signature: RestSignature;
+}
+
+export interface TokenMintPayload {
+  chain_id: number;
+  nonce: number;
+  recipient: string;
+  value: string;
+  token: string;
+  signature: RestSignature;
+}
+
+export interface TokenPausePayload {
+  chain_id: number;
+  nonce: number;
+  action: PauseAction;
+  token: string;
+  signature: RestSignature;
+}
+
+export interface TokenMetadataPayload {
+  chain_id: number;
+  nonce: number;
+  name: string;
+  uri: string;
+  token: string;
+  additional_metadata: KeyValuePair[];
+  signature: RestSignature;
+}

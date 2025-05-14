@@ -1,5 +1,9 @@
 import { get } from '@/client';
+import { API_VERSION } from '@/api/constants';
+
 import type { CheckpointNumberResponse, Checkpoint } from './types';
+
+const API_PREFIX = `/${API_VERSION}/checkpoints`;
 
 /**
  * Checkpoint API methods
@@ -10,7 +14,7 @@ export const checkpointsApi = {
    * @returns Promise with checkpoint number response
    */
   getNumber: () => {
-    return get<'custom', CheckpointNumberResponse>('/v1/checkpoints/number');
+    return get<'custom', CheckpointNumberResponse>(`${API_PREFIX}/number`);
   },
 
   /**
@@ -20,7 +24,7 @@ export const checkpointsApi = {
    * @returns Promise with checkpoint response
    */
   getByHash: (hash: string, full = false) => {
-    return get<'custom', Checkpoint>(`/v1/checkpoints/by_hash?hash=${hash}&full=${full}`);
+    return get<'custom', Checkpoint>(`${API_PREFIX}/by_hash?hash=${hash}&full=${full}`);
   },
 
   /**
@@ -30,7 +34,7 @@ export const checkpointsApi = {
    * @returns Promise with checkpoint response
    */
   getByNumber: (number: number | string, full = false) => {
-    return get<'custom', Checkpoint>(`/v1/checkpoints/by_number?number=${number}&full=${full}`);
+    return get<'custom', Checkpoint>(`${API_PREFIX}/by_number?number=${number}&full=${full}`);
   }
 };
 

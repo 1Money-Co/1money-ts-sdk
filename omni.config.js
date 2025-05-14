@@ -52,7 +52,7 @@ module.exports = {
     // git: 'git@github.com:1Money-Co/1money-ts-sdk.git',
 
     // npm depository url
-    npm: 'https://registry.npmjs.org/',
+    // npm: 'https://registry.npmjs.org/',
 
     preflight: {
       test: true, // whether or not process unit-test

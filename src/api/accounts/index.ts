@@ -1,5 +1,10 @@
 import { get } from '@/client';
+import { API_VERSION } from '@/api/constants';
+
 import type { AccountInfo, AssociatedTokenAccount } from './types';
+
+
+const API_PREFIX = `/${API_VERSION}/accounts`;
 
 /**
  * Accounts API methods
@@ -11,7 +16,7 @@ export const accountsApi = {
    * @returns Promise with account info response
    */
   getNonce: (address: string) => {
-    return get<'custom', AccountInfo>(`/v1/accounts/nonce?address=${address}`);
+    return get<'custom', AccountInfo>(`${API_PREFIX}/nonce?address=${address}`);
   },
 
   /**
@@ -21,7 +26,7 @@ export const accountsApi = {
    * @returns Promise with associated token account response
    */
   getTokenAccount: (address: string, token: string) => {
-    return get<'custom', AssociatedTokenAccount>(`/v1/accounts/token_account?address=${address}&token=${token}`);
+    return get<'custom', AssociatedTokenAccount>(`${API_PREFIX}/token_account?address=${address}&token=${token}`);
   }
 };
 
