@@ -148,3 +148,6 @@ apiClient.transactions.getByHash(txHash)
     console.error('Error:', err);
   });
 ```
+
+## License
+MIT

@@ -1,76 +1,44 @@
 import "mocha";
 import { expect } from "chai";
 import {
-  LogLevel,
-  Logger,
+  _typeof,
   safePromiseAll,
   safePromiseLine,
 } from "../";
 
 describe("utils test", function () {
-  describe("logger test", function () {
-    const logger = new Logger({
-      extra: {
-        appName: "TEST-APP",
-      },
-      prefix: "BEFORE-PREFIX",
-      suffix: "BEFORE-SUFFIX",
-    })
-    logger.prefix = "AFTER-PREFIX";
-    logger.suffix = "AFTER-SUFFIX";
-
-    it("logger is an object", function () {
-      expect(logger).to.be.an("object");
-      expect(logger).to.has.nested.property("debug").to.be.a("function");
-      expect(logger).to.has.nested.property("log").to.be.a("function");
-      expect(logger).to.has.nested.property("info").to.be.a("function");
-      expect(logger).to.has.nested.property("warn").to.be.a("function");
-      expect(logger).to.has.nested.property("error").to.be.a("function");
-      expect(logger).to.has.nested.property("logger").to.be.a("function");
-      expect(logger)
-        .to.has.nested.property("_generateMessage")
-        .to.be.a("function");
-      expect(logger).to.has.nested.property("logLevel").to.be.a("number");
-      expect(logger).to.has.nested.property("_extra").to.be.an("object");
-      expect(logger).to.has.nested.property("_prefix").to.be.a("string");
-      expect(logger).to.has.nested.property("_suffix").to.be.a("string");
-      expect(logger).to.has.nested.property("_logLevel").to.be.a("number");
-      expect(logger).to.has.nested.property("_preLevel").to.be.a("number");
+  describe("_typeof test", function () {
+    it("_typeof is a function", function () {
+      expect(_typeof).to.be.a("function");
     });
-
-    it("call logger", function () {
-      logger.format = "string";
-      logger.logLevel = LogLevel.debug;
-      logger.debug("debug msg");
-      logger.log("log msg");
-      logger.info("info msg");
-      logger.warn("warn msg");
-      logger.error("error msg");
-      logger.logger("debug", "logger msg - debug");
-      logger.logger("log", "logger msg - log");
-      logger.logger("info", "logger msg - info");
-      logger.logger("warn", "logger msg - warn");
-      logger.logger("error", "logger msg - error");
+    
+    it("call _typeof", function () {
+      expect(_typeof(1)).to.be.equal("number");
+      expect(_typeof("1")).to.be.equal("string");
+      expect(_typeof(true)).to.be.equal("boolean");
+      expect(_typeof(null)).to.be.equal("null");
+      expect(_typeof(undefined)).to.be.equal("undefined");
+      expect(_typeof({})).to.be.equal("object");
+      expect(_typeof([])).to.be.equal("array");
+      expect(_typeof(() => {})).to.be.equal("function");
+      expect(_typeof(new Date())).to.be.equal("date");
+      expect(_typeof(/a/)).to.be.equal("regexp");
+      expect(_typeof(new Set())).to.be.equal("set");
+      expect(_typeof(new Map())).to.be.equal("map");
+      expect(_typeof(new Error())).to.be.equal("error");
+      expect(_typeof(new Promise(() => {}))).to.be.equal("promise");
+      expect(_typeof(BigInt(1))).to.be.equal("bigint");
+      expect(_typeof(Symbol("a"))).to.be.equal("symbol");
+      expect(_typeof(new WeakMap())).to.be.equal("weakmap");
+      expect(_typeof(new WeakSet())).to.be.equal("weakset");
+      expect(_typeof(new Uint8Array())).to.be.equal("uint8array");
+      expect(_typeof(new Uint16Array())).to.be.equal("uint16array");
+      expect(_typeof(new Uint32Array())).to.be.equal("uint32array");
+      expect(_typeof(new Int8Array())).to.be.equal("int8array");
+      expect(_typeof(new Int16Array())).to.be.equal("int16array");
+      expect(_typeof(new Int32Array())).to.be.equal("int32array");
     });
-
-    it("silent logger", function () {
-      logger.logLevel = LogLevel.warn;
-      logger.silent = true;
-      expect(logger.logLevel).to.be.equal(LogLevel.silent);
-      logger.debug("debug msg");
-      logger.log("log msg");
-      logger.info("info msg");
-      logger.warn("warn msg");
-      logger.error("error msg");
-      logger.logger("debug", "logger msg - debug");
-      logger.logger("log", "logger msg - log");
-      logger.logger("info", "logger msg - info");
-      logger.logger("warn", "logger msg - warn");
-      logger.logger("error", "logger msg - error");
-      logger.silent = false;
-      expect(logger.logLevel).to.be.equal(LogLevel.warn);
-    });
-  });
+  }); 
 
   describe("safePromiseAll test", function () {
     it("safePromiseAll is a function", function () {

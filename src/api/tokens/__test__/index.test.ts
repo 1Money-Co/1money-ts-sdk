@@ -1,7 +1,6 @@
 import 'mocha';
 import { expect } from 'chai';
 import { api } from '../../';
-import { logger } from '../../../utils';
 
 describe('tokens API test', function () {
   // Set a longer timeout for all tests in this suite
@@ -62,7 +61,7 @@ describe('tokens API test', function () {
         done();
       })
       .rest(err => {
-        logger.error('Error fetching token metadata:', err);
+        console.error('Error fetching token metadata:', err);
         done();
       });
   });

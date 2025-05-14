@@ -1,7 +1,6 @@
 import 'mocha';
 import { expect } from 'chai';
 import { api } from '../../';
-import { logger } from '../../../utils';
 
 describe('accounts API test', function () {
   // Set a longer timeout for all tests in this suite
@@ -32,14 +31,14 @@ describe('accounts API test', function () {
   it('should fetch account nonce', function(done) {
     apiClient.accounts.getNonce(testAddress)
       .success(response => {
-        logger.log(`Account nonce for ${testAddress}:`, response);
+        console.log(`Account nonce for ${testAddress}:`, response);
         expect(response).to.be.an('object');
         expect(response).to.have.property('nonce');
         expect(response.nonce).to.be.a('number');
         done();
       })
       .rest(err => {
-        logger.error('Error fetching account nonce:', err);
+        console.error('Error fetching account nonce:', err);
         done();
       });
   });
@@ -47,7 +46,7 @@ describe('accounts API test', function () {
   it('should fetch associated token account', function(done) {
     apiClient.accounts.getTokenAccount(testAddress, testToken)
       .success(response => {
-        logger.log(`Token account for ${testAddress} and token ${testToken}:`, response);
+        console.log(`Token account for ${testAddress} and token ${testToken}:`, response);
         expect(response).to.be.an('object');
         expect(response).to.have.property('token_account_address');
         expect(response).to.have.property('balance');
@@ -55,7 +54,7 @@ describe('accounts API test', function () {
         done();
       })
       .rest(err => {
-        logger.error('Error fetching token account:', err);
+        console.error('Error fetching token account:', err);
         done();
       });
   });

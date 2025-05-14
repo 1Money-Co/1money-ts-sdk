@@ -1,7 +1,6 @@
 import 'mocha';
 import { expect } from 'chai';
 import { api, CHAIN_IDS } from '../../';
-import { logger } from '../../../utils';
 
 describe('checkpoint API test', function () {
   // Set a longer timeout for all tests in this suite
@@ -32,12 +31,12 @@ describe('checkpoint API test', function () {
         expect(response.number).to.be.a('number');
 
         // Log the checkpoint number for verification
-        logger.log(`Current checkpoint number from API: ${response.number}`);
+        console.log(`Current checkpoint number from API: ${response.number}`);
 
         done();
       })
       .rest(err => {
-        logger.error('Error fetching checkpoint number:', err);
+        console.error('Error fetching checkpoint number:', err);
         done();
       });
   });
@@ -120,7 +119,7 @@ describe('checkpoint API test', function () {
         done();
       })
       .rest(err => {
-        logger.error('Error fetching checkpoint by hash:', err);
+        console.error('Error fetching checkpoint by hash:', err);
         done();
       });
   });
@@ -203,7 +202,7 @@ describe('checkpoint API test', function () {
         done();
       })
       .rest(err => {  
-        logger.error('Error fetching checkpoint by number:', err);
+        console.error('Error fetching checkpoint by number:', err);
         done();
       });
   }); 
