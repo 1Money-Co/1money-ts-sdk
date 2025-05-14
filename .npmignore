@@ -10,10 +10,11 @@
 build
 src
 *test*
-node_modules
+./node_modules
 dist
 dist.zip
 docs
+examples
 DEV*.md
 
 # config files
