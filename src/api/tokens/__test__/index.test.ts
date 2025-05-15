@@ -1,6 +1,12 @@
 import 'mocha';
 import { expect } from 'chai';
 import { api } from '../../';
+import { CHAIN_IDS } from '../../constants';
+import { signMessage, toHex } from '../../../utils';
+import 'dotenv/config';
+import { AuthorityAction, AuthorityType, PauseAction, BlacklistAction } from '../types';
+
+const RUN_ENV = process.env.RUN_ENV || 'local';
 
 describe('tokens API test', function () {
   // Set a longer timeout for all tests in this suite
@@ -48,21 +54,290 @@ describe('tokens API test', function () {
   });
 
   // Example token for testing - replace with a valid token if needed
-  const testToken = '0x2cd8999Be299373D7881f4aDD11510030ad1412F';
+  const chainId = CHAIN_IDS.TESTNET;
+  const issuedToken = '0x8e9d1b45293e30ef38564582979195dd16a16e13';
+  const operatorAddress = process.env.OPERATOR_ADDRESS;
+  const operatorPK = process.env.OPERATOR_PRIVATE_KEY;
+  const testAddress = '0x179e3514e5afd76223d53c3d97117d66f217d087';
 
   // Skip actual API calls in regular tests
-  it.skip('should fetch token metadata', function(done) {
-    apiClient.tokens.getTokenMetadata(testToken)
+  it('should fetch token metadata', function (done) {
+    apiClient.tokens.getTokenMetadata(issuedToken)
       .success(response => {
         expect(response).to.be.an('object');
-        expect(response).to.have.property('symbol');
-        expect(response).to.have.property('decimals');
-        expect(response).to.have.property('supply');
+        expect(response.symbol).to.be.a('string');
+        expect(response.decimals).to.be.a('number');
+        expect(response.supply).to.be.a('string');
+        expect(response.is_paused).to.be.a('boolean');
+        expect(response.is_private).to.be.a('boolean');
+        expect(response.master_authority).to.be.a('string');
+        expect(response.master_mint_authority).to.be.a('string');
+        expect(response.pause_authority).to.be.a('string');
+        expect(response.minter_burn_authorities).to.be.an('array');
+        expect(response.list_authorities).to.be.an('array');
+        expect(response.black_list).to.be.an('array');
+        expect(response.white_list).to.be.an('array');
+        expect(response.metadata_update_authority).to.be.an('string');
         done();
       })
-      .rest(err => {
-        console.error('Error fetching token metadata:', err);
-        done();
+      .error(err => {
+        done(err?.data ?? err.message ?? err);
       });
   });
+
+  if (!(RUN_ENV === 'remote' || !operatorAddress || !operatorPK || !testAddress)) {
+    // !todo
+    it.skip('should set blacklist', function (done) {
+      apiClient.accounts.getNonce(operatorAddress)
+        .success(response => {
+          const nonce = response.nonce;
+          const action = BlacklistAction.Whitelist;
+          const payload = [
+            toHex(chainId),
+            toHex(nonce),
+            '0x' + Buffer.from(action).toString('hex'),
+            testAddress,
+            issuedToken,
+          ]
+          const signature = signMessage(payload, operatorPK)
+          if (!signature) return done(new Error('Failed to sign message'));
+          apiClient.tokens.setBlacklist({
+            chain_id: chainId,
+            nonce,
+            action,
+            address: testAddress,
+            token: issuedToken,
+            signature
+          })
+            .success(response => {
+              expect(response).to.be.an('object');
+              done();
+            })
+            .error(err => done(err?.data ?? err.message ?? err));
+        })
+        .error(err => done(err?.data ?? err.message ?? err));
+    });
+
+    // passed
+    it.skip('should burn token', function (done) {
+      apiClient.accounts.getNonce(operatorAddress)
+        .success(response => {
+          const nonce = response.nonce;
+          const burnValue = '10';
+          const payload = [
+            toHex(chainId),
+            toHex(nonce),
+            testAddress,
+            toHex(burnValue),
+            issuedToken,
+          ]
+          const signature = signMessage(payload, operatorPK)
+          if (!signature) return done(new Error('Failed to sign message'));
+          apiClient.tokens.burnToken({
+            chain_id: chainId,
+            nonce,
+            recipient: testAddress,
+            value: burnValue,
+            token: issuedToken,
+            signature
+          })
+            .success(response => {
+              expect(response).to.be.an('object');
+              expect(response.hash).to.be.a('string');
+              done();
+            })
+            .error(err => done(err?.data ?? err.message ?? err));
+        })
+        .error(err => done(err?.data ?? err.message ?? err));
+    });
+
+    // passed
+    it.skip('should grant authority', function (done) {
+      if (RUN_ENV === 'remote' || !operatorAddress || !operatorPK || !testAddress) return done();
+
+      apiClient.accounts.getNonce(operatorAddress)
+        .success(response => {
+          const nonce = response.nonce;
+          const tokenValue = '10000';
+          const payload = [
+            toHex(chainId),
+            toHex(nonce),
+            '0x' + Buffer.from(AuthorityAction.Grant).toString('hex'),
+            '0x' + Buffer.from(AuthorityType.MintBurnTokens).toString('hex'),
+            testAddress,
+            issuedToken,
+            toHex(tokenValue),
+          ]
+          const signature = signMessage(payload, operatorPK)
+          if (!signature) return done(new Error('Failed to sign message'));
+          apiClient.tokens.grantAuthority({
+            chain_id: chainId,
+            nonce,
+            action: AuthorityAction.Grant,
+            authority_type: AuthorityType.MintBurnTokens,
+            authority_address: testAddress,
+            token: issuedToken,
+            value: tokenValue,
+            signature
+          })
+            .success(response => {
+              expect(response).to.be.an('object');
+              done();
+            })
+            .error(err => done(err?.data ?? err.message ?? err));
+        })
+        .error(err => done(err?.data ?? err.message ?? err));
+    });
+
+    // passed (no permission to issue new token)
+    it.skip('should issue token', function (done) {
+      if (RUN_ENV === 'remote' || !operatorAddress || !operatorPK) return done();
+
+      apiClient.accounts.getNonce(operatorAddress)
+        .success(response => {
+          const nonce = response.nonce;
+          const name = 'USD 1Money';
+          const symbol = 'USD1';
+          const decimals = 6;
+          const payload = [
+            toHex(chainId),
+            toHex(nonce),
+            '0x' + Buffer.from(name).toString('hex'),
+            '0x' + Buffer.from(symbol).toString('hex'),
+            toHex(decimals),
+            operatorAddress,
+          ];
+          const signature = signMessage(payload, operatorPK)
+          if (!signature) return done(new Error('Failed to sign message'));
+          apiClient.tokens.issueToken({
+            chain_id: chainId,
+            nonce,
+            name,
+            symbol,
+            decimals,
+            master_authority: operatorAddress,
+            signature
+          })
+            .success(response => {
+              expect(response).to.be.an('object');
+              expect(response.token).to.be.a('string');
+              done();
+            })
+            .error(err => done(err?.data ?? err.message ?? err));
+        })
+        .error(err => done(err?.data ?? err.message ?? err));
+    });
+
+    // passed
+    it.skip('should mint token', function (done) {
+      if (RUN_ENV === 'remote' || !operatorAddress || !operatorPK || !testAddress) return done();
+
+      apiClient.accounts.getNonce(operatorAddress)
+        .success(response => {
+          const nonce = response.nonce;
+          const mintValue = '10000';
+          const payload = [
+            toHex(chainId),
+            toHex(nonce),
+            testAddress,
+            toHex(mintValue),
+            issuedToken,
+          ];
+          const signature = signMessage(payload, operatorPK)
+          if (!signature) return done(new Error('Failed to sign message'));
+          apiClient.tokens.mintToken({
+            chain_id: chainId,
+            nonce,
+            recipient: testAddress,
+            value: mintValue,
+            token: issuedToken,
+            signature
+          })
+            .success(response => {
+              expect(response).to.be.an('object');
+              expect(response.hash).to.be.a('string');
+              done();
+            })
+            .error(err => done(err?.data ?? err.message ?? err));
+        })
+        .error(err => done(err?.data ?? err.message ?? err));
+    });
+
+    // passed
+    it.skip('should pause token', function (done) {
+      if (RUN_ENV === 'remote' || !operatorAddress || !operatorPK) return done();
+
+      apiClient.accounts.getNonce(operatorAddress)
+        .success(response => {
+          const nonce = response.nonce;
+          const action = PauseAction.Unpause;
+          const payload = [
+            toHex(chainId),
+            toHex(nonce),
+            '0x' + Buffer.from(action).toString('hex'),
+            issuedToken,
+          ];
+          const signature = signMessage(payload, operatorPK);
+          if (!signature) return done(new Error('Failed to sign message'));
+          apiClient.tokens.pauseToken({
+            chain_id: chainId,
+            nonce,
+            action,
+            token: issuedToken,
+            signature
+          })
+            .success(response => {
+              expect(response).to.be.an('object');
+              expect(response.hash).to.be.a('string');
+              done();
+            })
+            .error(err => done(err?.data ?? err.message ?? err));
+        })
+        .error(err => done(err?.data ?? err.message ?? err));
+    });
+
+    // !todo
+    it.skip('should update metadata', function (done) {
+      if (RUN_ENV === 'remote' || !operatorAddress || !operatorPK) return done();
+
+      apiClient.accounts.getNonce(operatorAddress)
+        .success(response => {
+          const nonce = response.nonce;
+          const name = 'USDC';
+          const uri = 'https://usdc.com/metadata';
+          const additional_metadata = [
+            {
+              key: 'test',
+              value: 'test'
+            }
+          ];
+          const payload = [
+            toHex(chainId),
+            toHex(nonce),
+            '0x' + Buffer.from(name).toString('hex'),
+            '0x' + Buffer.from(uri).toString('hex'),
+            issuedToken,
+            '0x' + additional_metadata.map(item => Buffer.from(JSON.stringify(item)).toString('hex')).join('')
+          ];
+          const signature = signMessage(payload, operatorPK)
+          if (!signature) return done(new Error('Failed to sign message'));
+          apiClient.tokens.updateMetadata({
+            chain_id: chainId,
+            nonce,
+            name,
+            uri,
+            token: issuedToken,
+            additional_metadata,
+            signature
+          })
+            .success(response => {
+              expect(response).to.be.an('object');
+              expect(response.hash).to.be.a('string');
+              done();
+            })
+            .error(err => done(err?.data ?? err.message ?? err));
+        })
+        .error(err => done(err?.data ?? err.message ?? err));
+    });
+  }
 });

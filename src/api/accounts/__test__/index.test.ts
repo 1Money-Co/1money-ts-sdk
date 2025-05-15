@@ -31,31 +31,27 @@ describe('accounts API test', function () {
   it('should fetch account nonce', function(done) {
     apiClient.accounts.getNonce(testAddress)
       .success(response => {
-        console.log(`Account nonce for ${testAddress}:`, response);
         expect(response).to.be.an('object');
         expect(response).to.have.property('nonce');
         expect(response.nonce).to.be.a('number');
         done();
       })
-      .rest(err => {
-        console.error('Error fetching account nonce:', err);
-        done();
+      .error(err => {
+        done(err?.data ?? err.message ?? err);
       });
   });
 
   it('should fetch associated token account', function(done) {
     apiClient.accounts.getTokenAccount(testAddress, testToken)
       .success(response => {
-        console.log(`Token account for ${testAddress} and token ${testToken}:`, response);
         expect(response).to.be.an('object');
         expect(response).to.have.property('token_account_address');
         expect(response).to.have.property('balance');
         expect(response).to.have.property('nonce');
         done();
       })
-      .rest(err => {
-        console.error('Error fetching token account:', err);
-        done();
+      .error(err => {
+        done(err?.data ?? err.message ?? err);
       });
   });
 });

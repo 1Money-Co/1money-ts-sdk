@@ -34,7 +34,7 @@ export const tokensApi = {
    * @returns Promise with transaction hash response
    */
   setBlacklist: (payload: TokenBlacklistPayload) => {
-    return post<'custom', Hash>('${API_PREFIX}/blacklist', payload);
+    return post<'custom', Hash>(`${API_PREFIX}/blacklist`, payload);
   },
 
   /**

@@ -26,19 +26,13 @@ describe('checkpoint API test', function () {
   it('should fetch checkpoint number from the API', function(done) {
     apiClient.checkpoints.getNumber()
       .success(response => {
-        // Verify the response format
         expect(response).to.be.an('object');
         expect(response).to.have.property('number');
         expect(response.number).to.be.a('number');
-
-        // Log the checkpoint number for verification
-        console.log(`Current checkpoint number from API: ${response.number}`);
-
         done();
       })
-      .rest(err => {
-        console.error('Error fetching checkpoint number:', err);
-        done();
+      .error(err => {
+        done(err?.data ?? err.message ?? err);
       });
   });
 
@@ -119,9 +113,8 @@ describe('checkpoint API test', function () {
 
         done();
       })
-      .rest(err => {
-        console.error('Error fetching checkpoint by hash:', err);
-        done();
+      .error(err => {
+        done(err?.data ?? err.message ?? err);
       });
   });
 
@@ -202,9 +195,8 @@ describe('checkpoint API test', function () {
 
         done();
       })
-      .rest(err => {  
-        console.error('Error fetching checkpoint by number:', err);
-        done();
+      .error(err => {  
+        done(err?.data ?? err.message ?? err);
       });
   }); 
 });

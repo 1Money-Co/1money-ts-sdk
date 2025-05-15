@@ -46,10 +46,9 @@ export interface KeyValuePair {
 // Authority types
 export enum AuthorityType {
   MasterMint = 'MasterMint',
-  MintTokens = 'MintTokens',
+  MintBurnTokens = 'MintBurnTokens',
   Pause = 'Pause',
-  Burn = 'Burn',
-  Blacklist = 'Blacklist',
+  ManageList = 'ManageList',
   UpdateMetadata = 'UpdateMetadata'
 }
 
