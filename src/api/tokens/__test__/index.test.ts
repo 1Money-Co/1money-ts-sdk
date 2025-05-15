@@ -3,8 +3,8 @@ import { expect } from 'chai';
 import { api } from '../../';
 import { CHAIN_IDS } from '../../constants';
 import { signMessage, toHex } from '../../../utils';
-import 'dotenv/config';
 import { AuthorityAction, AuthorityType, PauseAction, BlacklistAction } from '../types';
+import 'dotenv/config';
 
 const RUN_ENV = process.env.RUN_ENV || 'local';
 
@@ -95,7 +95,7 @@ describe('tokens API test', function () {
           const payload = [
             toHex(chainId),
             toHex(nonce),
-            '0x' + Buffer.from(action).toString('hex'),
+            toHex(action),
             testAddress,
             issuedToken,
           ]
@@ -158,12 +158,12 @@ describe('tokens API test', function () {
       apiClient.accounts.getNonce(operatorAddress)
         .success(response => {
           const nonce = response.nonce;
-          const tokenValue = '10000';
+          const tokenValue = '15000';
           const payload = [
             toHex(chainId),
             toHex(nonce),
-            '0x' + Buffer.from(AuthorityAction.Grant).toString('hex'),
-            '0x' + Buffer.from(AuthorityType.MintBurnTokens).toString('hex'),
+            toHex(AuthorityAction.Grant),
+            toHex(AuthorityType.MintBurnTokens),
             testAddress,
             issuedToken,
             toHex(tokenValue),
@@ -202,8 +202,8 @@ describe('tokens API test', function () {
           const payload = [
             toHex(chainId),
             toHex(nonce),
-            '0x' + Buffer.from(name).toString('hex'),
-            '0x' + Buffer.from(symbol).toString('hex'),
+            toHex(name),
+            toHex(symbol),
             toHex(decimals),
             operatorAddress,
           ];
@@ -274,7 +274,7 @@ describe('tokens API test', function () {
           const payload = [
             toHex(chainId),
             toHex(nonce),
-            '0x' + Buffer.from(action).toString('hex'),
+            toHex(action),
             issuedToken,
           ];
           const signature = signMessage(payload, operatorPK);
@@ -314,10 +314,10 @@ describe('tokens API test', function () {
           const payload = [
             toHex(chainId),
             toHex(nonce),
-            '0x' + Buffer.from(name).toString('hex'),
-            '0x' + Buffer.from(uri).toString('hex'),
+            toHex(name),
+            toHex(uri),
             issuedToken,
-            '0x' + additional_metadata.map(item => Buffer.from(JSON.stringify(item)).toString('hex')).join('')
+            toHex(additional_metadata)
           ];
           const signature = signMessage(payload, operatorPK)
           if (!signature) return done(new Error('Failed to sign message'));

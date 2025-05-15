@@ -4,7 +4,12 @@ import {
   _typeof,
   safePromiseAll,
   safePromiseLine,
+  toHex,
+  signMessage,
 } from "../";
+import 'dotenv/config';
+
+const RUN_ENV = process.env.RUN_ENV || 'local';
 
 describe("utils test", function () {
   describe("_typeof test", function () {
@@ -37,6 +42,7 @@ describe("utils test", function () {
       expect(_typeof(new Int8Array())).to.be.equal("int8array");
       expect(_typeof(new Int16Array())).to.be.equal("int16array");
       expect(_typeof(new Int32Array())).to.be.equal("int32array");
+      expect(_typeof(new ArrayBuffer())).to.be.equal("arraybuffer");
     });
   }); 
 
@@ -87,5 +93,39 @@ describe("utils test", function () {
         done();
       });
     });
+  });
+
+  describe("signMessage test", function () {
+    it("signMessage is a function", function () {
+      expect(signMessage).to.be.a("function");
+    });
+    
+    const testPK = process.env.TEST_PRIVATE_KEY;
+    if (testPK && RUN_ENV !== 'remote') {
+      it("call signMessage", function () {
+        const payload = [
+          toHex(1),
+          toHex("2"),
+          toHex(true),
+        ];
+        const signature = signMessage(payload, testPK);
+        expect(signature).to.be.an("object");
+        expect(signature?.r).to.be.a("string");
+        expect(signature?.s).to.be.a("string");
+        expect(signature?.v).to.be.a("number");
+      });
+    }
+  });
+
+  describe("toHex test", function () {
+    it("toHex is a function", function () {
+      expect(toHex).to.be.a("function");
+    });
+
+    it("call toHex", function () {
+      expect(toHex(1)).to.be.equal("0x01");
+      expect(toHex("2")).to.be.equal("0x02");
+      expect(toHex(true)).to.be.equal("0x01");
+    });    
   });
 });

@@ -21,6 +21,7 @@ export type TypeofResult =
   | 'int8array'
   | 'int16array'
   | 'int32array'
+  | 'arraybuffer'
   | 'null'
   | 'undefined';
 
