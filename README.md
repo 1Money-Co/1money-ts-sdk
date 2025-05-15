@@ -35,7 +35,25 @@ const apiClient = api({
 });
 ```
 
-### CDN
+### Fetch the current checkpoint number
+
+```typescript
+const number = await apiClient.checkpoints.getNumber()
+  .success(response => {
+    console.log('number', response.number);
+    return response.number;
+  })
+  .error(err => {
+    console.error('Error:', err);
+    // return a default value
+    return 0;
+  });
+
+// do something with the number
+// ...
+```
+
+## CDN
 ```html
 <script src="https://unpkg.com/@1money/ts-sdk@latest/umd/1money-ts-sdk.min.js"></script>
 
@@ -53,7 +71,7 @@ const apiClient = api({
 </script>
 ```
 
-### Error Handling
+## Error Handling
 
 All API methods return a promise-like object with `.success()`, `.timeout()`, `.error()` and `.rest()` handlers. Always implement both handlers for proper error management:
 
@@ -63,6 +81,10 @@ All API methods return a promise-like object with `.success()`, `.timeout()`, `.
 4. `.rest()`: A final handler that runs after any of the above handlers complete
 
 ```typescript
+import { api } from '@1money/ts-sdk';
+
+const apiClient = api();
+
 apiClient.someMethod()
   .success(response => {
     // Handle successful response
@@ -75,6 +97,7 @@ apiClient.someMethod()
   });
 ```
 
+You can use `rest` to handle all other errors:
 ```typescript
 apiClient.someMethod()
   .success(response => {
@@ -85,7 +108,38 @@ apiClient.someMethod()
   });
 ```
 
-### Common Operations
+#### Async/Await
+You also can use async/await to handle the response:
+```typescript
+import { api } from '@1money/ts-sdk';
+
+const apiClient = api();
+
+try {
+  const response = await apiClient.someMethod();
+  console.log('Response:', response);
+} catch (err) {
+  console.error('Error:', err);
+}
+``` 
+
+#### Promise
+You also can use standard `promise` to handle the response:
+```typescript
+import { api } from '@1money/ts-sdk';
+
+const apiClient = api();
+
+apiClient.someMethod()
+  .then(response => {
+    console.log('Response:', response);
+  })
+  .catch(err => {
+    console.error('Error:', err);
+  });
+```
+
+## API Methods
 
 #### 1. Get Account Nonce
 ```typescript
