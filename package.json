@@ -101,7 +101,6 @@
     "tslib": "^2.6.3",
     "tsx": "^4.17.0",
     "typescript": "~5.8.3",
-    "typescript-transform-paths": "~3.5.5",
-    "webpack": "~5.93.0"
+    "typescript-transform-paths": "~3.5.5"
   }
 }

@@ -7,7 +7,6 @@ const Configuration = {
     */
   rules: {
     'type-enum': [2, 'always', [
-      '[OMNI-DOOR]',
       '[1MONEY-TS-SDK]',
       'feat',
       'feature',

@@ -143,9 +143,6 @@ importers:
       typescript-transform-paths:
         specifier: ~3.5.5
         version: 3.5.5(typescript@5.8.3)
-      webpack:
-        specifier: ~5.93.0
-        version: 5.93.0
 
 packages:
 
