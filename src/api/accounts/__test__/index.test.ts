@@ -36,7 +36,7 @@ describe('accounts API test', function () {
         expect(response.nonce).to.be.a('number');
         done();
       })
-      .error(err => {
+      .rest(err => {
         done(err?.data ?? err.message ?? err);
       });
   });
@@ -50,7 +50,7 @@ describe('accounts API test', function () {
         expect(response).to.have.property('nonce');
         done();
       })
-      .error(err => {
+      .rest(err => {
         done(err?.data ?? err.message ?? err);
       });
   });

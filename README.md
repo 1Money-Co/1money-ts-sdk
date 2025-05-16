@@ -52,6 +52,13 @@ const number = await apiClient.checkpoints.getNumber()
 // do something with the number
 // ...
 ```
+### Get checkpoint by number
+```typescript
+const checkpoint = await apiClient.checkpoints.getByNumber(1)
+  .success(response => {
+    console.log('checkpoint', response);
+  });
+```
 
 ## CDN
 ```html
@@ -141,6 +148,39 @@ apiClient.someMethod()
 
 ## API Methods
 
+### Signature Generation
+Before using the API methods that require signatures, you'll need to generate them using the provided utility functions:
+
+```typescript
+import { signMessage, toHex } from '@1money/ts-sdk';
+
+// Your private key (DO NOT share or commit your private key)
+const privateKey = 'YOUR_PRIVATE_KEY';
+
+// Example: Generate signature for a payment transaction
+const paymentPayload = [
+  toHex(1), // chain_id
+  toHex(1), // nonce
+  '0x2cd8999Be299373D7881f4aDD11510030ad1412F', // recipient
+  toHex('1000000000'), // value
+  '0x2cd8999Be299373D7881f4aDD11510030ad1412F', // token
+];
+
+const signature = signMessage(paymentPayload, privateKey);
+if (!signature) {
+  throw new Error('Failed to generate signature');
+}
+
+// The signature object will have the correct r, s, v format
+console.log('Generated signature:', signature);
+// Output example:
+// {
+//   r: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
+//   s: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
+//   v: 27
+// }
+```
+
 #### 1. Get Account Nonce
 ```typescript
 const address = '0x9E1E9688A44D058fF181Ed64ddFAFbBE5CC74ff3';
@@ -197,6 +237,385 @@ const txHash = '0xf55f9525be94633b56f954d3252d52b8ef42f5fd5f9491b243708471c15cc4
 apiClient.transactions.getByHash(txHash)
   .success(response => {
     console.log('Transaction details:', response);
+  })
+  .error(err => {
+    console.error('Error:', err);
+  });
+```
+
+#### 6. Get Transaction Receipt
+```typescript
+const txHash = '0xf55f9525be94633b56f954d3252d52b8ef42f5fd5f9491b243708471c15cc40c';
+apiClient.transactions.getReceiptByHash(txHash)
+  .success(response => {
+    console.log('Transaction receipt:', response);
+  })
+  .error(err => {
+    console.error('Error:', err);
+  });
+```
+
+#### 7. Submit Payment Transaction
+```typescript
+import { signMessage, toHex } from '@1money/ts-sdk';
+
+// Your private key (DO NOT share or commit your private key)
+const privateKey = 'YOUR_PRIVATE_KEY';
+
+// Create the payload array for signing
+const payload = [
+  toHex(1), // chain_id
+  toHex(1), // nonce
+  '0x2cd8999Be299373D7881f4aDD11510030ad1412F', // recipient
+  toHex('1000000000'), // value
+  '0x2cd8999Be299373D7881f4aDD11510030ad1412F', // token
+];
+
+// Generate signature
+const signature = signMessage(payload, privateKey);
+if (!signature) {
+  throw new Error('Failed to generate signature');
+}
+
+// Create the payment payload
+const paymentPayload = {
+  chain_id: 1,
+  nonce: 1,
+  recipient: '0x2cd8999Be299373D7881f4aDD11510030ad1412F',
+  value: '1000000000',
+  token: '0x2cd8999Be299373D7881f4aDD11510030ad1412F',
+  signature
+};
+
+apiClient.transactions.payment(paymentPayload)
+  .success(response => {
+    console.log('Payment transaction hash:', response.hash);
+  })
+  .error(err => {
+    console.error('Error:', err);
+  });
+```
+
+#### 8. Cancel Transaction
+```typescript
+import { signMessage, toHex } from '@1money/ts-sdk';
+
+// Your private key (DO NOT share or commit your private key)
+const privateKey = 'YOUR_PRIVATE_KEY';
+
+// Create the payload array for signing
+const payload = [
+  toHex(1), // chain_id
+  toHex(1), // nonce
+];
+
+// Generate signature
+const signature = signMessage(payload, privateKey);
+if (!signature) {
+  throw new Error('Failed to generate signature');
+}
+
+// Create the cancellation payload
+const cancellationPayload = {
+  chain_id: 1,
+  nonce: 1,
+  signature
+};
+
+apiClient.transactions.cancel(cancellationPayload)
+  .success(response => {
+    console.log('Cancellation transaction hash:', response.hash);
+  })
+  .error(err => {
+    console.error('Error:', err);
+  });
+```
+
+#### 9. Token Management Methods
+
+##### Issue New Token
+```typescript
+import { signMessage, toHex } from '@1money/ts-sdk';
+
+// Your private key (DO NOT share or commit your private key)
+const privateKey = 'YOUR_PRIVATE_KEY';
+
+// Create the payload array for signing
+const payload = [
+  toHex(1), // chain_id
+  toHex(1), // nonce
+  toHex('My Token'), // name
+  toHex('MTK'), // symbol
+  toHex(18), // decimals
+  '0x9E1E9688A44D058fF181Ed64ddFAFbBE5CC74ff3', // master_authority
+];
+
+// Generate signature
+const signature = signMessage(payload, privateKey);
+if (!signature) {
+  throw new Error('Failed to generate signature');
+}
+
+// Create the issue payload
+const issuePayload = {
+  chain_id: 1,
+  nonce: 1,
+  name: 'My Token',
+  symbol: 'MTK',
+  decimals: 18,
+  master_authority: '0x9E1E9688A44D058fF181Ed64ddFAFbBE5CC74ff3',
+  signature
+};
+
+apiClient.tokens.issueToken(issuePayload)
+  .success(response => {
+    console.log('Token issued:', response);
+  })
+  .error(err => {
+    console.error('Error:', err);
+  });
+```
+
+##### Mint Tokens
+```typescript
+import { signMessage, toHex } from '@1money/ts-sdk';
+
+// Your private key (DO NOT share or commit your private key)
+const privateKey = 'YOUR_PRIVATE_KEY';
+
+// Create the payload array for signing
+const payload = [
+  toHex(1), // chain_id
+  toHex(1), // nonce
+  '0x2cd8999Be299373D7881f4aDD11510030ad1412F', // token
+  '0x9E1E9688A44D058fF181Ed64ddFAFbBE5CC74ff3', // recipient
+  toHex('1000000000000000000'), // amount
+];
+
+// Generate signature
+const signature = signMessage(payload, privateKey);
+if (!signature) {
+  throw new Error('Failed to generate signature');
+}
+
+// Create the mint payload
+const mintPayload = {
+  chain_id: 1,
+  nonce: 1,
+  token: '0x2cd8999Be299373D7881f4aDD11510030ad1412F',
+  recipient: '0x9E1E9688A44D058fF181Ed64ddFAFbBE5CC74ff3',
+  value: '1000000000000000000',
+  signature
+};
+
+apiClient.tokens.mintToken(mintPayload)
+  .success(response => {
+    console.log('Mint transaction hash:', response.hash);
+  })
+  .error(err => {
+    console.error('Error:', err);
+  });
+```
+
+##### Burn Tokens
+```typescript
+import { signMessage, toHex } from '@1money/ts-sdk';
+
+// Your private key (DO NOT share or commit your private key)
+const privateKey = 'YOUR_PRIVATE_KEY';
+
+// Create the payload array for signing
+const payload = [
+  toHex(1), // chain_id
+  toHex(1), // nonce
+  '0x2cd8999Be299373D7881f4aDD11510030ad1412F', // token
+  toHex('1000000000000000000'), // amount
+];
+
+// Generate signature
+const signature = signMessage(payload, privateKey);
+if (!signature) {
+  throw new Error('Failed to generate signature');
+}
+
+// Create the burn payload
+const burnPayload = {
+  chain_id: 1,
+  nonce: 1,
+  token: '0x2cd8999Be299373D7881f4aDD11510030ad1412F',
+  value: '1000000000000000000',
+  signature
+};
+
+apiClient.tokens.burnToken(burnPayload)
+  .success(response => {
+    console.log('Burn transaction hash:', response.hash);
+  })
+  .error(err => {
+    console.error('Error:', err);
+  });
+```
+
+##### Update Token Metadata
+```typescript
+import { signMessage, toHex } from '@1money/ts-sdk';
+
+// Your private key (DO NOT share or commit your private key)
+const privateKey = 'YOUR_PRIVATE_KEY';
+
+// Create the payload array for signing
+const payload = [
+  toHex(1), // chain_id
+  toHex(1), // nonce
+  '0x2cd8999Be299373D7881f4aDD11510030ad1412F', // token
+  toHex('Updated Token Name'), // name
+  toHex('https://example.com/metadata'), // uri
+  toHex([]), // additional_metadata
+];
+
+// Generate signature
+const signature = signMessage(payload, privateKey);
+if (!signature) {
+  throw new Error('Failed to generate signature');
+}
+
+// Create the metadata payload
+const metadataPayload = {
+  chain_id: 1,
+  nonce: 1,
+  token: '0x2cd8999Be299373D7881f4aDD11510030ad1412F',
+  name: 'Updated Token Name',
+  uri: 'https://example.com/metadata',
+  additional_metadata: [],
+  signature
+};
+
+apiClient.tokens.updateMetadata(metadataPayload)
+  .success(response => {
+    console.log('Metadata update transaction hash:', response.hash);
+  })
+  .error(err => {
+    console.error('Error:', err);
+  });
+```
+
+##### Set Token Blacklist Status
+```typescript
+import { signMessage, toHex } from '@1money/ts-sdk';
+
+// Your private key (DO NOT share or commit your private key)
+const privateKey = 'YOUR_PRIVATE_KEY';
+
+// Create the payload array for signing
+const payload = [
+  toHex(1), // chain_id
+  toHex(1), // nonce
+  '0x2cd8999Be299373D7881f4aDD11510030ad1412F', // token
+  '0x9E1E9688A44D058fF181Ed64ddFAFbBE5CC74ff3', // address
+  toHex('Blacklist'), // action
+];
+
+// Generate signature
+const signature = signMessage(payload, privateKey);
+if (!signature) {
+  throw new Error('Failed to generate signature');
+}
+
+// Create the blacklist payload
+const blacklistPayload = {
+  chain_id: 1,
+  nonce: 1,
+  token: '0x2cd8999Be299373D7881f4aDD11510030ad1412F',
+  address: '0x9E1E9688A44D058fF181Ed64ddFAFbBE5CC74ff3',
+  action: 'Blacklist',
+  signature
+};
+
+apiClient.tokens.setBlacklist(blacklistPayload)
+  .success(response => {
+    console.log('Blacklist update transaction hash:', response.hash);
+  })
+  .error(err => {
+    console.error('Error:', err);
+  });
+```
+
+##### Grant Token Authority
+```typescript
+import { signMessage, toHex } from '@1money/ts-sdk';
+
+// Your private key (DO NOT share or commit your private key)
+const privateKey = 'YOUR_PRIVATE_KEY';
+
+// Create the payload array for signing
+const payload = [
+  toHex(1), // chain_id
+  toHex(1), // nonce
+  '0x2cd8999Be299373D7881f4aDD11510030ad1412F', // token
+  '0x9E1E9688A44D058fF181Ed64ddFAFbBE5CC74ff3', // authority_address
+  toHex('Grant'), // action
+  toHex('MasterMint'), // authority_type
+];
+
+// Generate signature
+const signature = signMessage(payload, privateKey);
+if (!signature) {
+  throw new Error('Failed to generate signature');
+}
+
+// Create the authority payload
+const authorityPayload = {
+  chain_id: 1,
+  nonce: 1,
+  token: '0x2cd8999Be299373D7881f4aDD11510030ad1412F',
+  authority_address: '0x9E1E9688A44D058fF181Ed64ddFAFbBE5CC74ff3',
+  action: 'Grant',
+  authority_type: 'MasterMint',
+  signature
+};
+
+apiClient.tokens.grantAuthority(authorityPayload)
+  .success(response => {
+    console.log('Authority update transaction hash:', response.hash);
+  })
+  .error(err => {
+    console.error('Error:', err);
+  });
+```
+
+##### Pause/Unpause Token
+```typescript
+import { signMessage, toHex } from '@1money/ts-sdk';
+
+// Your private key (DO NOT share or commit your private key)
+const privateKey = 'YOUR_PRIVATE_KEY';
+
+// Create the payload array for signing
+const payload = [
+  toHex(1), // chain_id
+  toHex(1), // nonce
+  '0x2cd8999Be299373D7881f4aDD11510030ad1412F', // token
+  toHex('Pause'), // action
+];
+
+// Generate signature
+const signature = signMessage(payload, privateKey);
+if (!signature) {
+  throw new Error('Failed to generate signature');
+}
+
+// Create the pause payload
+const pausePayload = {
+  chain_id: 1,
+  nonce: 1,
+  token: '0x2cd8999Be299373D7881f4aDD11510030ad1412F',
+  action: 'Pause',
+  signature
+};
+
+apiClient.tokens.pauseToken(pausePayload)
+  .success(response => {
+    console.log('Pause status update transaction hash:', response.hash);
   })
   .error(err => {
     console.error('Error:', err);

@@ -57,7 +57,7 @@ describe('transactions API test', function () {
         expect(response).to.have.property('from');
         done();
       })
-      .error(err => {
+      .rest(err => {
         // If the transaction doesn't exist, we'll consider the test passed
         expect(err).to.be.an('object');
         expect(err).to.have.property('message');
@@ -74,7 +74,7 @@ describe('transactions API test', function () {
         expect(response).to.have.property('success');
         done();
       })
-      .error(err => {
+      .rest(err => {
         expect(err).to.be.an('object');
         expect(err).to.have.property('message');
         expect(err.message).to.include('not found');
@@ -90,7 +90,7 @@ describe('transactions API test', function () {
         expect(response.fee).to.be.a('string');
         done();
       })
-      .error(err => {
+      .rest(err => {
         done(err?.data ?? err.message ?? err);
       });
   });
@@ -123,14 +123,14 @@ describe('transactions API test', function () {
               expect(response).to.have.property('hash');
               done();
             })
-            .error(err => {
+            .rest(err => {
               expect(err).to.be.an('object');
               expect(err).to.have.property('message');
               expect(err?.data?.message).to.include('insufficient funds');
               done(err?.data ?? err.message ?? err);
             });
         })
-        .error(err => done(err?.data ?? err.message ?? err));
+        .rest(err => done(err?.data ?? err.message ?? err));
     });
 
     // passed (the tx to be cancelled is not in pending pool)
@@ -153,11 +153,11 @@ describe('transactions API test', function () {
               expect(response).to.be.an('object');
               done();
             })
-            .error(err => {
+            .rest(err => {
               done(err?.data ?? err.message ?? err);
             });
         })
-        .error(err => done(err?.data ?? err.message ?? err));
+        .rest(err => done(err?.data ?? err.message ?? err));
     });
   }
 });

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { _typeof } from '@/utils';
 
 import type { AxiosStatic, AxiosRequestConfig, AxiosError, RawAxiosResponseHeaders, AxiosResponseHeaders, RawAxiosRequestHeaders, AxiosRequestHeaders, AxiosResponse } from 'axios';
 
@@ -400,19 +401,37 @@ export class Request {
     this.request = this.request.bind(this);
   }
 
-  private parseError(err: any) {
+  private parseError(err: any): ParsedError {
     if (typeof err === 'string') err = new Error(err);
-    const name: string = err?.name ?? '';
-    const message: string =
-      err?.message ?? err?.toString?.() ?? err ?? '';
+    
+    // Ensure we have a valid error object
+    if (!err || (_typeof(err) !== 'object' && _typeof(err) !== 'error')) {
+      err = new Error('Unknown error occurred');
+    }
+
+    const name: string = err?.name ?? 'Error';
+    const message: string = err?.message ?? err?.toString?.() ?? 'Unknown error';
     const stack: string = err?.stack ?? '';
     const status = err?.response?.status ?? 500;
+    const data = err?.response?.data ?? undefined;
+
+    // Validate status code
+    if (typeof status !== 'number' || status < 100 || status > 599) {
+      return {
+        name: 'InvalidStatusError',
+        message: 'Invalid HTTP status code',
+        stack,
+        status: 500,
+        data
+      };
+    }
+
     return {
       name,
       message,
       stack,
       status,
-      data: err?.response?.data ?? void 0
+      data
     };
   }
 
@@ -422,9 +441,13 @@ export class Request {
   }
 
   public request<T, U = unknown>(options: Options<T, U>): PromiseWrapper<T, U> & Promise<CustomResponseData<T, U, WithFailureData<T>>> {
+    // Set default security headers
     options.withCredentials = typeof options.withCredentials === 'boolean' ? options.withCredentials : true;
     options.headers = options.headers || {};
     options.headers['Accept'] = options.headers['Accept'] || '*/*';
+    options.headers['X-Requested-With'] = options.headers['X-Requested-With'] || 'XMLHttpRequest';
+    options.headers['X-Content-Type-Options'] = options.headers['X-Content-Type-Options'] || 'nosniff';
+
     const {
       onSuccess: initOnSuccess,
       onFailure: initOnFailure,
@@ -556,11 +579,20 @@ export class Request {
       let timer: any = null;
       let isTimeout = false;
       const _timeout = timeout ?? initTimeout;
+      
+      // Cleanup function for timeout
+      const cleanup = () => {
+        if (timer !== null) {
+          clearTimeout(timer);
+          timer = null;
+        }
+      };
+
       if (_timeout) {
         timer = setTimeout(async () => {
           try {
             isTimeout = true;
-            timer = null;
+            cleanup();
             let err = this.parseError('timeout') as ParsedError<'timeout'>;
             // @ts-ignore
             const res = await Promise.resolve(callbacks.timeout(err, options.headers ?? {}));
@@ -574,10 +606,7 @@ export class Request {
 
       this.axios<any, AxiosResponse<ResponseData<WithFailureData<T>>, any>, any>(options).then(async response => {
         if (isTimeout) return;
-        if (timer !== null) {
-          clearTimeout(timer);
-          timer = null;
-        }
+        cleanup();
 
         const { status, data, headers } = response;
         try {
@@ -601,10 +630,7 @@ export class Request {
         }
       }).catch(async (err: AxiosError<any>) => {
         if (isTimeout) return;
-        if (timer !== null) {
-          clearTimeout(timer);
-          timer = null;
-        }
+        cleanup();
 
         console.error(`[1Money client]: Error(${err.status ?? 500}, ${err.code ?? 'UNKNOWN'}), Message: ${err.message}, Config: ${err.config?.method}, ${err.config?.baseURL ?? ''}${err.config?.url ?? ''}, ${JSON.stringify(err.config?.headers ?? {})}, Request: ${JSON.stringify(err.config?.data ?? {})};`);
 

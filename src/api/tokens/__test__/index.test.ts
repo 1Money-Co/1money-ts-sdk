@@ -80,7 +80,7 @@ describe('tokens API test', function () {
         expect(response.metadata_update_authority).to.be.an('string');
         done();
       })
-      .error(err => {
+      .rest(err => {
         done(err?.data ?? err.message ?? err);
       });
   });
@@ -113,9 +113,9 @@ describe('tokens API test', function () {
               expect(response).to.be.an('object');
               done();
             })
-            .error(err => done(err?.data ?? err.message ?? err));
+            .rest(err => done(err?.data ?? err.message ?? err));
         })
-        .error(err => done(err?.data ?? err.message ?? err));
+        .rest(err => done(err?.data ?? err.message ?? err));
     });
 
     // passed
@@ -146,9 +146,9 @@ describe('tokens API test', function () {
               expect(response.hash).to.be.a('string');
               done();
             })
-            .error(err => done(err?.data ?? err.message ?? err));
+            .rest(err => done(err?.data ?? err.message ?? err));
         })
-        .error(err => done(err?.data ?? err.message ?? err));
+        .rest(err => done(err?.data ?? err.message ?? err));
     });
 
     // passed
@@ -184,9 +184,9 @@ describe('tokens API test', function () {
               expect(response).to.be.an('object');
               done();
             })
-            .error(err => done(err?.data ?? err.message ?? err));
+            .rest(err => done(err?.data ?? err.message ?? err));
         })
-        .error(err => done(err?.data ?? err.message ?? err));
+        .rest(err => done(err?.data ?? err.message ?? err));
     });
 
     // passed (no permission to issue new token)
@@ -223,9 +223,9 @@ describe('tokens API test', function () {
               expect(response.token).to.be.a('string');
               done();
             })
-            .error(err => done(err?.data ?? err.message ?? err));
+            .rest(err => done(err?.data ?? err.message ?? err));
         })
-        .error(err => done(err?.data ?? err.message ?? err));
+        .rest(err => done(err?.data ?? err.message ?? err));
     });
 
     // passed
@@ -258,9 +258,9 @@ describe('tokens API test', function () {
               expect(response.hash).to.be.a('string');
               done();
             })
-            .error(err => done(err?.data ?? err.message ?? err));
+            .rest(err => done(err?.data ?? err.message ?? err));
         })
-        .error(err => done(err?.data ?? err.message ?? err));
+        .rest(err => done(err?.data ?? err.message ?? err));
     });
 
     // passed
@@ -291,9 +291,9 @@ describe('tokens API test', function () {
               expect(response.hash).to.be.a('string');
               done();
             })
-            .error(err => done(err?.data ?? err.message ?? err));
+            .rest(err => done(err?.data ?? err.message ?? err));
         })
-        .error(err => done(err?.data ?? err.message ?? err));
+        .rest(err => done(err?.data ?? err.message ?? err));
     });
 
     // !todo
@@ -335,9 +335,9 @@ describe('tokens API test', function () {
               expect(response.hash).to.be.a('string');
               done();
             })
-            .error(err => done(err?.data ?? err.message ?? err));
+            .rest(err => done(err?.data ?? err.message ?? err));
         })
-        .error(err => done(err?.data ?? err.message ?? err));
+        .rest(err => done(err?.data ?? err.message ?? err));
     });
   }
 });

@@ -31,7 +31,7 @@ describe('checkpoint API test', function () {
         expect(response.number).to.be.a('number');
         done();
       })
-      .error(err => {
+      .rest(err => {
         done(err?.data ?? err.message ?? err);
       });
   });
@@ -113,7 +113,7 @@ describe('checkpoint API test', function () {
 
         done();
       })
-      .error(err => {
+      .rest(err => {
         done(err?.data ?? err.message ?? err);
       });
   });
@@ -195,7 +195,7 @@ describe('checkpoint API test', function () {
 
         done();
       })
-      .error(err => {  
+      .rest(err => {  
         done(err?.data ?? err.message ?? err);
       });
   }); 
