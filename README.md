@@ -348,6 +348,7 @@ const payload = [
   toHex('MTK'), // symbol
   toHex(18), // decimals
   '0x9E1E9688A44D058fF181Ed64ddFAFbBE5CC74ff3', // master_authority
+  toHex(true), // is_private
 ];
 
 // Generate signature
@@ -364,6 +365,7 @@ const issuePayload = {
   symbol: 'MTK',
   decimals: 18,
   master_authority: '0x9E1E9688A44D058fF181Ed64ddFAFbBE5CC74ff3',
+  is_private: true,
   signature
 };
 
@@ -499,9 +501,10 @@ apiClient.tokens.updateMetadata(metadataPayload)
   });
 ```
 
-##### Set Token Blacklist Status
+##### Set Token Manage List Status
 ```typescript
 import { signMessage, toHex } from '@1money/ts-sdk';
+import type { ManageListAction, AuthorityType, AuthorityAction, PauseAction } from '@1money/ts-sdk/api';
 
 // Your private key (DO NOT share or commit your private key)
 const privateKey = 'YOUR_PRIVATE_KEY';
@@ -512,7 +515,7 @@ const payload = [
   toHex(1), // nonce
   '0x2cd8999Be299373D7881f4aDD11510030ad1412F', // token
   '0x9E1E9688A44D058fF181Ed64ddFAFbBE5CC74ff3', // address
-  toHex('Blacklist'), // action
+  toHex(ManageListAction.Blacklist), // action
 ];
 
 // Generate signature
@@ -521,19 +524,19 @@ if (!signature) {
   throw new Error('Failed to generate signature');
 }
 
-// Create the blacklist payload
-const blacklistPayload = {
+// Create the manage list payload
+const manageListPayload = {
   chain_id: 1,
   nonce: 1,
   token: '0x2cd8999Be299373D7881f4aDD11510030ad1412F',
   address: '0x9E1E9688A44D058fF181Ed64ddFAFbBE5CC74ff3',
-  action: 'Blacklist',
+  action: ManageListAction.Blacklist,
   signature
 };
 
-apiClient.tokens.setBlacklist(blacklistPayload)
+apiClient.tokens.setManageList(manageListPayload)
   .success(response => {
-    console.log('Blacklist update transaction hash:', response.hash);
+    console.log('Manage list update transaction hash:', response.hash);
   })
   .error(err => {
     console.error('Error:', err);
@@ -543,6 +546,7 @@ apiClient.tokens.setBlacklist(blacklistPayload)
 ##### Grant Token Authority
 ```typescript
 import { signMessage, toHex } from '@1money/ts-sdk';
+import type { AuthorityType, AuthorityAction } from '@1money/ts-sdk/api';
 
 // Your private key (DO NOT share or commit your private key)
 const privateKey = 'YOUR_PRIVATE_KEY';
@@ -553,8 +557,8 @@ const payload = [
   toHex(1), // nonce
   '0x2cd8999Be299373D7881f4aDD11510030ad1412F', // token
   '0x9E1E9688A44D058fF181Ed64ddFAFbBE5CC74ff3', // authority_address
-  toHex('Grant'), // action
-  toHex('MasterMint'), // authority_type
+  toHex(AuthorityAction.Grant), // action
+  toHex(AuthorityType.MasterMint), // authority_type
 ];
 
 // Generate signature
@@ -569,8 +573,8 @@ const authorityPayload = {
   nonce: 1,
   token: '0x2cd8999Be299373D7881f4aDD11510030ad1412F',
   authority_address: '0x9E1E9688A44D058fF181Ed64ddFAFbBE5CC74ff3',
-  action: 'Grant',
-  authority_type: 'MasterMint',
+  action: AuthorityAction.Grant,
+  authority_type: AuthorityType.MasterMint,
   signature
 };
 
@@ -586,6 +590,7 @@ apiClient.tokens.grantAuthority(authorityPayload)
 ##### Pause/Unpause Token
 ```typescript
 import { signMessage, toHex } from '@1money/ts-sdk';
+import type { PauseAction } from '@1money/ts-sdk/api';
 
 // Your private key (DO NOT share or commit your private key)
 const privateKey = 'YOUR_PRIVATE_KEY';
@@ -595,7 +600,7 @@ const payload = [
   toHex(1), // chain_id
   toHex(1), // nonce
   '0x2cd8999Be299373D7881f4aDD11510030ad1412F', // token
-  toHex('Pause'), // action
+  toHex(PauseAction.Pause), // action
 ];
 
 // Generate signature
@@ -609,7 +614,7 @@ const pausePayload = {
   chain_id: 1,
   nonce: 1,
   token: '0x2cd8999Be299373D7881f4aDD11510030ad1412F',
-  action: 'Pause',
+  action: PauseAction.Pause,
   signature
 };
 

@@ -35,7 +35,7 @@ describe('api test', function () {
 
     // Tokens API
     expect(apiClient.tokens.getTokenMetadata).to.be.a('function');
-    expect(apiClient.tokens.setBlacklist).to.be.a('function');
+    expect(apiClient.tokens.setManageList).to.be.a('function');
     expect(apiClient.tokens.burnToken).to.be.a('function');
     expect(apiClient.tokens.grantAuthority).to.be.a('function');
     expect(apiClient.tokens.issueToken).to.be.a('function');

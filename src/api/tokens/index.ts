@@ -4,7 +4,7 @@ import { API_VERSION } from '@/api/constants';
 import type { Hash, HashWithToken } from '@/api/types';
 import type {
   MintInfo,
-  TokenBlacklistPayload,
+  TokenManageListPayload,
   TokenBurnPayload,
   TokenAuthorityPayload,
   TokenIssuePayload,
@@ -29,12 +29,12 @@ export const tokensApi = {
   },
 
   /**
-   * Set token blacklist status
-   * @param payload Token blacklist request payload
+   * Set token manage list status
+   * @param payload Token manage list request payload
    * @returns Promise with transaction hash response
    */
-  setBlacklist: (payload: TokenBlacklistPayload) => {
-    return post<'custom', Hash>(`${API_PREFIX}/blacklist`, payload);
+  setManageList: (payload: TokenManageListPayload) => {
+    return post<'custom', Hash>(`${API_PREFIX}/managelist`, payload);
   },
 
   /**

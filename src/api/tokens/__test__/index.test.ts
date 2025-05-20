@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { api } from '../../';
 import { CHAIN_IDS } from '../../constants';
 import { signMessage, toHex } from '../../../utils';
-import { AuthorityAction, AuthorityType, PauseAction, BlacklistAction } from '../types';
+import { AuthorityAction, AuthorityType, PauseAction, ManageListAction } from '../types';
 import 'dotenv/config';
 
 const RUN_ENV = process.env.RUN_ENV || 'local';
@@ -25,8 +25,8 @@ describe('tokens API test', function () {
     expect(apiClient.tokens.getTokenMetadata).to.be.a('function');
   });
 
-  it('should have setBlacklist method', function () {
-    expect(apiClient.tokens.setBlacklist).to.be.a('function');
+  it('should have setManageList method', function () {
+    expect(apiClient.tokens.setManageList).to.be.a('function');
   });
 
   it('should have burnToken method', function () {
@@ -87,11 +87,11 @@ describe('tokens API test', function () {
 
   if (!(RUN_ENV === 'remote' || !operatorAddress || !operatorPK || !testAddress)) {
     // !todo
-    it.skip('should set blacklist', function (done) {
+    it.skip('should set manage list', function (done) {
       apiClient.accounts.getNonce(operatorAddress)
         .success(response => {
           const nonce = response.nonce;
-          const action = BlacklistAction.Whitelist;
+          const action = ManageListAction.Whitelist;
           const payload = [
             toHex(chainId),
             toHex(nonce),
@@ -101,7 +101,7 @@ describe('tokens API test', function () {
           ]
           const signature = signMessage(payload, operatorPK)
           if (!signature) return done(new Error('Failed to sign message'));
-          apiClient.tokens.setBlacklist({
+          apiClient.tokens.setManageList({
             chain_id: chainId,
             nonce,
             action,
@@ -199,6 +199,7 @@ describe('tokens API test', function () {
           const name = 'USD 1Money';
           const symbol = 'USD1';
           const decimals = 6;
+          const isPrivate = true;
           const payload = [
             toHex(chainId),
             toHex(nonce),
@@ -206,6 +207,7 @@ describe('tokens API test', function () {
             toHex(symbol),
             toHex(decimals),
             operatorAddress,
+            toHex(isPrivate),
           ];
           const signature = signMessage(payload, operatorPK)
           if (!signature) return done(new Error('Failed to sign message'));
@@ -216,7 +218,8 @@ describe('tokens API test', function () {
             symbol,
             decimals,
             master_authority: operatorAddress,
-            signature
+            is_private: isPrivate,
+            signature,
           })
             .success(response => {
               expect(response).to.be.an('object');

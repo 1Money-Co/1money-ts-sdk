@@ -57,7 +57,7 @@ export enum AuthorityAction {
   Revoke = 'Revoke'
 }
 
-export enum BlacklistAction {
+export enum ManageListAction {
   Blacklist = 'Blacklist',
   Whitelist = 'Whitelist'
 }
@@ -74,10 +74,10 @@ export interface RestSignature {
   v: number;
 }
 
-export interface TokenBlacklistPayload {
+export interface TokenManageListPayload {
   chain_id: number;
   nonce: number;
-  action: BlacklistAction;
+  action: ManageListAction;
   address: string;
   token: string;
   signature: RestSignature;
@@ -110,6 +110,7 @@ export interface TokenIssuePayload {
   name: string;
   decimals: number;
   master_authority: string;
+  is_private: boolean;
   signature: RestSignature;
 }
 
