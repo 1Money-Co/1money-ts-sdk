@@ -49,7 +49,7 @@ describe('transactions API test', function () {
   const chainId = CHAIN_IDS.TESTNET;
 
   // Make real API calls to test the transactions API
-  it('should fetch transaction by hash', function (done) {
+  it.skip('should fetch transaction by hash', function (done) {
     apiClient.transactions.getByHash(testHash)
       .success(response => {
         expect(response).to.be.an('object');
@@ -66,7 +66,7 @@ describe('transactions API test', function () {
       });
   });
 
-  it('should fetch transaction receipt by hash', function (done) {
+  it.skip('should fetch transaction receipt by hash', function (done) {
     apiClient.transactions.getReceiptByHash(testHash)
       .success(response => {
         expect(response).to.be.an('object');
@@ -82,7 +82,7 @@ describe('transactions API test', function () {
       });;
   });
 
-  it('should estimate transaction fee', function (done) {
+  it.skip('should estimate transaction fee', function (done) {
     apiClient.transactions.estimateFee(testAddress, tokenValue, issuedToken)
       .success(response => {
         expect(response).to.be.an('object');

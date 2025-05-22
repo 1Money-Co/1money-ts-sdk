@@ -36,7 +36,7 @@ describe('checkpoint API test', function () {
       });
   });
 
-  it('should fetch checkpoint by hash from the API', function(done) {
+  it.skip('should fetch checkpoint by hash from the API', function(done) {
     apiClient.checkpoints.getByHash(hash, true)
       .success(response => {
         expect(response).to.be.an('object');
@@ -118,7 +118,7 @@ describe('checkpoint API test', function () {
       });
   });
 
-  it('should fetch checkpoint by number from the API', function(done) {
+  it.skip('should fetch checkpoint by number from the API', function(done) {
     apiClient.checkpoints.getByNumber(number, true)
       .success(response => {
         expect(response).to.be.an('object');

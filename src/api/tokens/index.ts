@@ -25,7 +25,7 @@ export const tokensApi = {
    * @returns Promise with token metadata response
    */
   getTokenMetadata: (token: string) => {
-    return get<'custom', MintInfo>(`${API_PREFIX}/token_metadata?token=${token}`);
+    return get<'custom', MintInfo>(`${API_PREFIX}/token_metadata?token=${token}`, { withCredentials: false });
   },
 
   /**
@@ -34,7 +34,7 @@ export const tokensApi = {
    * @returns Promise with transaction hash response
    */
   setManageList: (payload: TokenManageListPayload) => {
-    return post<'custom', Hash>(`${API_PREFIX}/managelist`, payload);
+    return post<'custom', Hash>(`${API_PREFIX}/managelist`, payload, { withCredentials: false });
   },
 
   /**
@@ -43,7 +43,7 @@ export const tokensApi = {
    * @returns Promise with transaction hash response
    */
   burnToken: (payload: TokenBurnPayload) => {
-    return post<'custom', Hash>(`${API_PREFIX}/burn`, payload);
+    return post<'custom', Hash>(`${API_PREFIX}/burn`, payload, { withCredentials: false });
   },
 
   /**
@@ -52,7 +52,7 @@ export const tokensApi = {
    * @returns Promise with transaction hash response
    */
   grantAuthority: (payload: TokenAuthorityPayload) => {
-    return post<'custom', Hash>(`${API_PREFIX}/grant_authority`, payload);
+    return post<'custom', Hash>(`${API_PREFIX}/grant_authority`, payload, { withCredentials: false });
   },
 
   /**
@@ -61,7 +61,7 @@ export const tokensApi = {
    * @returns Promise with transaction hash and token address response
    */
   issueToken: (payload: TokenIssuePayload) => {
-    return post<'custom', HashWithToken>(`${API_PREFIX}/issue`, payload);
+    return post<'custom', HashWithToken>(`${API_PREFIX}/issue`, payload, { withCredentials: false });
   },
 
   /**
@@ -70,7 +70,7 @@ export const tokensApi = {
    * @returns Promise with transaction hash response
    */
   mintToken: (payload: TokenMintPayload) => {
-    return post<'custom', Hash>(`${API_PREFIX}/mint`, payload);
+    return post<'custom', Hash>(`${API_PREFIX}/mint`, payload, { withCredentials: false });
   },
 
   /**
@@ -79,7 +79,7 @@ export const tokensApi = {
    * @returns Promise with transaction hash response
    */
   pauseToken: (payload: TokenPausePayload) => {
-    return post<'custom', Hash>(`${API_PREFIX}/pause`, payload);
+    return post<'custom', Hash>(`${API_PREFIX}/pause`, payload, { withCredentials: false });
   },
 
   /**
@@ -88,7 +88,7 @@ export const tokensApi = {
    * @returns Promise with transaction hash response
    */
   updateMetadata: (payload: TokenMetadataPayload) => {
-    return post<'custom', Hash>(`${API_PREFIX}/update_metadata`, payload);
+    return post<'custom', Hash>(`${API_PREFIX}/update_metadata`, payload, { withCredentials: false });
   }
 };
 

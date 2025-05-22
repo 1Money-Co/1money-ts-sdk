@@ -61,7 +61,7 @@ describe('tokens API test', function () {
   const testAddress = '0x179e3514e5afd76223d53c3d97117d66f217d087';
 
   // Skip actual API calls in regular tests
-  it('should fetch token metadata', function (done) {
+  it.skip('should fetch token metadata', function (done) {
     apiClient.tokens.getTokenMetadata(issuedToken)
       .success(response => {
         expect(response).to.be.an('object');

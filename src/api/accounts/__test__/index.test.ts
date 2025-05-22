@@ -28,7 +28,7 @@ describe('accounts API test', function () {
   const testToken = '0x8a0e3fde2b52f63459b41c6c931382b5adb7aa0b';
 
   // Make real API calls to test the accounts API
-  it('should fetch account nonce', function(done) {
+  it.skip('should fetch account nonce', function(done) {
     apiClient.accounts.getNonce(testAddress)
       .success(response => {
         expect(response).to.be.an('object');
@@ -41,7 +41,7 @@ describe('accounts API test', function () {
       });
   });
 
-  it('should fetch associated token account', function(done) {
+  it.skip('should fetch associated token account', function(done) {
     apiClient.accounts.getTokenAccount(testAddress, testToken)
       .success(response => {
         expect(response).to.be.an('object');

@@ -14,7 +14,7 @@ export const checkpointsApi = {
    * @returns Promise with checkpoint number response
    */
   getNumber: () => {
-    return get<'custom', CheckpointNumberResponse>(`${API_PREFIX}/number`);
+    return get<'custom', CheckpointNumberResponse>(`${API_PREFIX}/number`, { withCredentials: false });
   },
 
   /**
@@ -24,7 +24,7 @@ export const checkpointsApi = {
    * @returns Promise with checkpoint response
    */
   getByHash: (hash: string, full = false) => {
-    return get<'custom', Checkpoint>(`${API_PREFIX}/by_hash?hash=${hash}&full=${full}`);
+    return get<'custom', Checkpoint>(`${API_PREFIX}/by_hash?hash=${hash}&full=${full}`, { withCredentials: false });
   },
 
   /**
@@ -34,7 +34,7 @@ export const checkpointsApi = {
    * @returns Promise with checkpoint response
    */
   getByNumber: (number: number | string, full = false) => {
-    return get<'custom', Checkpoint>(`${API_PREFIX}/by_number?number=${number}&full=${full}`);
+    return get<'custom', Checkpoint>(`${API_PREFIX}/by_number?number=${number}&full=${full}`, { withCredentials: false });
   }
 };
 

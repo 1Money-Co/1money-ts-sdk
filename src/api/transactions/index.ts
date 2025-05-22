@@ -22,7 +22,7 @@ export const transactionsApi = {
    * @returns Promise with transaction response
    */
   getByHash: (hash: string) => {
-    return get<'custom', Transaction>(`${API_PREFIX}/by_hash?hash=${hash}`);
+    return get<'custom', Transaction>(`${API_PREFIX}/by_hash?hash=${hash}`, { withCredentials: false });
   },
 
   /**
@@ -31,7 +31,7 @@ export const transactionsApi = {
    * @returns Promise with transaction receipt response
    */
   getReceiptByHash: (hash: string) => {
-    return get<'custom', TransactionReceipt>(`${API_PREFIX}/receipt/by_hash?hash=${hash}`);
+    return get<'custom', TransactionReceipt>(`${API_PREFIX}/receipt/by_hash?hash=${hash}`, { withCredentials: false });
   },
 
   /**
@@ -46,7 +46,7 @@ export const transactionsApi = {
     if (token) {
       url += `&token=${token}`;
     }
-    return get<'custom', EstimateFee>(url);
+    return get<'custom', EstimateFee>(url, { withCredentials: false });
   },
 
   /**
@@ -55,7 +55,7 @@ export const transactionsApi = {
    * @returns Promise with transaction hash response
    */
   payment: (payload: PaymentPayload) => {
-    return post<'custom', Hash>(`${API_PREFIX}/payment`, payload);
+    return post<'custom', Hash>(`${API_PREFIX}/payment`, payload, { withCredentials: false });
   },
 
   /**
@@ -64,7 +64,7 @@ export const transactionsApi = {
    * @returns Promise with transaction hash response
    */
   cancel: (payload: CancellationPayload) => {
-    return post<'custom', Hash>(`${API_PREFIX}/cancellation`, payload);
+    return post<'custom', Hash>(`${API_PREFIX}/cancellation`, payload, { withCredentials: false });
   }
 };
 
