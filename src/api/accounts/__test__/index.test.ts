@@ -24,11 +24,11 @@ describe('accounts API test', function () {
   });
 
   // Valid addresses for testing on the testnet
-  const testAddress = '0x179e3514e5afd76223d53c3d97117d66f217d087';
+  const testAddress = '0xa634dfba8c7550550817898bc4820cd10888aac5';
   const testToken = '0x8a0e3fde2b52f63459b41c6c931382b5adb7aa0b';
 
   // Make real API calls to test the accounts API
-  it.skip('should fetch account nonce', function(done) {
+  it('should fetch account nonce', function(done) {
     apiClient.accounts.getNonce(testAddress)
       .success(response => {
         expect(response).to.be.an('object');

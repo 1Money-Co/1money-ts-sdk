@@ -1,6 +1,6 @@
 {
   "name": "@1money/ts-sdk",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "ts sdk for 1Money protocol network",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -53,8 +53,10 @@
   "author": "",
   "license": "MIT",
   "peerDependencies": {
-    "axios": ">=1.8.2",
-    "ethers": ">=6.14.0"
+    "@ethereumjs/rlp": ">=10.0.0 <11.0.0",
+    "@noble/secp256k1": ">=2.2.0 <3.0.0",
+    "axios": ">=1.8.2 <2.0.0",
+    "viem": ">=2.0.0 <3.0.0"
   },
   "devDependencies": {
     "@babel/core": "~7.26.10",
@@ -63,6 +65,8 @@
     "@babel/preset-typescript": "~7.26.0",
     "@babel/runtime-corejs3": "~7.26.10",
     "@commitlint/cli": "8.3.5",
+    "@ethereumjs/rlp": "^10.0.0",
+    "@noble/secp256k1": "^2.2.3",
     "@omni-door/cli": "~3.1.0",
     "@rollup/plugin-alias": "~5.1.1",
     "@rollup/plugin-babel": "~6.0.4",
@@ -85,7 +89,6 @@
     "eslint": "~8.57.1",
     "eslint-config-prettier": "~10.0.1",
     "eslint-plugin-prettier": "~5.2.3",
-    "ethers": "^6.14.0",
     "husky": "9.1.7",
     "ip": "1.1.5",
     "lint-staged": "15.4.3",
@@ -101,6 +104,7 @@
     "tslib": "^2.6.3",
     "tsx": "^4.17.0",
     "typescript": "~5.8.3",
-    "typescript-transform-paths": "~3.5.5"
+    "typescript-transform-paths": "~3.5.5",
+    "viem": "^2.30.0"
   }
 }

@@ -6,6 +6,8 @@ import { signMessage, toHex } from '../../../utils';
 import { AuthorityAction, AuthorityType, PauseAction, ManageListAction } from '../types';
 import 'dotenv/config';
 
+import type { ZeroXString } from '../../../utils/sign';
+
 const RUN_ENV = process.env.RUN_ENV || 'local';
 
 describe('tokens API test', function () {
@@ -57,11 +59,11 @@ describe('tokens API test', function () {
   const chainId = CHAIN_IDS.TESTNET;
   const issuedToken = '0x8e9d1b45293e30ef38564582979195dd16a16e13';
   const operatorAddress = process.env.OPERATOR_ADDRESS;
-  const operatorPK = process.env.OPERATOR_PRIVATE_KEY;
+  const operatorPK = process.env.OPERATOR_PRIVATE_KEY as ZeroXString;
   const testAddress = '0x179e3514e5afd76223d53c3d97117d66f217d087';
 
   // Skip actual API calls in regular tests
-  it.skip('should fetch token metadata', function (done) {
+  it('should fetch token metadata', function (done) {
     apiClient.tokens.getTokenMetadata(issuedToken)
       .success(response => {
         expect(response).to.be.an('object');
@@ -89,7 +91,7 @@ describe('tokens API test', function () {
     // !todo
     it.skip('should set manage list', function (done) {
       apiClient.accounts.getNonce(operatorAddress)
-        .success(response => {
+        .success(async response => {
           const nonce = response.nonce;
           const action = ManageListAction.Whitelist;
           const payload = [
@@ -99,7 +101,7 @@ describe('tokens API test', function () {
             testAddress,
             issuedToken,
           ]
-          const signature = signMessage(payload, operatorPK)
+          const signature = await signMessage(payload, operatorPK)
           if (!signature) return done(new Error('Failed to sign message'));
           apiClient.tokens.setManageList({
             chain_id: chainId,
@@ -121,7 +123,7 @@ describe('tokens API test', function () {
     // passed
     it.skip('should burn token', function (done) {
       apiClient.accounts.getNonce(operatorAddress)
-        .success(response => {
+        .success(async response => {
           const nonce = response.nonce;
           const burnValue = '10';
           const payload = [
@@ -131,7 +133,7 @@ describe('tokens API test', function () {
             toHex(burnValue),
             issuedToken,
           ]
-          const signature = signMessage(payload, operatorPK)
+          const signature = await signMessage(payload, operatorPK)
           if (!signature) return done(new Error('Failed to sign message'));
           apiClient.tokens.burnToken({
             chain_id: chainId,
@@ -156,7 +158,7 @@ describe('tokens API test', function () {
       if (RUN_ENV === 'remote' || !operatorAddress || !operatorPK || !testAddress) return done();
 
       apiClient.accounts.getNonce(operatorAddress)
-        .success(response => {
+        .success(async response => {
           const nonce = response.nonce;
           const tokenValue = '15000';
           const payload = [
@@ -168,7 +170,7 @@ describe('tokens API test', function () {
             issuedToken,
             toHex(tokenValue),
           ]
-          const signature = signMessage(payload, operatorPK)
+          const signature = await signMessage(payload, operatorPK)
           if (!signature) return done(new Error('Failed to sign message'));
           apiClient.tokens.grantAuthority({
             chain_id: chainId,
@@ -189,39 +191,40 @@ describe('tokens API test', function () {
         .rest(err => done(err?.data ?? err.message ?? err));
     });
 
-    // passed (no permission to issue new token)
+    // !todo
     it.skip('should issue token', function (done) {
       if (RUN_ENV === 'remote' || !operatorAddress || !operatorPK) return done();
 
       apiClient.accounts.getNonce(operatorAddress)
-        .success(response => {
+        .success(async response => {
           const nonce = response.nonce;
           const name = 'USD 1Money';
           const symbol = 'USD1';
           const decimals = 6;
-          const isPrivate = true;
+          const isPrivate = false;
           const payload = [
             toHex(chainId),
             toHex(nonce),
-            toHex(name),
             toHex(symbol),
+            toHex(name),
             toHex(decimals),
-            operatorAddress,
+            toHex(operatorAddress),
             toHex(isPrivate),
           ];
-          const signature = signMessage(payload, operatorPK)
+          const signature = await signMessage(payload, operatorPK)
           if (!signature) return done(new Error('Failed to sign message'));
           apiClient.tokens.issueToken({
             chain_id: chainId,
             nonce,
-            name,
             symbol,
+            name,
             decimals,
             master_authority: operatorAddress,
             is_private: isPrivate,
             signature,
           })
             .success(response => {
+              console.info('result: ', response);
               expect(response).to.be.an('object');
               expect(response.token).to.be.a('string');
               done();
@@ -236,7 +239,7 @@ describe('tokens API test', function () {
       if (RUN_ENV === 'remote' || !operatorAddress || !operatorPK || !testAddress) return done();
 
       apiClient.accounts.getNonce(operatorAddress)
-        .success(response => {
+        .success(async response => {
           const nonce = response.nonce;
           const mintValue = '10000';
           const payload = [
@@ -246,7 +249,7 @@ describe('tokens API test', function () {
             toHex(mintValue),
             issuedToken,
           ];
-          const signature = signMessage(payload, operatorPK)
+          const signature = await signMessage(payload, operatorPK)
           if (!signature) return done(new Error('Failed to sign message'));
           apiClient.tokens.mintToken({
             chain_id: chainId,
@@ -271,7 +274,7 @@ describe('tokens API test', function () {
       if (RUN_ENV === 'remote' || !operatorAddress || !operatorPK) return done();
 
       apiClient.accounts.getNonce(operatorAddress)
-        .success(response => {
+        .success(async response => {
           const nonce = response.nonce;
           const action = PauseAction.Unpause;
           const payload = [
@@ -280,7 +283,7 @@ describe('tokens API test', function () {
             toHex(action),
             issuedToken,
           ];
-          const signature = signMessage(payload, operatorPK);
+          const signature = await signMessage(payload, operatorPK);
           if (!signature) return done(new Error('Failed to sign message'));
           apiClient.tokens.pauseToken({
             chain_id: chainId,
@@ -304,7 +307,7 @@ describe('tokens API test', function () {
       if (RUN_ENV === 'remote' || !operatorAddress || !operatorPK) return done();
 
       apiClient.accounts.getNonce(operatorAddress)
-        .success(response => {
+        .success(async response => {
           const nonce = response.nonce;
           const name = 'USDC';
           const uri = 'https://usdc.com/metadata';
@@ -322,7 +325,7 @@ describe('tokens API test', function () {
             issuedToken,
             toHex(additional_metadata)
           ];
-          const signature = signMessage(payload, operatorPK)
+          const signature = await signMessage(payload, operatorPK)
           if (!signature) return done(new Error('Failed to sign message'));
           apiClient.tokens.updateMetadata({
             chain_id: chainId,

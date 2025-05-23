@@ -5,6 +5,8 @@ import { CHAIN_IDS } from '../../constants';
 import { signMessage, toHex } from '../../../utils';
 import 'dotenv/config';
 
+import type { ZeroXString } from '../../../utils/sign';
+
 const RUN_ENV = process.env.RUN_ENV || 'local';
 
 describe('transactions API test', function () {
@@ -42,7 +44,7 @@ describe('transactions API test', function () {
   const issuedToken = '0x8e9d1b45293e30ef38564582979195dd16a16e13';
   const tokenValue = '100';
   const operatorAddress = process.env.OPERATOR_ADDRESS;
-  const operatorPK = process.env.OPERATOR_PRIVATE_KEY;
+  const operatorPK = process.env.OPERATOR_PRIVATE_KEY as ZeroXString;
   const testAddress = '0x179e3514e5afd76223d53c3d97117d66f217d087';
   const testPK = '0xce6ed4b68189c8e844fc245d3169df053fb9e05c13f168cd005a6a111ac67bee';
   const testHash = '0x85396c45c42acfc73c214da3b71737f3c46b4bda638d5b0c58404d176392f867';
@@ -99,7 +101,7 @@ describe('transactions API test', function () {
     // passed
     it.skip('should submit payment transaction', function (done) {
       apiClient.accounts.getNonce(testAddress)
-        .success(response => {
+        .success(async response => {
           const nonce = response.nonce;
           const payload = [
             toHex(chainId),
@@ -108,7 +110,7 @@ describe('transactions API test', function () {
             toHex(tokenValue),
             issuedToken
           ];
-          const signature = signMessage(payload, operatorPK)
+          const signature = await signMessage(payload, operatorPK)
           if (!signature) return done(new Error('Failed to sign message'));
           apiClient.transactions.payment({
             chain_id: chainId,
@@ -136,13 +138,13 @@ describe('transactions API test', function () {
     // passed (the tx to be cancelled is not in pending pool)
     it.skip('should cancel transaction', function (done) {
       apiClient.accounts.getNonce(testAddress)
-        .success(response => {
+        .success(async response => {
           const nonce = response.nonce;
           const payload = [
             toHex(chainId),
             toHex(nonce),
           ];
-          const signature = signMessage(payload, operatorPK)
+          const signature = await signMessage(payload, operatorPK)
           if (!signature) return done(new Error('Failed to sign message'));
           apiClient.transactions.cancel({
             chain_id: chainId,

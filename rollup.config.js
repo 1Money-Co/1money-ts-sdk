@@ -12,7 +12,7 @@ module.exports = function (getConfig) {
   const extensions = ['.ts', '.js'];
   config.forEach(v => {
     // just keep the reference for third-party libs
-    v.external = ['axios', 'chalk'];
+    v.external = ['axios', 'viem', '@noble/secp256k1', '@ethereumjs/rlp'];
     v.plugins.unshift(
       alias({
         entries: [
@@ -36,7 +36,8 @@ module.exports = function (getConfig) {
     plugins: [
       alias({
         entries: [
-          { find: '@/', replacement: path.resolve(__dirname, 'src/') }
+          { find: '@/', replacement: path.resolve(__dirname, 'src/') },
+          { find: '@noble/secp256k1', replacement: path.resolve(__dirname, 'node_modules/@noble/secp256k1/index.js') }
         ]
       }),
       nodePolyfills(),
@@ -47,6 +48,8 @@ module.exports = function (getConfig) {
       }),
       commonjs(),
       typescript({
+        tsconfig: path.resolve(__dirname, 'tsconfig.json'),
+        include: ['src/**/*.ts'],
         compilerOptions: {
           target: 'es2015',
           module: 'ESNext',

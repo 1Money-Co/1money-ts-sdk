@@ -1,6 +1,8 @@
 // Types for tokens API
 import { AddressSchema, TokenAddressSchema, U256Schema } from '../types';
 
+import type { Signature } from '@/utils/sign';
+
 // Token metadata key-value pair
 export interface MetaDataKeyValuePair {
   key: string;
@@ -68,11 +70,7 @@ export enum PauseAction {
 }
 
 // Signature type for REST requests
-export interface RestSignature {
-  r: string;
-  s: string;
-  v: number;
-}
+export interface RestSignature extends Signature {}
 
 export interface TokenManageListPayload {
   chain_id: number;
