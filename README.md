@@ -212,13 +212,13 @@ const privateKey = 'YOUR_PRIVATE_KEY';
 
 // Create the payload array for signing
 const payload = [
-  toHex(1), // chain_id
-  toHex(1), // nonce
-  toHex('My Token'), // name
-  toHex('MTK'), // symbol
-  toHex(18), // decimals
+  1, // chain_id
+  1, // nonce
+  'My Token', // name
+  'MTK', // symbol
+  18, // decimals
   '0x9E1E9688A44D058fF181Ed64ddFAFbBE5CC74ff3', // master_authority
-  toHex(true), // is_private
+  true, // is_private
 ];
 
 // Generate signature
@@ -258,11 +258,11 @@ const privateKey = 'YOUR_PRIVATE_KEY';
 
 // Create the payload array for signing
 const payload = [
-  toHex(1), // chain_id
-  toHex(1), // nonce
+  1, // chain_id
+  1, // nonce
   '0x2cd8999Be299373D7881f4aDD11510030ad1412F', // token
   '0x9E1E9688A44D058fF181Ed64ddFAFbBE5CC74ff3', // address
-  toHex(ManageListAction.Blacklist), // action
+  ManageListAction.Blacklist, // action
 ];
 
 // Generate signature
@@ -299,10 +299,10 @@ const privateKey = 'YOUR_PRIVATE_KEY';
 
 // Create the payload array for signing
 const payload = [
-  toHex(1), // chain_id
-  toHex(1), // nonce
+  1, // chain_id
+  1, // nonce
   '0x2cd8999Be299373D7881f4aDD11510030ad1412F', // token
-  toHex('1000000000000000000'), // amount
+  '1000000000000000000', // amount
 ];
 
 // Generate signature
@@ -339,12 +339,12 @@ const privateKey = 'YOUR_PRIVATE_KEY';
 
 // Create the payload array for signing
 const payload = [
-  toHex(1), // chain_id
-  toHex(1), // nonce
+  1, // chain_id
+  1, // nonce
   '0x2cd8999Be299373D7881f4aDD11510030ad1412F', // token
   '0x9E1E9688A44D058fF181Ed64ddFAFbBE5CC74ff3', // authority_address
-  toHex(AuthorityAction.Grant), // action
-  toHex(AuthorityType.MasterMint), // authority_type
+  AuthorityAction.Grant, // action
+  AuthorityType.MasterMint, // authority_type
 ];
 
 // Generate signature
@@ -423,10 +423,10 @@ const privateKey = 'YOUR_PRIVATE_KEY';
 
 // Create the payload array for signing
 const payload = [
-  toHex(1), // chain_id
-  toHex(1), // nonce
+  1, // chain_id
+  1, // nonce
   '0x2cd8999Be299373D7881f4aDD11510030ad1412F', // recipient
-  toHex('1000000000'), // value
+  '1000000000', // value
   '0x2cd8999Be299373D7881f4aDD11510030ad1412F', // token
 ];
 
@@ -464,8 +464,8 @@ const privateKey = 'YOUR_PRIVATE_KEY';
 
 // Create the payload array for signing
 const payload = [
-  toHex(1), // chain_id
-  toHex(1), // nonce
+  1, // chain_id
+  1, // nonce
 ];
 
 // Generate signature

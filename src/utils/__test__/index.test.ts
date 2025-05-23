@@ -121,9 +121,10 @@ describe("utils test", function () {
     if (testPK && RUN_ENV !== 'remote') {
       it("call signMessage", function (done) {
         const payload = [
-          toHex(1),
-          toHex("2"),
-          toHex(true),
+          1,
+          'USDT',
+          true,
+          '0x1234567890',
         ];
         signMessage(payload, testPK as ZeroXString)
           .then(signature => {

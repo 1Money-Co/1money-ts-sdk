@@ -2,7 +2,7 @@ import 'mocha';
 import { expect } from 'chai';
 import { api } from '../../';
 import { CHAIN_IDS } from '../../constants';
-import { signMessage, toHex } from '../../../utils';
+import { signMessage } from '../../../utils';
 import 'dotenv/config';
 
 import type { ZeroXString } from '../../../utils/sign';
@@ -104,10 +104,10 @@ describe('transactions API test', function () {
         .success(async response => {
           const nonce = response.nonce;
           const payload = [
-            toHex(chainId),
-            toHex(nonce),
+            chainId,
+            nonce,
             testAddress,
-            toHex(tokenValue),
+            tokenValue,
             issuedToken
           ];
           const signature = await signMessage(payload, operatorPK)
@@ -141,8 +141,8 @@ describe('transactions API test', function () {
         .success(async response => {
           const nonce = response.nonce;
           const payload = [
-            toHex(chainId),
-            toHex(nonce),
+            chainId,
+            nonce,
           ];
           const signature = await signMessage(payload, operatorPK)
           if (!signature) return done(new Error('Failed to sign message'));

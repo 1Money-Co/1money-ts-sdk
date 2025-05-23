@@ -20,7 +20,7 @@ export interface Signature {
   v: number;
 }
 
-export type Payload = string | number | bigint | Uint8Array | Array<Payload> | null | undefined;
+export type Payload = boolean | string | number | bigint | Uint8Array | Array<Payload> | null | undefined;
 /**
  * Sign a message using the provided private key
  * @param payload Payload to sign
@@ -28,7 +28,29 @@ export type Payload = string | number | bigint | Uint8Array | Array<Payload> | n
  * @returns Signature object with r, s, v components
  */
 export async function signMessage(payload: Array<Payload>, privateKey: ZeroXString): Promise<Signature> {
-  const encoded: Uint8Array = rlpEncode(payload);
+  const formatted = payload.map((v) => {
+    if (_typeof(v) === 'string') {
+      if (/^0x[0-9a-fA-F]+$/.test(v as string)) {
+        // hex-encoded data → raw bytes
+        return hexToBytes(v as ZeroXString);
+      } else if (!isNaN(+(v as string))) {
+        // number-like string → hex → bytes
+        return hexToBytes(numberToHex(+(v as `${number}`)));
+      } else {
+        // plain string → UTF-8 bytes
+        return new TextEncoder().encode(v as string);
+      }
+    } else if (_typeof(v) === 'number' || _typeof(v) === 'bigint') {
+      // produce minimal hex, then arrayify
+      return hexToBytes(numberToHex(v as number | bigint));
+    } else if (_typeof(v) === 'boolean') {
+      return v ? Uint8Array.from([1]) : new Uint8Array([]);
+    } else {
+      return v;
+    }
+  }) as Exclude<Payload, boolean | Payload[]> & Exclude<Payload, boolean | Payload[]>[];
+
+  const encoded: Uint8Array = rlpEncode(formatted);
 
   const digestHex = keccak256(encoded);
   const digest = hexToBytes(digestHex);
