@@ -1,4 +1,6 @@
 # @1money/ts-sdk
+<img src="./public/logo.png" alt="1Money Logo" width="200"/> 
+
 The TS-SDK for 1Money Network Protocol
 
 [![Build Status](https://github.com/1Money-Co/1money-ts-sdk/actions/workflows/cicd-npm.yml/badge.svg)](https://github.com/1Money-Co/1money-ts-sdk/actions/workflows/cicd-npm.yml)
