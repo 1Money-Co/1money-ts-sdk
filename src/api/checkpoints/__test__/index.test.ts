@@ -12,9 +12,9 @@ describe('checkpoint API test', function () {
     network: 'testnet',
   });
 
-  const number = 464730;
-  const hash = '0xca82c4666c3bb8e8a40218d82687713801be1921a764f859eda8848577fea8bd';
-  const p_hash = '0x68723ef1c65199c871a03fd072d6b09412852c2073ff78740b1d9bc5e8f2e897';
+  const number = 100;
+  const hash = '0xb2fa4f7beb1bb3b867481392c13330159d944a26bcc9208c30744b0b45997809';
+  const p_hash = '0x1087ec76ee7ddd3a134d31380d685443a2cad33b59b4de0578b36b3d1625bd58';
 
   it('should have methods', function () {
     expect(apiClient.checkpoints).to.be.an('object');

@@ -16,7 +16,7 @@ export const accountsApi = {
    * @returns Promise with account info response
    */
   getNonce: (address: string) => {
-    return get<'custom', AccountInfo>(`${API_PREFIX}/nonce?address=${address}`);
+    return get<'custom', AccountInfo>(`${API_PREFIX}/nonce?address=${address}`, { withCredentials: false });
   },
 
   /**
@@ -26,7 +26,7 @@ export const accountsApi = {
    * @returns Promise with associated token account response
    */
   getTokenAccount: (address: string, token: string) => {
-    return get<'custom', AssociatedTokenAccount>(`${API_PREFIX}/token_account?address=${address}&token=${token}`);
+    return get<'custom', AssociatedTokenAccount>(`${API_PREFIX}/token_account?address=${address}&token=${token}`, { withCredentials: false });
   }
 };
 

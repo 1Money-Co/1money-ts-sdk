@@ -1,6 +1,7 @@
 import "mocha";
 import { expect } from "chai";
 import {
+  deriveTokenAddress,
   _typeof,
   safePromiseAll,
   safePromiseLine,
@@ -9,9 +10,25 @@ import {
 } from "../";
 import 'dotenv/config';
 
+import type { ZeroXString } from '../sign';
+
 const RUN_ENV = process.env.RUN_ENV || 'local';
 
 describe("utils test", function () {
+  describe("deriveTokenAddress test", function () {
+    it("deriveTokenAddress is a function", function () {
+      expect(deriveTokenAddress).to.be.a("function");
+    });
+
+    it("call deriveTokenAddress", function () {
+      const walletAddress = "0xA634dfba8c7550550817898bC4820cD10888Aac5";
+      const mintAddress = "0x8E9d1b45293e30EF38564582979195DD16A16E13";
+      const tokenAddress = deriveTokenAddress(walletAddress, mintAddress);
+      expect(tokenAddress).to.be.a('string');
+      expect(tokenAddress).to.be.equal("0x91b6191015e41469ba2febd7e1722a8ee83de15b");
+    });
+  });
+
   describe("_typeof test", function () {
     it("_typeof is a function", function () {
       expect(_typeof).to.be.a("function");
@@ -102,17 +119,21 @@ describe("utils test", function () {
     
     const testPK = process.env.TEST_PRIVATE_KEY;
     if (testPK && RUN_ENV !== 'remote') {
-      it("call signMessage", function () {
+      it("call signMessage", function (done) {
         const payload = [
-          toHex(1),
-          toHex("2"),
-          toHex(true),
+          1,
+          'USDT',
+          true,
+          '0x1234567890',
         ];
-        const signature = signMessage(payload, testPK);
-        expect(signature).to.be.an("object");
-        expect(signature?.r).to.be.a("string");
-        expect(signature?.s).to.be.a("string");
-        expect(signature?.v).to.be.a("number");
+        signMessage(payload, testPK as ZeroXString)
+          .then(signature => {
+            expect(signature).to.be.an("object");
+            expect(signature?.r).to.be.a("string");
+            expect(signature?.s).to.be.a("string");
+            expect(signature?.v).to.be.a("number");
+            done();
+          });
       });
     }
   });
@@ -123,9 +144,15 @@ describe("utils test", function () {
     });
 
     it("call toHex", function () {
-      expect(toHex(1)).to.be.equal("0x01");
-      expect(toHex("2")).to.be.equal("0x02");
-      expect(toHex(true)).to.be.equal("0x01");
+      expect(toHex(1)).to.be.equal("0x1");
+      expect(toHex("2")).to.be.equal("0x2");
+      expect(toHex(true)).to.be.equal("0x1");
+      expect(toHex(false)).to.be.equal("0x0");
+      expect(toHex(null)).to.be.equal("0x6e756c6c");
+      expect(toHex(undefined)).to.be.equal("0x");
+      expect(toHex({})).to.be.equal("0x7b7d");
+      expect(toHex([])).to.be.equal("0x");
+      expect(toHex(new Error())).to.be.equal("0x7b7d");
     });    
   });
 });
