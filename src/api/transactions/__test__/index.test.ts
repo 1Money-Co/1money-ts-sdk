@@ -1,11 +1,26 @@
 import 'mocha';
+import puppeteer, { type Browser, type Page } from 'puppeteer';
 import { expect } from 'chai';
 import { api } from '../../';
 import { CHAIN_IDS } from '../../constants';
 import { signMessage } from '../../../utils';
+import { transactionsApi } from '../';
+import { accountsApi } from '../../accounts';
 import 'dotenv/config';
 
 import type { ZeroXString } from '../../../utils/sign';
+
+declare global {
+  interface Window {
+    signMessage: typeof signMessage;
+    getNonce: typeof accountsApi.getNonce;
+    _getByHash: typeof transactionsApi.getByHash;
+    getReceiptByHash: typeof transactionsApi.getReceiptByHash;
+    estimateFee: typeof transactionsApi.estimateFee;
+    payment: typeof transactionsApi.payment;
+    cancel: typeof transactionsApi.cancel;
+  }
+}
 
 const RUN_ENV = process.env.RUN_ENV || 'local';
 
@@ -17,6 +32,34 @@ describe('transactions API test', function () {
     timeout: 3000,
     network: 'testnet',
   });
+
+  let browser: Browser;
+  let pageOne: Page;
+
+  if (RUN_ENV === 'local') {
+    before(async () => {
+      browser = await puppeteer.launch({
+        headless: true,
+        executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+      });
+      await browser.newPage().then(page => {
+        pageOne = page;
+        return Promise.all([
+          pageOne.exposeFunction('signMessage', signMessage),
+          pageOne.exposeFunction('getNonce', apiClient.accounts.getNonce),
+          pageOne.exposeFunction('_getByHash', apiClient.transactions.getByHash),
+          pageOne.exposeFunction('getReceiptByHash', apiClient.transactions.getReceiptByHash),
+          pageOne.exposeFunction('estimateFee', apiClient.transactions.estimateFee),
+          pageOne.exposeFunction('payment', apiClient.transactions.payment),
+          pageOne.exposeFunction('cancel', apiClient.transactions.cancel),
+        ])
+      });
+    });
+
+    after(async () => {
+      await browser.close();
+    });
+  }
 
   it('should have transactions API object', function () {
     expect(apiClient.transactions).to.be.an('object');
