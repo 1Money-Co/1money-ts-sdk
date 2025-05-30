@@ -7,10 +7,12 @@ import {
   safePromiseLine,
   toHex,
   signMessage,
+  encodePayload,
+  calcTxHash,
 } from "../";
 import 'dotenv/config';
 
-import type { ZeroXString } from '../sign';
+import type { ZeroXString } from '../interface';
 
 const RUN_ENV = process.env.RUN_ENV || 'local';
 
@@ -62,6 +64,19 @@ describe("utils test", function () {
       expect(_typeof(new ArrayBuffer())).to.be.equal("arraybuffer");
     });
   }); 
+
+  describe("encodePayload test", function () {
+    it("encodePayload is a function", function () {
+      expect(encodePayload).to.be.a("function");
+    });
+
+    it("call encodePayload", function () {
+      const payload = [1, "0x1234567890", true, "0x1234567890"];
+      const encoded = encodePayload(payload);
+      expect(encoded).to.be.a("uint8array");
+      expect(encoded.length).to.be.equal(15);
+    });
+  });
 
   describe("safePromiseAll test", function () {
     it("safePromiseAll is a function", function () {
@@ -154,5 +169,29 @@ describe("utils test", function () {
       expect(toHex([])).to.be.equal("0x");
       expect(toHex(new Error())).to.be.equal("0x7b7d");
     });    
+  });
+
+  describe("calcTxHash test", function () {
+    it("calcTxHash is a function", function () {
+      expect(calcTxHash).to.be.a("function");
+    });
+
+    it("call calcTxHash", function () {
+      const payload = [
+        1212101,
+        2,
+        '0x0000000000000000000000000000000000000000',
+        1024,
+        '0x0000000000000000000000000000000000000000',
+      ];
+      const signature = {
+        r: '0xe9ef6ce7aaeb4656f197b63a96c932ab5e0fd2df0913f6af1c8e7b1879e5ed0a' as const,
+        s: '0x68a9cbaa35af5e3d896a2841d19a42dba729380a1c91864403de872578f6f6c3' as const,
+        v: 0,
+      };
+      const hash = calcTxHash(payload, signature);
+      expect(hash).to.be.a("string");
+      expect(hash).to.be.equal("0x87e63407778ce2fc07ba5f51d957eb6966e3eb1f3be75e0287115442bdef1d82");
+    });
   });
 });

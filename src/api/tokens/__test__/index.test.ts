@@ -9,7 +9,7 @@ import { tokensApi } from '../';
 import { accountsApi } from '../../accounts';
 import 'dotenv/config';
 
-import type { ZeroXString } from '../../../utils/sign';
+import type { ZeroXString } from '../../../utils';
 
 declare global {
   interface Window {
@@ -152,7 +152,7 @@ describe('tokens API test', function () {
           ]
           const signature = await window.signMessage(payload, operatorPK)
           if (!signature) return done(new Error('Failed to sign message'));
-          const response = await apiClient.tokens.setManageList({
+          const response = await window.setManageList({
             chain_id: chainId,
             nonce,
             action,
@@ -217,7 +217,7 @@ describe('tokens API test', function () {
           ]
           const signature = await window.signMessage(payload, operatorPK)
           if (!signature) return done(new Error('Failed to sign message'));
-          const response = await apiClient.tokens.burnToken({
+          const response = await window.burnToken({
             chain_id: chainId,
             nonce,
             recipient: testAddress,
@@ -287,7 +287,7 @@ describe('tokens API test', function () {
           ]
           const signature = await window.signMessage(payload, operatorPK)
           if (!signature) return done(new Error('Failed to sign message'));
-          const response = await apiClient.tokens.grantAuthority({
+          const response = await window.grantAuthority({
             chain_id: chainId,
             nonce,
             action,
@@ -366,7 +366,7 @@ describe('tokens API test', function () {
           ];
           const signature = await window.signMessage(payload, operatorPK)
           if (!signature) return done(new Error('Failed to sign message'));
-          const response = await apiClient.tokens.issueToken({
+          const response = await window.issueToken({
             chain_id: chainId,
             nonce,
             symbol,
@@ -436,7 +436,7 @@ describe('tokens API test', function () {
         () => pageOne.evaluate(async (params) => {
           const { operatorAddress, operatorPK, chainId, testAddress, issuedToken } = params;
           const { nonce } = await window.getNonce(operatorAddress);
-          const mintValue = '10000';
+          const mintValue = '100000';
           const payload = [
             chainId,
             nonce,
@@ -446,7 +446,7 @@ describe('tokens API test', function () {
           ];
           const signature = await window.signMessage(payload, operatorPK)
           if (!signature) return done(new Error('Failed to sign message'));
-          const response = await apiClient.tokens.mintToken({
+          const response = await window.mintToken({
             chain_id: chainId,
             nonce,
             recipient: testAddress,
@@ -468,7 +468,7 @@ describe('tokens API test', function () {
         () => apiClient.accounts.getNonce(operatorAddress)
           .success(async response => {
             const nonce = response.nonce;
-            const mintValue = '10000';
+            const mintValue = '100000';
             const payload = [
               chainId,
               nonce,
@@ -512,7 +512,7 @@ describe('tokens API test', function () {
           ];
           const signature = await window.signMessage(payload, operatorPK);
           if (!signature) return done(new Error('Failed to sign message'));
-          const response = await apiClient.tokens.pauseToken({
+          const response = await window.pauseToken({
             chain_id: chainId,
             nonce,
             action,
@@ -585,7 +585,7 @@ describe('tokens API test', function () {
           ];
           const signature = await window.signMessage(payload, operatorPK)
           if (!signature) return done(new Error('Failed to sign message'));
-          const response = await apiClient.tokens.updateMetadata({
+          const response = await window.updateMetadata({
             chain_id: chainId,
             nonce,
             name,
