@@ -492,5 +492,75 @@ apiClient.transactions.cancel(cancellationPayload)
   });
 ```
 
+## Utility Functions
+
+### Calculate Transaction Hash
+```typescript
+import { calcTxHash } from '@1money/ts-sdk';
+
+// Create the payload array
+const payload = [
+  1212101, // chain_id
+  2, // nonce
+  '0x0000000000000000000000000000000000000000', // recipient
+  1024, // value
+  '0x0000000000000000000000000000000000000000', // token
+];
+
+// Create the signature object
+const signature = {
+  r: '0xe9ef6ce7aaeb4656f197b63a96c932ab5e0fd2df0913f6af1c8e7b1879e5ed0a',
+  s: '0x68a9cbaa35af5e3d896a2841d19a42dba729380a1c91864403de872578f6f6c3',
+  v: 0,
+};
+
+// Calculate the transaction hash
+const hash = calcTxHash(payload, signature);
+console.log('Transaction hash:', hash);
+```
+
+### Derive Token Address
+```typescript
+import { deriveTokenAddress } from '@1money/ts-sdk';
+
+const walletAddress = '0xA634dfba8c7550550817898bC4820cD10888Aac5';
+const mintAddress = '0x8E9d1b45293e30EF38564582979195DD16A16E13';
+
+// Derive the token account address
+const tokenAddress = deriveTokenAddress(walletAddress, mintAddress);
+console.log('Token account address:', tokenAddress);
+```
+
+### Convert to Hex
+```typescript
+import { toHex } from '@1money/ts-sdk';
+
+// Convert different types to hex
+const boolHex = toHex(true); // '0x01'
+const numHex = toHex(123); // '0x7b'
+const strHex = toHex('hello'); // '0x68656c6c6f'
+const arrHex = toHex([1, 2, 3]); // '0x010203'
+```
+
+### Sign Message
+```typescript
+import { signMessage } from '@1money/ts-sdk';
+
+// Your private key (DO NOT share or commit your private key)
+const privateKey = 'YOUR_PRIVATE_KEY';
+
+// Create the payload array for signing
+const payload = [
+  1212101, // chain_id
+  2, // nonce
+  '0x0000000000000000000000000000000000000000', // recipient
+  '1000000000000000000', // value (in wei)
+  '0x0000000000000000000000000000000000000000', // token
+];
+
+// Sign the message
+const signature = await signMessage(payload, privateKey);
+```
+
 ## License
 MIT

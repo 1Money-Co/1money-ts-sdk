@@ -1,6 +1,6 @@
 {
   "name": "@1money/ts-sdk",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "ts sdk for 1Money protocol network",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -96,6 +96,7 @@
     "nyc": "17.0.0",
     "prettier": "~3.5.0",
     "prettier-eslint": "^16.3.0",
+    "puppeteer": "^24.9.0",
     "rollup": "~4.40.0",
     "rollup-plugin-polyfill-node": "^0.13.0",
     "ts-loader": "9.5.1",

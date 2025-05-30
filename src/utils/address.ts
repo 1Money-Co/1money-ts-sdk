@@ -1,6 +1,6 @@
 import { keccak256, hexToBytes, stringToBytes, bytesToHex } from 'viem';
 
-export type Address = `0x${string}`;
+import type { ZeroXString } from './interface';
 
 /**
  * Derives the token account address given the wallet address and mint address.
@@ -18,12 +18,12 @@ export type Address = `0x${string}`;
 export function deriveTokenAddress(
   walletAddress: string,
   mintAddress: string,
-): Address {
+): ZeroXString {
   const walletBytes: Uint8Array = walletAddress.startsWith('0x')
-    ? hexToBytes(walletAddress as Address)
+    ? hexToBytes(walletAddress as ZeroXString)
     : stringToBytes(walletAddress);
   const mintBytes: Uint8Array = mintAddress.startsWith('0x')
-    ? hexToBytes(mintAddress as Address)
+    ? hexToBytes(mintAddress as ZeroXString)
     : stringToBytes(mintAddress);
 
   const combined = new Uint8Array(walletBytes.length + mintBytes.length);
@@ -34,5 +34,5 @@ export function deriveTokenAddress(
   const hashBytes = hexToBytes(hashHex);
 
   const addressBytes = hashBytes.slice(12);
-  return bytesToHex(addressBytes) as Address;
+  return bytesToHex(addressBytes) as ZeroXString;
 }

@@ -1,7 +1,7 @@
 // Types for tokens API
 import { AddressSchema, TokenAddressSchema, U256Schema } from '../types';
 
-import type { Signature } from '@/utils/sign';
+import type { Signature } from '@/utils';
 
 // Token metadata key-value pair
 export interface MetaDataKeyValuePair {
