@@ -109,7 +109,7 @@ describe('tokens API test', function () {
   const issuedToken = '0x5458747a0efb9ebeb8696fcac1479278c0872fbe';
   const operatorAddress = process.env.OPERATOR_ADDRESS;
   const operatorPK = process.env.OPERATOR_PRIVATE_KEY as ZeroXString;
-  const testAddress = '0x179e3514e5afd76223d53c3d97117d66f217d087';
+  const testAddress = '0x6324dAc598f9B637824978eD6b268C896E0c40E0';
 
   // Skip actual API calls in regular tests
   it('should fetch token metadata', function (done) {

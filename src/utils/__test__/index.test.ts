@@ -71,10 +71,18 @@ describe("utils test", function () {
     });
 
     it("call encodePayload", function () {
-      const payload = [1, "0x1234567890", true, "0x1234567890"];
+      const payload = [
+        1212101,
+        0,
+        '0xA634dfba8c7550550817898bC4820cD10888Aac5',
+        '10',
+        '0x5458747a0efb9ebeb8696fcac1479278c0872fbe'
+      ];
       const encoded = encodePayload(payload);
       expect(encoded).to.be.a("uint8array");
-      expect(encoded.length).to.be.equal(15);
+      expect(encoded.length).to.be.equal(49);
+      expect(encoded.every(v => v >= 0 && v <= 255)).to.be.true;
+      expect([240, 131, 18, 126, 197, 128, 148, 166, 52, 223, 186, 140, 117, 80, 85, 8, 23, 137, 139, 196, 130, 12, 209, 8, 136, 170, 197, 10, 148, 84, 88, 116, 122, 14, 251, 158, 190, 184, 105, 111, 202, 193, 71, 146, 120, 192, 135, 47, 190].every((v, k) => v === encoded[k])).to.be.true;
     });
   });
 

@@ -29,14 +29,14 @@ export function encodePayload(payload: Payload) {
           return hexToBytes(v as ZeroXString);
         } else if (!isNaN(+(v as string))) {
           // number-like string → hex → bytes
-          return hexToBytes(numberToHex(+(v as `${number}`)));
+          return v === '0' ? new Uint8Array([]) : hexToBytes(numberToHex(+(v as `${number}`)));
         } else {
           // plain string → UTF-8 bytes
           return new TextEncoder().encode(v as string);
         }
       } else if (_typeof(v) === 'number' || _typeof(v) === 'bigint') {
         // produce minimal hex, then arrayify
-        return hexToBytes(numberToHex(v as number | bigint));
+        return v === 0 || v === BigInt(0) ? new Uint8Array([]) : hexToBytes(numberToHex(v as number | bigint));
       } else if (_typeof(v) === 'boolean') {
         return v ? Uint8Array.from([1]) : new Uint8Array([]);
       } else {
