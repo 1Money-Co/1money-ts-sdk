@@ -88,9 +88,9 @@ describe('transactions API test', function () {
   const tokenValue = '10';
   const operatorAddress = process.env.OPERATOR_ADDRESS;
   const operatorPK = process.env.OPERATOR_PRIVATE_KEY as ZeroXString;
-  const testAddress = '0x179e3514e5afd76223d53c3d97117d66f217d087';
-  const testPK = '0xce6ed4b68189c8e844fc245d3169df053fb9e05c13f168cd005a6a111ac67bee';
-  const testHash = '0x43e64ff66da8ef0fe5d2d09b69b19a4163c4ce9c25379c287d5409ac1d9b49bd';
+  const testAddress = '0x6324dAc598f9B637824978eD6b268C896E0c40E0';
+  const testPK = '0x1aeee88b6620cd0d24f0ee3128f3baa34241bcb0e8f6c467c20db30720555254' as const;
+  const testHash = '0x43e64ff66da8ef0fe5d2d09b69b19a4163c4ce9c25379c287d5409ac1d9b49bd' as const;
   const chainId = CHAIN_IDS.TESTNET;
 
   // Make real API calls to test the transactions API
@@ -181,24 +181,24 @@ describe('transactions API test', function () {
 
   if (!(RUN_ENV === 'remote' || !operatorAddress || !operatorPK || !testPK || !testAddress)) {
     // passed
-    it.skip('should submit payment transaction', function (done) {
+    it('should submit payment transaction', function (done) {
       safePromiseLine([
         () => RUN_ENV === 'local' ? pageOne.evaluate(async (params) => {
-          const { operatorAddress, operatorPK, chainId, testAddress, tokenValue, issuedToken } = params;
-          const { nonce } = await window.getNonce(operatorAddress);
+          const { operatorAddress, testPK, chainId, testAddress, tokenValue, issuedToken } = params;
+          const { nonce } = await window.getNonce(testAddress);
           const payload = [
             chainId,
             nonce,
-            testAddress,
+            operatorAddress,
             tokenValue,
             issuedToken
           ];
-          const signature = await window.signMessage(payload, operatorPK)
+          const signature = await window.signMessage(payload, testPK)
           if (!signature) return done(new Error('Failed to sign message'));
           const response = await window.payment({
             chain_id: chainId,
             nonce,
-            recipient: testAddress,
+            recipient: operatorAddress,
             value: tokenValue,
             token: issuedToken,
             signature
@@ -206,7 +206,7 @@ describe('transactions API test', function () {
           return response;
         }, {
           operatorAddress,
-          operatorPK,
+          testPK,
           chainId,
           testAddress,
           tokenValue,
@@ -215,27 +215,28 @@ describe('transactions API test', function () {
           expect(response).to.be.an('object');
           expect(response.token).to.be.a('string');
         }) : Promise.resolve(),
-        () => apiClient.accounts.getNonce(operatorAddress)
+        () => apiClient.accounts.getNonce(testAddress)
           .success(async response => {
             const nonce = response.nonce;
             const payload = [
               chainId,
               nonce,
-              testAddress,
+              operatorAddress,
               tokenValue,
               issuedToken
             ];
-            const signature = await signMessage(payload, operatorPK)
+            const signature = await signMessage(payload, testPK)
             if (!signature) return done(new Error('Failed to sign message'));
             apiClient.transactions.payment({
               chain_id: chainId,
               nonce,
-              recipient: testAddress,
+              recipient: operatorAddress,
               value: tokenValue,
               token: issuedToken,
               signature
             })
               .success(response => {
+                console.info(1111, response);
                 expect(response).to.be.an('object');
                 expect(response).to.have.property('hash');
               })
