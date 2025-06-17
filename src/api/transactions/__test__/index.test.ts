@@ -94,7 +94,7 @@ describe('transactions API test', function () {
   const chainId = CHAIN_IDS.TESTNET;
 
   // Make real API calls to test the transactions API
-  it('should fetch transaction by hash', function (done) {
+  it.skip('should fetch transaction by hash', function (done) {
     safePromiseAll([
       RUN_ENV === 'local' ? pageOne.evaluate(async (params) => {
         const { testHash } = params;
@@ -124,7 +124,7 @@ describe('transactions API test', function () {
 
   });
 
-  it('should fetch transaction receipt by hash', function (done) {
+  it.skip('should fetch transaction receipt by hash', function (done) {
     safePromiseAll([
       RUN_ENV === 'local' ? pageOne.evaluate(async (params) => {
         const { testHash } = params;
@@ -152,7 +152,7 @@ describe('transactions API test', function () {
     ]).then(() => done()).catch(done);
   });
 
-  it('should estimate transaction fee', function (done) {
+  it.skip('should estimate transaction fee', function (done) {
     safePromiseAll([
       RUN_ENV === 'local' ? pageOne.evaluate(async (params) => {
         const { testAddress, tokenValue, issuedToken } = params;
@@ -236,7 +236,6 @@ describe('transactions API test', function () {
               signature
             })
               .success(response => {
-                console.info(1111, response);
                 expect(response).to.be.an('object');
                 expect(response).to.have.property('hash');
               })

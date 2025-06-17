@@ -6,6 +6,7 @@ const commonjs = require('@rollup/plugin-commonjs');
 const json = require('@rollup/plugin-json');
 const terser = require('@rollup/plugin-terser');
 const nodePolyfills = require('rollup-plugin-polyfill-node');
+const tscAlias = require('tsc-alias');
 
 module.exports = function (getConfig) {
   const config = getConfig(false);
@@ -19,8 +20,28 @@ module.exports = function (getConfig) {
           { find: '@/', replacement: path.resolve(__dirname, 'src/') }
         ]
       }),
-      nodePolyfills()
-    )
+      nodePolyfills(),
+    );
+    v.plugins.push(
+      {
+        name: 'tscAlias',
+        async writeBundle() {
+          return tscAlias.replaceTscAliasPaths({
+            resolveFullPaths: true,
+            outDir: './lib'
+          });
+        },
+      },
+      {
+        name: 'tscAlias',
+        async writeBundle() {
+          return tscAlias.replaceTscAliasPaths({
+            resolveFullPaths: true,
+            outDir: './es'
+          });
+        },
+      }
+    );
   });
 
   // umd

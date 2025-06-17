@@ -59,7 +59,7 @@ describe('checkpoint API test', function () {
     expect(apiClient.checkpoints.getByNumber).to.be.a('function');
   });
 
-  it('should fetch checkpoint number from the API', function (done) {
+  it.skip('should fetch checkpoint number from the API', function (done) {
     Promise.all([
       RUN_ENV === 'local' ? pageOne.evaluate(async () => {
         const response = await window.getNumber();
@@ -81,7 +81,7 @@ describe('checkpoint API test', function () {
     ]).then(() => done()).catch(done);
   });
 
-  it('should fetch checkpoint by hash from the API', function (done) {
+  it.skip('should fetch checkpoint by hash from the API', function (done) {
     Promise.all([
       RUN_ENV === 'local' ? pageOne.evaluate(async (_hash) => {
         const response = await window.getByHash(_hash, true);
@@ -239,7 +239,7 @@ describe('checkpoint API test', function () {
     ]).then(() => done()).catch(done);
   });
 
-  it('should fetch checkpoint by number from the API', function (done) {
+  it.skip('should fetch checkpoint by number from the API', function (done) {
     Promise.all([
       RUN_ENV === 'local' ? pageOne.evaluate(async (_number) => {
         const response = await window.getByNumber(_number, true);

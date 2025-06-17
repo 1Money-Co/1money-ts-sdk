@@ -1,6 +1,6 @@
 {
   "name": "@1money/ts-sdk",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "ts sdk for 1Money protocol network",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -101,6 +101,7 @@
     "rollup-plugin-polyfill-node": "^0.13.0",
     "ts-loader": "9.5.1",
     "ts-patch": "~3.2.1",
+    "tsc-alias": "^1.8.16",
     "tsconfig-paths": "~3.9.0",
     "tslib": "^2.6.3",
     "tsx": "^4.17.0",

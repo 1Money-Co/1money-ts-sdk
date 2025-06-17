@@ -12,11 +12,11 @@ The TS-SDK for 1Money Network Protocol
 ## Quick start
 ### Install
 ```shell
-npm i -S @1money/ts-sdk axios ethers
+npm i -S @1money/ts-sdk axios viem @ethereumjs/rlp @noble/secp256k1
 # or
-yarn add @1money/ts-sdk axios ethers
+yarn add @1money/ts-sdk axios viem @ethereumjs/rlp @noble/secp256k1
 # or
-pnpm i @1money/ts-sdk axios ethers
+pnpm i @1money/ts-sdk axios viem @ethereumjs/rlp @noble/secp256k1
 ```
 
 ### Initialize the API Client
