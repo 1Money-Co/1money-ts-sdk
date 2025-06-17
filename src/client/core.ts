@@ -25,7 +25,7 @@ export type CustomResponseData<T, U, Y = T> = T extends 'custom'
   : U
   : U
   : ResponseData<Y>
-  : ResponseData<Y>
+  : ResponseData<Y>;
 
 export type CheckNever<T> = T extends never ? true : false;
 
@@ -403,7 +403,7 @@ export class Request {
 
   private parseError(err: any): ParsedError {
     if (typeof err === 'string') err = new Error(err);
-    
+
     // Ensure we have a valid error object
     if (!err || (_typeof(err) !== 'object' && _typeof(err) !== 'error')) {
       err = new Error('Unknown error occurred');
@@ -579,7 +579,7 @@ export class Request {
       let timer: any = null;
       let isTimeout = false;
       const _timeout = timeout ?? initTimeout;
-      
+
       // Cleanup function for timeout
       const cleanup = () => {
         if (timer !== null) {

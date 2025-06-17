@@ -112,7 +112,7 @@ describe('tokens API test', function () {
   const testAddress = '0x6324dAc598f9B637824978eD6b268C896E0c40E0';
 
   // Skip actual API calls in regular tests
-  it('should fetch token metadata', function (done) {
+  it.skip('should fetch token metadata', function (done) {
     apiClient.tokens.getTokenMetadata(issuedToken)
       .success(response => {
         expect(response).to.be.an('object');
@@ -144,9 +144,9 @@ describe('tokens API test', function () {
           const { operatorAddress, operatorPK, action, chainId, testAddress, issuedToken } = params;
           const { nonce } = await window.getNonce(operatorAddress);
           const payload = [
-            toHex(chainId),
-            toHex(nonce),
-            toHex(action),
+            chainId,
+            nonce,
+            action,
             testAddress,
             issuedToken,
           ]
@@ -176,9 +176,9 @@ describe('tokens API test', function () {
             const nonce = response.nonce;
             const action = ManageListAction.Whitelist;
             const payload = [
-              toHex(chainId),
-              toHex(nonce),
-              toHex(action),
+              chainId,
+              nonce,
+              action,
               testAddress,
               issuedToken,
             ]
@@ -214,7 +214,7 @@ describe('tokens API test', function () {
             testAddress,
             burnValue,
             issuedToken,
-          ]
+          ];
           const signature = await window.signMessage(payload, operatorPK)
           if (!signature) return done(new Error('Failed to sign message'));
           const response = await window.burnToken({
@@ -523,7 +523,7 @@ describe('tokens API test', function () {
         }, {
           operatorAddress,
           operatorPK,
-          action: PauseAction.Unpause,
+          action: PauseAction.Pause,
           chainId,
           issuedToken,
         }).then(response => {

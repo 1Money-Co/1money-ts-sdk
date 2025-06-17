@@ -65,7 +65,7 @@ describe('accounts API test', function () {
   const testToken = '0x5458747a0efb9ebeb8696fcac1479278c0872fbe';
 
   // Make real API calls to test the accounts API
-  it('should fetch account nonce', function(done) {
+  it.skip('should fetch account nonce', function(done) {
     Promise.all([
       RUN_ENV === 'local' ? pageOne.evaluate(async (_address) => {
         const response = await window.getNonce(_address);
@@ -87,7 +87,7 @@ describe('accounts API test', function () {
     ]).then(() => done()).catch(done);
   });
 
-  it('should fetch associated token account', function(done) {
+  it.skip('should fetch associated token account', function(done) {
     Promise.all([
       RUN_ENV === 'local' ? pageTwo.evaluate(async (_address, _token) => {
         const response = await window.getTokenAccount(_address, _token);

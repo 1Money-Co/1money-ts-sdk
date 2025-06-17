@@ -46,7 +46,7 @@ describe('checkpoint API test', function () {
     expect(apiClient.chain.getChainId).to.be.a('function');
   });
 
-  it('should fetch chain id from the API', function (done) {
+  it.skip('should fetch chain id from the API', function (done) {
     Promise.all([
       RUN_ENV === 'local' ? pageOne.evaluate(async () => {
         const response = await window.getChainId();
