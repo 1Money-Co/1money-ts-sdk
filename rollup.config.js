@@ -9,11 +9,11 @@ const nodePolyfills = require('rollup-plugin-polyfill-node');
 const tscAlias = require('tsc-alias');
 
 module.exports = function (getConfig) {
-  const config = getConfig(false);
+  let config = getConfig(true);
   const extensions = ['.ts', '.js'];
   config.forEach(v => {
     // just keep the reference for third-party libs
-    v.external = ['axios', 'viem', '@noble/secp256k1', '@ethereumjs/rlp'];
+    v.external = ['axios', 'viem', '@ethereumjs/rlp'];
     v.plugins.unshift(
       alias({
         entries: [
@@ -44,6 +44,17 @@ module.exports = function (getConfig) {
     );
   });
 
+  config = config.filter(v => {
+    const outputs = [
+      path.resolve(__dirname, 'src/index.ts'),
+      path.resolve(__dirname, 'src/api/index.ts'),
+      path.resolve(__dirname, 'src/client/index.ts'),
+      path.resolve(__dirname, 'src/utils/index.ts'),
+    ]
+
+    return outputs.includes(v.input)
+  });
+
   // umd
   config.push({
     input: 'src/index.ts',
@@ -57,17 +68,10 @@ module.exports = function (getConfig) {
     plugins: [
       alias({
         entries: [
-          { find: '@/', replacement: path.resolve(__dirname, 'src/') },
-          { find: '@noble/secp256k1', replacement: path.resolve(__dirname, 'node_modules/@noble/secp256k1/index.js') }
+          { find: '@/', replacement: path.resolve(__dirname, 'src/') }
         ]
       }),
       nodePolyfills(),
-      nodeResolve({
-        extensions,
-        preferBuiltins: true,
-        browser: true
-      }),
-      commonjs(),
       typescript({
         tsconfig: path.resolve(__dirname, 'tsconfig.json'),
         include: ['src/**/*.ts'],
@@ -79,6 +83,12 @@ module.exports = function (getConfig) {
           outDir: 'umd',
         }
       }),
+      nodeResolve({
+        extensions,
+        preferBuiltins: true,
+        browser: true
+      }),
+      commonjs(),
       json(),
       terser()
     ]
