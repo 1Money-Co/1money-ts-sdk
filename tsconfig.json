@@ -64,7 +64,7 @@
     ]
   },
   "exclude": [
-    "node_modules",
+    "node_modules/**",
     "**/__test__/",
     "configs/",
     "lib/",
