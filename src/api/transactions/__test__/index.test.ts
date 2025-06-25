@@ -84,7 +84,7 @@ describe('transactions API test', function () {
   it('should have cancel method', function () {
     expect(apiClient.transactions.cancel).to.be.a('function');
   });
-  const issuedToken = '0x5458747a0efb9ebeb8696fcac1479278c0872fbe';
+  const issuedToken = '0x555Da6a773419c98F3c0fFac5eA1d05F3E635946';
   const tokenValue = '10';
   const operatorAddress = process.env.OPERATOR_ADDRESS;
   const operatorPK = process.env.OPERATOR_PRIVATE_KEY as ZeroXString;

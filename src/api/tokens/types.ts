@@ -26,16 +26,17 @@ export interface MinterAllowance {
 export interface MintInfo {
   symbol: string;
   master_authority: AddressSchema;
-  master_mint_authority: AddressSchema;
-  minter_authorities: MinterAllowance[];
-  pause_authority: AddressSchema;
-  burn_authorities: AddressSchema[];
-  black_list_authorities: AddressSchema[];
+  master_mint_burn_authority: AddressSchema;
+  mint_burn_authorities: MinterAllowance[];
+  pause_authorities: AddressSchema[];
+  list_authorities: AddressSchema[];
   black_list: AddressSchema[];
-  metadata_update_authority: AddressSchema;
+  white_list: AddressSchema[];
+  metadata_update_authorities: AddressSchema[];
   supply: U256Schema;
   decimals: number;
   is_paused: boolean;
+  is_private: boolean;
   meta: TokenMetadata;
 }
 
