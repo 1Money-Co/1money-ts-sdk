@@ -61,11 +61,11 @@ describe('accounts API test', function () {
   });
 
   // Valid addresses for testing on the testnet
-  const testAddress = '0xa634dfba8c7550550817898bc4820cd10888aac5';
-  const testToken = '0x5458747a0efb9ebeb8696fcac1479278c0872fbe';
+  const testAddress = '0xA634dfba8c7550550817898bC4820cD10888Aac5';
+  const testToken = '0x555Da6a773419c98F3c0fFac5eA1d05F3E635946';
 
   // Make real API calls to test the accounts API
-  it.skip('should fetch account nonce', function(done) {
+  it('should fetch account nonce', function(done) {
     Promise.all([
       RUN_ENV === 'local' ? pageOne.evaluate(async (_address) => {
         const response = await window.getNonce(_address);
@@ -87,7 +87,7 @@ describe('accounts API test', function () {
     ]).then(() => done()).catch(done);
   });
 
-  it.skip('should fetch associated token account', function(done) {
+  it('should fetch associated token account', function(done) {
     Promise.all([
       RUN_ENV === 'local' ? pageTwo.evaluate(async (_address, _token) => {
         const response = await window.getTokenAccount(_address, _token);

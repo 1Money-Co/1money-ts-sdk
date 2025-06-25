@@ -106,13 +106,13 @@ describe('tokens API test', function () {
 
   // Example token for testing - replace with a valid token if needed
   const chainId = CHAIN_IDS.TESTNET;
-  const issuedToken = '0x5458747a0efb9ebeb8696fcac1479278c0872fbe';
+  const issuedToken = '0x555Da6a773419c98F3c0fFac5eA1d05F3E635946';
   const operatorAddress = process.env.OPERATOR_ADDRESS;
   const operatorPK = process.env.OPERATOR_PRIVATE_KEY as ZeroXString;
   const testAddress = '0x6324dAc598f9B637824978eD6b268C896E0c40E0';
 
   // Skip actual API calls in regular tests
-  it.skip('should fetch token metadata', function (done) {
+  it('should fetch token metadata', function (done) {
     apiClient.tokens.getTokenMetadata(issuedToken)
       .success(response => {
         expect(response).to.be.an('object');
@@ -122,13 +122,14 @@ describe('tokens API test', function () {
         expect(response.is_paused).to.be.a('boolean');
         expect(response.is_private).to.be.a('boolean');
         expect(response.master_authority).to.be.a('string');
-        expect(response.master_mint_authority).to.be.a('string');
-        expect(response.pause_authority).to.be.a('string');
-        expect(response.minter_burn_authorities).to.be.an('array');
+        expect(response.master_mint_burn_authority).to.be.a('string');
+        expect(response.mint_burn_authorities).to.be.an('array');
+        expect(response.pause_authorities).to.be.an('array');
         expect(response.list_authorities).to.be.an('array');
         expect(response.black_list).to.be.an('array');
         expect(response.white_list).to.be.an('array');
-        expect(response.metadata_update_authority).to.be.an('string');
+        expect(response.metadata_update_authorities).to.be.an('array');
+        expect(response.meta).to.be.an('object');
         done();
       })
       .rest(err => {
