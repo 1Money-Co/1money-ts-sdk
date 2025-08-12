@@ -20,6 +20,7 @@ describe('api test', function () {
     expect(apiClient.tokens).to.be.an('object');
     expect(apiClient.transactions).to.be.an('object');
     expect(apiClient.checkpoints).to.be.an('object');
+    expect(apiClient.state).to.be.an('object');
   });
 
   it('should export API URLs', function () {
@@ -35,7 +36,8 @@ describe('api test', function () {
 
     // Tokens API
     expect(apiClient.tokens.getTokenMetadata).to.be.a('function');
-    expect(apiClient.tokens.setManageList).to.be.a('function');
+    expect(apiClient.tokens.manageBlacklist).to.be.a('function');
+    expect(apiClient.tokens.manageWhitelist).to.be.a('function');
     expect(apiClient.tokens.burnToken).to.be.a('function');
     expect(apiClient.tokens.grantAuthority).to.be.a('function');
     expect(apiClient.tokens.issueToken).to.be.a('function');
@@ -48,11 +50,13 @@ describe('api test', function () {
     expect(apiClient.transactions.getReceiptByHash).to.be.a('function');
     expect(apiClient.transactions.estimateFee).to.be.a('function');
     expect(apiClient.transactions.payment).to.be.a('function');
-    expect(apiClient.transactions.cancel).to.be.a('function');
 
     // Checkpoints API
     expect(apiClient.checkpoints.getNumber).to.be.a('function');
     expect(apiClient.checkpoints.getByHash).to.be.a('function');
     expect(apiClient.checkpoints.getByNumber).to.be.a('function');
+
+    // State API
+    expect(apiClient.state.getLatestEpochCheckpoint).to.be.a('function');
   });
 });

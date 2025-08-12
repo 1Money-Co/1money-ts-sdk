@@ -29,12 +29,21 @@ export const tokensApi = {
   },
 
   /**
-   * Set token manage list status
-   * @param payload Token manage list request payload
+   * Manage token blacklist
+   * @param payload Token blacklist request payload
    * @returns Promise with transaction hash response
    */
-  setManageList: (payload: TokenManageListPayload) => {
-    return post<'custom', Hash>(`${API_PREFIX}/managelist`, payload, { withCredentials: false });
+  manageBlacklist: (payload: TokenManageListPayload) => {
+    return post<'custom', Hash>(`${API_PREFIX}/manage_blacklist`, payload, { withCredentials: false });
+  },
+
+  /**
+   * Manage token whitelist
+   * @param payload Token whitelist request payload
+   * @returns Promise with transaction hash response
+   */
+  manageWhitelist: (payload: TokenManageListPayload) => {
+    return post<'custom', Hash>(`${API_PREFIX}/manage_whitelist`, payload, { withCredentials: false });
   },
 
   /**

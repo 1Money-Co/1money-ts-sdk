@@ -6,8 +6,7 @@ import type { Transaction } from '@/api/checkpoints/types';
 import type {
   TransactionReceipt,
   EstimateFee,
-  PaymentPayload,
-  CancellationPayload
+  PaymentPayload
 } from './types';
 
 const API_PREFIX = `/${API_VERSION}/transactions`;
@@ -56,15 +55,6 @@ export const transactionsApi = {
    */
   payment: (payload: PaymentPayload) => {
     return post<'custom', Hash>(`${API_PREFIX}/payment`, payload, { withCredentials: false });
-  },
-
-  /**
-   * Cancel transaction
-   * @param payload Cancellation payload
-   * @returns Promise with transaction hash response
-   */
-  cancel: (payload: CancellationPayload) => {
-    return post<'custom', Hash>(`${API_PREFIX}/cancellation`, payload, { withCredentials: false });
   }
 };
 

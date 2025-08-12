@@ -1,9 +1,9 @@
 
 // concurrent
-export function safePromiseAll<T extends readonly unknown[] | []>(arr: T) {
-  if (!arr || !arr.length) return Promise.resolve([]);
+export function safePromiseAll<T extends readonly Promise<any>[]>(arr: T): Promise<Awaited<T[number]>[]> {
+  if (!arr || !arr.length) return Promise.resolve([]) as any;
 
-  return Promise.all(arr);
+  return Promise.all(arr) as any;
 }
 
 // serial

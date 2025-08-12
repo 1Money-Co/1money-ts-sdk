@@ -74,6 +74,8 @@ export enum PauseAction {
 export interface RestSignature extends Signature {}
 
 export interface TokenManageListPayload {
+  recent_epoch: number;
+  recent_checkpoint: number;
   chain_id: number;
   nonce: number;
   action: ManageListAction;
@@ -83,6 +85,8 @@ export interface TokenManageListPayload {
 }
 
 export interface TokenBurnPayload {
+  recent_epoch: number;
+  recent_checkpoint: number;
   chain_id: number;
   nonce: number;
   recipient: string;
@@ -92,6 +96,8 @@ export interface TokenBurnPayload {
 }
 
 export interface TokenAuthorityPayload {
+  recent_epoch: number;
+  recent_checkpoint: number;
   chain_id: number;
   nonce: number;
   action: AuthorityAction;
@@ -103,6 +109,8 @@ export interface TokenAuthorityPayload {
 }
 
 export interface TokenIssuePayload {
+  recent_epoch: number;
+  recent_checkpoint: number;
   chain_id: number;
   nonce: number;
   symbol: string;
@@ -114,6 +122,8 @@ export interface TokenIssuePayload {
 }
 
 export interface TokenMintPayload {
+  recent_epoch: number;
+  recent_checkpoint: number;
   chain_id: number;
   nonce: number;
   recipient: string;
@@ -123,6 +133,8 @@ export interface TokenMintPayload {
 }
 
 export interface TokenPausePayload {
+  recent_epoch: number;
+  recent_checkpoint: number;
   chain_id: number;
   nonce: number;
   action: PauseAction;
@@ -131,6 +143,8 @@ export interface TokenPausePayload {
 }
 
 export interface TokenMetadataPayload {
+  recent_epoch: number;
+  recent_checkpoint: number;
   chain_id: number;
   nonce: number;
   name: string;
