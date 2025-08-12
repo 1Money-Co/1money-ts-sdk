@@ -147,7 +147,7 @@ describe('tokens API test', function () {
   });
 
   if (!(RUN_ENV === 'remote' || !operatorAddress || !operatorPK || !testAddress)) {
-    // !todo
+    // passed
     it.skip('should manage blacklist', function (done) {
       safePromiseLine([
         () => pageOne.evaluate(async (params) => {
@@ -169,9 +169,9 @@ describe('tokens API test', function () {
           ]
           const signature = await window.signMessage(payload, operatorPK)
           if (!signature) return done(new Error('Failed to sign message'));
-          const response = await window.manageBlacklist({
-            recent_epoch: epochData.epoch,
-            recent_checkpoint: epochData.checkpoint,
+          const response = await window.manageWhitelist({
+            recent_epoch: recentEpoch,
+            recent_checkpoint: recentCheckpoint,
             chain_id: chainId,
             nonce,
             action,
@@ -183,7 +183,7 @@ describe('tokens API test', function () {
         }, {
           operatorAddress,
           operatorPK,
-          action: ManageListAction.Whitelist,
+          action: ManageListAction.Add,
           chainId,
           testAddress,
           issuedToken,
@@ -191,21 +191,17 @@ describe('tokens API test', function () {
           expect(response).to.be.an('object');
         }),
         () => safePromiseAll([
-          new Promise((resolve, reject) => {
-            apiClient.state.getLatestEpochCheckpoint()
-              .success(resolve)
-              .rest(reject);
-          }),
-          new Promise((resolve, reject) => {
-            apiClient.accounts.getNonce(operatorAddress)
-              .success(resolve)
-              .rest(reject);
-          })
+          apiClient.state.getLatestEpochCheckpoint()
+            .success(res => res)
+            .rest(err => { throw (err?.data ?? err.message ?? err) }),
+          apiClient.accounts.getNonce(operatorAddress)
+            .success(res => res)
+            .rest(err => { throw (err?.data ?? err.message ?? err) }),
         ]).then(async ([epochData, nonceResponse]) => {
           const nonce = nonceResponse.nonce;
           const recentEpoch = epochData.epoch;
           const recentCheckpoint = epochData.checkpoint;
-          const action = ManageListAction.Whitelist;
+          const action = ManageListAction.Add;
           const payload = [
             recentEpoch,
             recentCheckpoint,
@@ -218,8 +214,8 @@ describe('tokens API test', function () {
           const signature = await signMessage(payload, operatorPK)
           if (!signature) return done(new Error('Failed to sign message'));
           apiClient.tokens.manageBlacklist({
-            recent_epoch: epochData.epoch,
-            recent_checkpoint: epochData.checkpoint,
+            recent_epoch: recentEpoch,
+            recent_checkpoint: recentCheckpoint,
             chain_id: chainId,
             nonce,
             action,
@@ -235,7 +231,7 @@ describe('tokens API test', function () {
       ]).then(() => done()).catch(done);
     });
 
-    // !todo
+    // passed
     it.skip('should burn token', function (done) {
       safePromiseLine([
         () => RUN_ENV === 'local' ? pageOne.evaluate(async (params) => {
@@ -259,8 +255,8 @@ describe('tokens API test', function () {
           const signature = await window.signMessage(payload, operatorPK)
           if (!signature) return done(new Error('Failed to sign message'));
           const response = await window.burnToken({
-            recent_epoch: epochData.epoch,
-            recent_checkpoint: epochData.checkpoint,
+            recent_epoch: recentEpoch,
+            recent_checkpoint: recentCheckpoint,
             chain_id: chainId,
             nonce,
             recipient: testAddress,
@@ -280,16 +276,12 @@ describe('tokens API test', function () {
           expect(response.hash).to.be.a('string');
         }) : Promise.resolve(),
         () => safePromiseAll([
-          new Promise((resolve, reject) => {
-            apiClient.state.getLatestEpochCheckpoint()
-              .success(resolve)
-              .rest(reject);
-          }),
-          new Promise((resolve, reject) => {
-            apiClient.accounts.getNonce(operatorAddress)
-              .success(resolve)
-              .rest(reject);
-          })
+          apiClient.state.getLatestEpochCheckpoint()
+            .success(res => res)
+            .rest(err => { throw (err?.data ?? err.message ?? err) }),
+          apiClient.accounts.getNonce(operatorAddress)
+            .success(res => res)
+            .rest(err => { throw (err?.data ?? err.message ?? err) }),
         ]).then(async ([epochData, nonceResponse]) => {
           const nonce = nonceResponse.nonce;
           const recentEpoch = epochData.epoch;
@@ -300,18 +292,18 @@ describe('tokens API test', function () {
             recentCheckpoint,
             chainId,
             nonce,
-            testAddress,
+            operatorAddress,
             burnValue,
             issuedToken,
           ]
           const signature = await signMessage(payload, operatorPK)
           if (!signature) return done(new Error('Failed to sign message'));
           apiClient.tokens.burnToken({
-            recent_epoch: epochData.epoch,
-            recent_checkpoint: epochData.checkpoint,
+            recent_epoch: recentEpoch,
+            recent_checkpoint: recentCheckpoint,
             chain_id: chainId,
             nonce,
-            recipient: testAddress,
+            recipient: operatorAddress,
             value: burnValue,
             token: issuedToken,
             signature
@@ -320,7 +312,10 @@ describe('tokens API test', function () {
               expect(response).to.be.an('object');
               expect(response.hash).to.be.a('string');
             })
-            .rest(err => { throw (err?.data ?? err.message ?? err) });
+            .rest(err => {
+              console.info(11111, err);
+              throw (err?.data ?? err.message ?? err);
+            });
         }).catch(err => { throw (err?.data ?? err.message ?? err) })
       ]).then(() => done()).catch(done);
     });
@@ -377,16 +372,12 @@ describe('tokens API test', function () {
           expect(response).to.be.an('object');
         }),
         () => safePromiseAll([
-          new Promise((resolve, reject) => {
-            apiClient.state.getLatestEpochCheckpoint()
-              .success(resolve)
-              .rest(reject);
-          }),
-          new Promise((resolve, reject) => {
-            apiClient.accounts.getNonce(operatorAddress)
-              .success(resolve)
-              .rest(reject);
-          })
+          apiClient.state.getLatestEpochCheckpoint()
+            .success(res => res)
+            .rest(err => { throw (err?.data ?? err.message ?? err) }),
+          apiClient.accounts.getNonce(operatorAddress)
+            .success(res => res)
+            .rest(err => { throw (err?.data ?? err.message ?? err) }),
         ]).then(async ([epochData, nonceResponse]) => {
           const nonce = nonceResponse.nonce;
           const recentEpoch = epochData.epoch;
@@ -399,7 +390,7 @@ describe('tokens API test', function () {
             nonce,
             AuthorityAction.Grant,
             AuthorityType.MintBurnTokens,
-            testAddress,
+            operatorAddress,
             issuedToken,
             tokenValue,
           ]
@@ -412,7 +403,7 @@ describe('tokens API test', function () {
             nonce,
             action: AuthorityAction.Grant,
             authority_type: AuthorityType.MintBurnTokens,
-            authority_address: testAddress,
+            authority_address: operatorAddress,
             token: issuedToken,
             value: tokenValue,
             signature
@@ -492,7 +483,7 @@ describe('tokens API test', function () {
           const recentEpoch = epochData.epoch;
           const recentCheckpoint = epochData.checkpoint;
           const name = 'USDT 1Money';
-          const symbol = 'USDT';
+          const symbol = 'USDT1';
           const decimals = 6;
           const isPrivate = false;
           const payload = [
@@ -577,16 +568,12 @@ describe('tokens API test', function () {
           expect(response.hash).to.be.a('string');
         }),
         () => safePromiseAll([
-          new Promise((resolve, reject) => {
-            apiClient.state.getLatestEpochCheckpoint()
-              .success(resolve)
-              .rest(reject);
-          }),
-          new Promise((resolve, reject) => {
-            apiClient.accounts.getNonce(operatorAddress)
-              .success(resolve)
-              .rest(reject);
-          })
+          apiClient.state.getLatestEpochCheckpoint()
+            .success(res => res)
+            .rest(err => { throw (err?.data ?? err.message ?? err) }),
+          apiClient.accounts.getNonce(operatorAddress)
+            .success(res => res)
+            .rest(err => { throw (err?.data ?? err.message ?? err) }),
         ]).then(async ([epochData, nonceResponse]) => {
           const nonce = nonceResponse.nonce;
           const recentEpoch = epochData.epoch;
@@ -622,7 +609,7 @@ describe('tokens API test', function () {
       ]).then(() => done()).catch(done);
     });
 
-    // !todo
+    // passed
     it.skip('should pause token', function (done) {
       if (RUN_ENV === 'remote' || !operatorAddress || !operatorPK) return done();
 
@@ -666,16 +653,12 @@ describe('tokens API test', function () {
           expect(response.hash).to.be.a('string');
         }),
         () => safePromiseAll([
-          new Promise((resolve, reject) => {
-            apiClient.state.getLatestEpochCheckpoint()
-              .success(resolve)
-              .rest(reject);
-          }),
-          new Promise((resolve, reject) => {
-            apiClient.accounts.getNonce(operatorAddress)
-              .success(resolve)
-              .rest(reject);
-          })
+          apiClient.state.getLatestEpochCheckpoint()
+            .success(res => res)
+            .rest(err => { throw (err?.data ?? err.message ?? err) }),
+          apiClient.accounts.getNonce(operatorAddress)
+            .success(res => res)
+            .rest(err => { throw (err?.data ?? err.message ?? err) }),
         ]).then(async ([epochData, nonceResponse]) => {
           const nonce = nonceResponse.nonce;
           const recentEpoch = epochData.epoch;
@@ -691,9 +674,9 @@ describe('tokens API test', function () {
           ];
           const signature = await signMessage(payload, operatorPK);
           if (!signature) return done(new Error('Failed to sign message'));
-          apiClient.tokens.pauseToken({
-            recent_epoch: epochData.epoch,
-            recent_checkpoint: epochData.checkpoint,
+          return apiClient.tokens.pauseToken({
+            recent_epoch: recentEpoch,
+            recent_checkpoint: recentCheckpoint,
             chain_id: chainId,
             nonce,
             action,
@@ -764,16 +747,12 @@ describe('tokens API test', function () {
           expect(response.hash).to.be.a('string');
         }),
         () => safePromiseAll([
-          new Promise((resolve, reject) => {
-            apiClient.state.getLatestEpochCheckpoint()
-              .success(resolve)
-              .rest(reject);
-          }),
-          new Promise((resolve, reject) => {
-            apiClient.accounts.getNonce(operatorAddress)
-              .success(resolve)
-              .rest(reject);
-          })
+          apiClient.state.getLatestEpochCheckpoint()
+            .success(res => res)
+            .rest(err => { throw (err?.data ?? err.message ?? err) }),
+          apiClient.accounts.getNonce(operatorAddress)
+            .success(res => res)
+            .rest(err => { throw (err?.data ?? err.message ?? err) }),
         ]).then(async ([epochData, nonceResponse]) => {
           const nonce = nonceResponse.nonce;
           const recentEpoch = epochData.epoch;
@@ -799,8 +778,8 @@ describe('tokens API test', function () {
           const signature = await signMessage(payload, operatorPK)
           if (!signature) return done(new Error('Failed to sign message'));
           apiClient.tokens.updateMetadata({
-            recent_epoch: epochData.epoch,
-            recent_checkpoint: epochData.checkpoint,
+            recent_epoch: recentEpoch,
+            recent_checkpoint: recentCheckpoint,
             chain_id: chainId,
             nonce,
             name,

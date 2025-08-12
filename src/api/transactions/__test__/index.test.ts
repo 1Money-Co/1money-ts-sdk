@@ -83,7 +83,7 @@ describe('transactions API test', function () {
   });
 
   const issuedToken = '0x555Da6a773419c98F3c0fFac5eA1d05F3E635946';
-  const tokenValue = '10';
+  const tokenValue = '100';
   const operatorAddress = process.env.OPERATOR_ADDRESS;
   const operatorPK = process.env.OPERATOR_PRIVATE_KEY as ZeroXString;
   const testAddress = '0x6324dAc598f9B637824978eD6b268C896E0c40E0';

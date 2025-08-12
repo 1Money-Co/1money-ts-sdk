@@ -61,8 +61,8 @@ export enum AuthorityAction {
 }
 
 export enum ManageListAction {
-  Blacklist = 'Blacklist',
-  Whitelist = 'Whitelist'
+  Add = 'Add',
+  Remove = 'Remove'
 }
 
 export enum PauseAction {
