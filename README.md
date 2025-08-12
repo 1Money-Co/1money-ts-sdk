@@ -236,10 +236,12 @@ const epochData = await apiClient.state.getLatestEpochCheckpoint()
 
 // Create the payload array for signing
 const payload = [
+  epochData.epoch, // recent_epoch
+  epochData.checkpoint, // recent_checkpoint
   1, // chain_id
   1, // nonce
-  'My Token', // name
   'MTK', // symbol
+  'My Token', // name
   18, // decimals
   '0x9E1E9688A44D058fF181Ed64ddFAFbBE5CC74ff3', // master_authority
   true, // is_private
@@ -288,6 +290,8 @@ const epochData = await apiClient.state.getLatestEpochCheckpoint()
 
 // Create the payload array for signing
 const payload = [
+  epochData.epoch, // recent_epoch
+  epochData.checkpoint, // recent_checkpoint
   1, // chain_id
   1, // nonce
   ManageListAction.Blacklist, // action
@@ -339,8 +343,14 @@ import { signMessage, toHex } from '@1money/ts-sdk';
 // Your private key (DO NOT share or commit your private key)
 const privateKey = 'YOUR_PRIVATE_KEY';
 
+// First, get the latest epoch checkpoint
+const epochData = await apiClient.state.getLatestEpochCheckpoint()
+  .success(response => response);
+
 // Create the payload array for signing
 const payload = [
+  epochData.epoch, // recent_epoch
+  epochData.checkpoint, // recent_checkpoint
   1, // chain_id
   1, // nonce
   '0x2cd8999Be299373D7881f4aDD11510030ad1412F', // token
@@ -353,8 +363,10 @@ if (!signature) {
   throw new Error('Failed to generate signature');
 }
 
-// Create the burn payload
+// Create the burn payload with epoch checkpoint data
 const burnPayload = {
+  recent_epoch: epochData.epoch,
+  recent_checkpoint: epochData.checkpoint,
   chain_id: 1,
   nonce: 1,
   token: '0x2cd8999Be299373D7881f4aDD11510030ad1412F',
@@ -379,8 +391,14 @@ import type { AuthorityType, AuthorityAction } from '@1money/ts-sdk/api';
 // Your private key (DO NOT share or commit your private key)
 const privateKey = 'YOUR_PRIVATE_KEY';
 
+// First, get the latest epoch checkpoint
+const epochData = await apiClient.state.getLatestEpochCheckpoint()
+  .success(response => response);
+
 // Create the payload array for signing
 const payload = [
+  epochData.epoch, // recent_epoch
+  epochData.checkpoint, // recent_checkpoint
   1, // chain_id
   1, // nonce
   '0x2cd8999Be299373D7881f4aDD11510030ad1412F', // token
@@ -395,8 +413,10 @@ if (!signature) {
   throw new Error('Failed to generate signature');
 }
 
-// Create the authority payload
+// Create the authority payload with epoch checkpoint data
 const authorityPayload = {
+  recent_epoch: epochData.epoch,
+  recent_checkpoint: epochData.checkpoint,
   chain_id: 1,
   nonce: 1,
   token: '0x2cd8999Be299373D7881f4aDD11510030ad1412F',
@@ -469,6 +489,8 @@ const epochData = await apiClient.state.getLatestEpochCheckpoint()
 
 // Create the payload array for signing
 const payload = [
+  epochData.epoch, // recent_epoch
+  epochData.checkpoint, // recent_checkpoint
   1, // chain_id
   1, // nonce
   '0x2cd8999Be299373D7881f4aDD11510030ad1412F', // recipient

@@ -28,7 +28,7 @@ describe('state API test', function () {
     before(async () => {
       browser = await puppeteer.launch({
         headless: true,
-        executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+        executablePath: process.env.CHROME_PATH || undefined
       });
       await browser.newPage().then(page => {
         pageOne = page;
@@ -60,17 +60,17 @@ describe('state API test', function () {
         expect(response).to.have.property('checkpoint');
         expect(response).to.have.property('checkpoint_hash');
         expect(response).to.have.property('checkpoint_parent_hash');
-        
+
         // Verify field types
         expect(response.epoch).to.be.a('number');
         expect(response.checkpoint).to.be.a('number');
         expect(response.checkpoint_hash).to.be.a('string');
         expect(response.checkpoint_parent_hash).to.be.a('string');
-        
+
         // Verify hash format (should be 0x prefixed hex strings)
         expect(response.checkpoint_hash).to.match(/^0x[a-fA-F0-9]{64}$/);
         expect(response.checkpoint_parent_hash).to.match(/^0x[a-fA-F0-9]{64}$/);
-        
+
         done();
       })
       .rest(err => {
@@ -78,33 +78,31 @@ describe('state API test', function () {
       });
   });
 
-  if (!(RUN_ENV === 'remote')) {
-    it('should fetch latest epoch checkpoint via puppeteer', function (done) {
-      if (RUN_ENV !== 'local') return done();
+  it('should fetch latest epoch checkpoint via puppeteer', function (done) {
+    if (RUN_ENV === 'remote') return done();
 
-      pageOne.evaluate(async () => {
-        const response = await window.getLatestEpochCheckpoint();
-        return response;
-      }).then(response => {
-        // Verify all fields from l1client EpochCheckpointResponse struct
-        expect(response).to.be.an('object');
-        expect(response).to.have.property('epoch');
-        expect(response).to.have.property('checkpoint');
-        expect(response).to.have.property('checkpoint_hash');
-        expect(response).to.have.property('checkpoint_parent_hash');
-        
-        // Verify field types
-        expect(response.epoch).to.be.a('number');
-        expect(response.checkpoint).to.be.a('number');
-        expect(response.checkpoint_hash).to.be.a('string');
-        expect(response.checkpoint_parent_hash).to.be.a('string');
-        
-        // Verify hash format (should be 0x prefixed hex strings)
-        expect(response.checkpoint_hash).to.match(/^0x[a-fA-F0-9]{64}$/);
-        expect(response.checkpoint_parent_hash).to.match(/^0x[a-fA-F0-9]{64}$/);
-        
-        done();
-      }).catch(done);
-    });
-  }
+    pageOne.evaluate(async () => {
+      const response = await window.getLatestEpochCheckpoint();
+      return response;
+    }).then(response => {
+      // Verify all fields from l1client EpochCheckpointResponse struct
+      expect(response).to.be.an('object');
+      expect(response).to.have.property('epoch');
+      expect(response).to.have.property('checkpoint');
+      expect(response).to.have.property('checkpoint_hash');
+      expect(response).to.have.property('checkpoint_parent_hash');
+
+      // Verify field types
+      expect(response.epoch).to.be.a('number');
+      expect(response.checkpoint).to.be.a('number');
+      expect(response.checkpoint_hash).to.be.a('string');
+      expect(response.checkpoint_parent_hash).to.be.a('string');
+
+      // Verify hash format (should be 0x prefixed hex strings)
+      expect(response.checkpoint_hash).to.match(/^0x[a-fA-F0-9]{64}$/);
+      expect(response.checkpoint_parent_hash).to.match(/^0x[a-fA-F0-9]{64}$/);
+
+      done();
+    }).catch(done);
+  });
 });

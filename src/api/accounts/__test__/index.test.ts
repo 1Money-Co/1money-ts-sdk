@@ -29,7 +29,7 @@ describe('accounts API test', function () {
     before(async () => {
       browser = await puppeteer.launch({
         headless: true,
-        executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+        executablePath: process.env.CHROME_PATH || undefined
       });
       await Promise.all([
         browser.newPage().then(page => {
