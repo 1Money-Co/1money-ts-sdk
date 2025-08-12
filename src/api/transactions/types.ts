@@ -21,17 +21,12 @@ export interface EstimateFee {
 
 // Payment transaction payload
 export interface PaymentPayload {
+  recent_epoch: number;
+  recent_checkpoint: number;
   chain_id: number;
   nonce: number;
   recipient: AddressSchema;
   value: string;
   token: AddressSchema;
-  signature: RestSignature;
-}
-
-// Cancellation payload
-export interface CancellationPayload {
-  chain_id: number;
-  nonce: number;
   signature: RestSignature;
 }

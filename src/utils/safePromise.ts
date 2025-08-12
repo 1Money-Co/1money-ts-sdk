@@ -1,6 +1,6 @@
 
 // concurrent
-export function safePromiseAll<T extends readonly unknown[] | []>(arr: T) {
+export function safePromiseAll<T extends readonly Promise<any>[]>(arr: T): Promise<Awaited<T[number]>[]> {
   if (!arr || !arr.length) return Promise.resolve([]);
 
   return Promise.all(arr);

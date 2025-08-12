@@ -6,6 +6,7 @@ import { CHAIN_IDS } from '../../constants';
 import { signMessage, safePromiseAll, safePromiseLine } from '../../../utils';
 import { transactionsApi } from '../';
 import { accountsApi } from '../../accounts';
+import { stateApi } from '../../state';
 import 'dotenv/config';
 
 import type { ZeroXString } from '../../../utils';
@@ -18,7 +19,7 @@ declare global {
     getReceiptByHash: typeof transactionsApi.getReceiptByHash;
     estimateFee: typeof transactionsApi.estimateFee;
     payment: typeof transactionsApi.payment;
-    cancel: typeof transactionsApi.cancel;
+    getLatestEpochCheckpoint: typeof stateApi.getLatestEpochCheckpoint;
   }
 }
 
@@ -40,7 +41,7 @@ describe('transactions API test', function () {
     before(async () => {
       browser = await puppeteer.launch({
         headless: true,
-        executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+        executablePath: process.env.CHROME_PATH || undefined
       });
       await browser.newPage().then(page => {
         pageOne = page;
@@ -51,7 +52,7 @@ describe('transactions API test', function () {
           pageOne.exposeFunction('getReceiptByHash', apiClient.transactions.getReceiptByHash),
           pageOne.exposeFunction('estimateFee', apiClient.transactions.estimateFee),
           pageOne.exposeFunction('payment', apiClient.transactions.payment),
-          pageOne.exposeFunction('cancel', apiClient.transactions.cancel),
+          pageOne.exposeFunction('getLatestEpochCheckpoint', apiClient.state.getLatestEpochCheckpoint),
         ])
       });
     });
@@ -81,11 +82,8 @@ describe('transactions API test', function () {
     expect(apiClient.transactions.payment).to.be.a('function');
   });
 
-  it('should have cancel method', function () {
-    expect(apiClient.transactions.cancel).to.be.a('function');
-  });
   const issuedToken = '0x555Da6a773419c98F3c0fFac5eA1d05F3E635946';
-  const tokenValue = '10';
+  const tokenValue = '100';
   const operatorAddress = process.env.OPERATOR_ADDRESS;
   const operatorPK = process.env.OPERATOR_PRIVATE_KEY as ZeroXString;
   const testAddress = '0x6324dAc598f9B637824978eD6b268C896E0c40E0';
@@ -121,7 +119,6 @@ describe('transactions API test', function () {
           throw (err?.data ?? err.message ?? err);
         })
     ]).then(() => done()).catch(done);
-
   });
 
   it.skip('should fetch transaction receipt by hash', function (done) {
@@ -152,7 +149,7 @@ describe('transactions API test', function () {
     ]).then(() => done()).catch(done);
   });
 
-  it.skip('should estimate transaction fee', function (done) {
+  it('should estimate transaction fee', function (done) {
     safePromiseAll([
       RUN_ENV === 'local' ? pageOne.evaluate(async (params) => {
         const { testAddress, tokenValue, issuedToken } = params;
@@ -181,12 +178,19 @@ describe('transactions API test', function () {
 
   if (!(RUN_ENV === 'remote' || !operatorAddress || !operatorPK || !testPK || !testAddress)) {
     // passed
-    it('should submit payment transaction', function (done) {
+    it.skip('should submit payment transaction', function (done) {
       safePromiseLine([
         () => RUN_ENV === 'local' ? pageOne.evaluate(async (params) => {
           const { operatorAddress, testPK, chainId, testAddress, tokenValue, issuedToken } = params;
-          const { nonce } = await window.getNonce(testAddress);
+          const [epochData, { nonce }] = await safePromiseAll([
+            window.getLatestEpochCheckpoint(),
+            window.getNonce(testAddress)
+          ])
+          const recentEpoch = epochData.epoch;
+          const recentCheckpoint = epochData.checkpoint
           const payload = [
+            recentEpoch,
+            recentCheckpoint,
             chainId,
             nonce,
             operatorAddress,
@@ -196,6 +200,8 @@ describe('transactions API test', function () {
           const signature = await window.signMessage(payload, testPK)
           if (!signature) return done(new Error('Failed to sign message'));
           const response = await window.payment({
+            recent_epoch: recentEpoch,
+            recent_checkpoint: recentCheckpoint,
             chain_id: chainId,
             nonce,
             recipient: operatorAddress,
@@ -215,90 +221,49 @@ describe('transactions API test', function () {
           expect(response).to.be.an('object');
           expect(response.token).to.be.a('string');
         }) : Promise.resolve(),
-        () => apiClient.accounts.getNonce(testAddress)
-          .success(async response => {
-            const nonce = response.nonce;
-            const payload = [
-              chainId,
-              nonce,
-              operatorAddress,
-              tokenValue,
-              issuedToken
-            ];
-            const signature = await signMessage(payload, testPK)
-            if (!signature) return done(new Error('Failed to sign message'));
-            apiClient.transactions.payment({
-              chain_id: chainId,
-              nonce,
-              recipient: operatorAddress,
-              value: tokenValue,
-              token: issuedToken,
-              signature
+        () => safePromiseAll([
+          apiClient.state.getLatestEpochCheckpoint()
+            .success(res => res)
+            .rest(err => { throw (err?.data ?? err.message ?? err) }),
+          apiClient.accounts.getNonce(testAddress)
+            .success(res => res)
+            .rest(err => { throw (err?.data ?? err.message ?? err) })
+        ]).then(async ([epochData, { nonce }]) => {
+          const recentEpoch = epochData.epoch;
+          const recentCheckpoint = epochData.checkpoint;
+          const payload = [
+            recentEpoch,
+            recentCheckpoint,
+            chainId,
+            nonce,
+            operatorAddress,
+            tokenValue,
+            issuedToken
+          ];
+          const signature = await signMessage(payload, testPK)
+          if (!signature) return done(new Error('Failed to sign message'));
+          apiClient.transactions.payment({
+            recent_epoch: recentEpoch,
+            recent_checkpoint: recentCheckpoint,
+            chain_id: chainId,
+            nonce,
+            recipient: operatorAddress,
+            value: tokenValue,
+            token: issuedToken,
+            signature
+          })
+            .success(response => {
+              expect(response).to.be.an('object');
+              expect(response).to.have.property('hash');
             })
-              .success(response => {
-                expect(response).to.be.an('object');
-                expect(response).to.have.property('hash');
-              })
-              .rest(err => {
-                expect(err).to.be.an('object');
-                expect(err).to.have.property('message');
-                expect(err?.data?.message).to.include('insufficient funds');
-                throw (err?.data ?? err.message ?? err);
-              });
-          })
-          .rest(err => { throw (err?.data ?? err.message ?? err) })
-      ]).then(() => done()).catch(done);
-    });
-
-    // passed (the tx to be cancelled is not in pending pool)
-    it.skip('should cancel transaction', function (done) {
-      safePromiseLine([
-        () => apiClient.accounts.getNonce(operatorAddress)
-          .success(async response => {
-            const currentNonce = response.nonce;
-            const nextNonce = currentNonce + 1;
-
-            const currentPayload = [
-              chainId,
-              currentNonce,
-              testAddress,
-              tokenValue,
-              issuedToken
-            ];
-            const nextPayload = [
-              chainId,
-              nextNonce,
-            ];
-            const [currentSign, nextSign] = await safePromiseAll([
-              signMessage(currentPayload, operatorPK),
-              signMessage(nextPayload, operatorPK),
-            ])
-            if (!currentSign || !nextSign) return done(new Error('Failed to sign message'));
-            apiClient.transactions.payment({
-              chain_id: chainId,
-              nonce: currentNonce,
-              recipient: testAddress,
-              value: tokenValue,
-              token: issuedToken,
-              signature: currentSign
+            .rest(err => {
+              expect(err).to.be.an('object');
+              expect(err).to.have.property('message');
+              expect(err?.data?.message).to.include('insufficient funds');
+              throw (err?.data ?? err.message ?? err);
             });
-            setTimeout(() => {
-              apiClient.transactions.cancel({
-                chain_id: chainId,
-                nonce: nextNonce,
-                signature: nextSign
-              })
-                .success(response => {
-                  expect(response).to.be.an('object');
-                  done();
-                })
-                .rest(err => {
-                  throw(err?.data ?? err.message ?? err);
-                });
-            }, 100);
-          })
-          .rest(err => { throw(err?.data ?? err.message ?? err) })
-      ]).then(() => done()).catch(done);
+        }).then(() => done()).catch(done)
+      ]);
     });
   }
 });

@@ -151,6 +151,24 @@ apiClient.someMethod()
 
 ## API Methods
 
+### State API
+
+#### Get Latest Epoch Checkpoint
+The state API provides access to the latest epoch and checkpoint values that are required for all POST operations. The response includes both the epoch/checkpoint numbers and their cryptographic hashes.
+
+```typescript
+apiClient.state.getLatestEpochCheckpoint()
+  .success(response => {
+    console.log('Latest epoch:', response.epoch);
+    console.log('Latest checkpoint:', response.checkpoint);
+    console.log('Checkpoint hash:', response.checkpoint_hash);
+    console.log('Parent checkpoint hash:', response.checkpoint_parent_hash);
+  })
+  .error(err => {
+    console.error('Error:', err);
+  });
+```
+
 ### Chain API
 
 #### Get Chain ID
@@ -212,12 +230,18 @@ import { signMessage, toHex } from '@1money/ts-sdk';
 // Your private key (DO NOT share or commit your private key)
 const privateKey = 'YOUR_PRIVATE_KEY';
 
+// First, get the latest epoch checkpoint
+const epochData = await apiClient.state.getLatestEpochCheckpoint()
+  .success(response => response);
+
 // Create the payload array for signing
 const payload = [
+  epochData.epoch, // recent_epoch
+  epochData.checkpoint, // recent_checkpoint
   1, // chain_id
   1, // nonce
-  'My Token', // name
   'MTK', // symbol
+  'My Token', // name
   18, // decimals
   '0x9E1E9688A44D058fF181Ed64ddFAFbBE5CC74ff3', // master_authority
   true, // is_private
@@ -229,8 +253,10 @@ if (!signature) {
   throw new Error('Failed to generate signature');
 }
 
-// Create the issue payload
+// Create the issue payload with epoch checkpoint data
 const issuePayload = {
+  recent_epoch: epochData.epoch,
+  recent_checkpoint: epochData.checkpoint,
   chain_id: 1,
   nonce: 1,
   name: 'My Token',
@@ -250,7 +276,7 @@ apiClient.tokens.issueToken(issuePayload)
   });
 ```
 
-#### Set Token Manage List
+#### Manage Token Blacklist/Whitelist
 ```typescript
 import { signMessage, toHex } from '@1money/ts-sdk';
 import type { ManageListAction } from '@1money/ts-sdk/api';
@@ -258,13 +284,19 @@ import type { ManageListAction } from '@1money/ts-sdk/api';
 // Your private key (DO NOT share or commit your private key)
 const privateKey = 'YOUR_PRIVATE_KEY';
 
+// First, get the latest epoch checkpoint
+const epochData = await apiClient.state.getLatestEpochCheckpoint()
+  .success(response => response);
+
 // Create the payload array for signing
 const payload = [
+  epochData.epoch, // recent_epoch
+  epochData.checkpoint, // recent_checkpoint
   1, // chain_id
   1, // nonce
-  '0x2cd8999Be299373D7881f4aDD11510030ad1412F', // token
-  '0x9E1E9688A44D058fF181Ed64ddFAFbBE5CC74ff3', // address
   ManageListAction.Blacklist, // action
+  '0x9E1E9688A44D058fF181Ed64ddFAFbBE5CC74ff3', // address
+  '0x2cd8999Be299373D7881f4aDD11510030ad1412F', // token
 ];
 
 // Generate signature
@@ -273,19 +305,31 @@ if (!signature) {
   throw new Error('Failed to generate signature');
 }
 
-// Create the manage list payload
+// Create the manage list payload with epoch checkpoint data
 const manageListPayload = {
+  recent_epoch: epochData.epoch,
+  recent_checkpoint: epochData.checkpoint,
   chain_id: 1,
   nonce: 1,
-  token: '0x2cd8999Be299373D7881f4aDD11510030ad1412F',
-  address: '0x9E1E9688A44D058fF181Ed64ddFAFbBE5CC74ff3',
   action: ManageListAction.Blacklist,
+  address: '0x9E1E9688A44D058fF181Ed64ddFAFbBE5CC74ff3',
+  token: '0x2cd8999Be299373D7881f4aDD11510030ad1412F',
   signature
 };
 
-apiClient.tokens.setManageList(manageListPayload)
+// Use manageBlacklist for blacklist operations
+apiClient.tokens.manageBlacklist(manageListPayload)
   .success(response => {
-    console.log('Manage list update transaction hash:', response.hash);
+    console.log('Blacklist update transaction hash:', response.hash);
+  })
+  .error(err => {
+    console.error('Error:', err);
+  });
+
+// Or use manageWhitelist for whitelist operations
+apiClient.tokens.manageWhitelist(manageListPayload)
+  .success(response => {
+    console.log('Whitelist update transaction hash:', response.hash);
   })
   .error(err => {
     console.error('Error:', err);
@@ -299,8 +343,14 @@ import { signMessage, toHex } from '@1money/ts-sdk';
 // Your private key (DO NOT share or commit your private key)
 const privateKey = 'YOUR_PRIVATE_KEY';
 
+// First, get the latest epoch checkpoint
+const epochData = await apiClient.state.getLatestEpochCheckpoint()
+  .success(response => response);
+
 // Create the payload array for signing
 const payload = [
+  epochData.epoch, // recent_epoch
+  epochData.checkpoint, // recent_checkpoint
   1, // chain_id
   1, // nonce
   '0x2cd8999Be299373D7881f4aDD11510030ad1412F', // token
@@ -313,8 +363,10 @@ if (!signature) {
   throw new Error('Failed to generate signature');
 }
 
-// Create the burn payload
+// Create the burn payload with epoch checkpoint data
 const burnPayload = {
+  recent_epoch: epochData.epoch,
+  recent_checkpoint: epochData.checkpoint,
   chain_id: 1,
   nonce: 1,
   token: '0x2cd8999Be299373D7881f4aDD11510030ad1412F',
@@ -339,8 +391,14 @@ import type { AuthorityType, AuthorityAction } from '@1money/ts-sdk/api';
 // Your private key (DO NOT share or commit your private key)
 const privateKey = 'YOUR_PRIVATE_KEY';
 
+// First, get the latest epoch checkpoint
+const epochData = await apiClient.state.getLatestEpochCheckpoint()
+  .success(response => response);
+
 // Create the payload array for signing
 const payload = [
+  epochData.epoch, // recent_epoch
+  epochData.checkpoint, // recent_checkpoint
   1, // chain_id
   1, // nonce
   '0x2cd8999Be299373D7881f4aDD11510030ad1412F', // token
@@ -355,8 +413,10 @@ if (!signature) {
   throw new Error('Failed to generate signature');
 }
 
-// Create the authority payload
+// Create the authority payload with epoch checkpoint data
 const authorityPayload = {
+  recent_epoch: epochData.epoch,
+  recent_checkpoint: epochData.checkpoint,
   chain_id: 1,
   nonce: 1,
   token: '0x2cd8999Be299373D7881f4aDD11510030ad1412F',
@@ -423,8 +483,14 @@ import { signMessage, toHex } from '@1money/ts-sdk';
 // Your private key (DO NOT share or commit your private key)
 const privateKey = 'YOUR_PRIVATE_KEY';
 
+// First, get the latest epoch checkpoint
+const epochData = await apiClient.state.getLatestEpochCheckpoint()
+  .success(response => response);
+
 // Create the payload array for signing
 const payload = [
+  epochData.epoch, // recent_epoch
+  epochData.checkpoint, // recent_checkpoint
   1, // chain_id
   1, // nonce
   '0x2cd8999Be299373D7881f4aDD11510030ad1412F', // recipient
@@ -438,8 +504,10 @@ if (!signature) {
   throw new Error('Failed to generate signature');
 }
 
-// Create the payment payload
+// Create the payment payload with epoch checkpoint data
 const paymentPayload = {
+  recent_epoch: epochData.epoch,
+  recent_checkpoint: epochData.checkpoint,
   chain_id: 1,
   nonce: 1,
   recipient: '0x2cd8999Be299373D7881f4aDD11510030ad1412F',
@@ -457,40 +525,6 @@ apiClient.transactions.payment(paymentPayload)
   });
 ```
 
-#### Cancel Transaction
-```typescript
-import { signMessage, toHex } from '@1money/ts-sdk';
-
-// Your private key (DO NOT share or commit your private key)
-const privateKey = 'YOUR_PRIVATE_KEY';
-
-// Create the payload array for signing
-const payload = [
-  1, // chain_id
-  1, // nonce
-];
-
-// Generate signature
-const signature = await signMessage(payload, privateKey);
-if (!signature) {
-  throw new Error('Failed to generate signature');
-}
-
-// Create the cancellation payload
-const cancellationPayload = {
-  chain_id: 1,
-  nonce: 1,
-  signature
-};
-
-apiClient.transactions.cancel(cancellationPayload)
-  .success(response => {
-    console.log('Cancellation transaction hash:', response.hash);
-  })
-  .error(err => {
-    console.error('Error:', err);
-  });
-```
 
 ## Utility Functions
 
