@@ -294,7 +294,7 @@ const payload = [
   epochData.checkpoint, // recent_checkpoint
   1, // chain_id
   1, // nonce
-  ManageListAction.Blacklist, // action
+  ManageListAction.Add, // action
   '0x9E1E9688A44D058fF181Ed64ddFAFbBE5CC74ff3', // address
   '0x2cd8999Be299373D7881f4aDD11510030ad1412F', // token
 ];
@@ -311,7 +311,7 @@ const manageListPayload = {
   recent_checkpoint: epochData.checkpoint,
   chain_id: 1,
   nonce: 1,
-  action: ManageListAction.Blacklist,
+  action: ManageListAction.Add,
   address: '0x9E1E9688A44D058fF181Ed64ddFAFbBE5CC74ff3',
   token: '0x2cd8999Be299373D7881f4aDD11510030ad1412F',
   signature

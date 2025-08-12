@@ -1,6 +1,7 @@
 
 // concurrent
-export function safePromiseAll<T extends readonly Promise<any>[]>(arr: T): Promise<Awaited<T[number]>[]> {
+export function safePromiseAll<T extends readonly Promise<any>[]>(arr: T): Promise<{ [K in keyof T]: Awaited<T[K]> }> {
+  // @ts-expect-error
   if (!arr || !arr.length) return Promise.resolve([]);
 
   return Promise.all(arr);
