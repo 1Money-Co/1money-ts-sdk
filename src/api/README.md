@@ -14,7 +14,7 @@ The API is organized into the following modules:
 ## Usage
 
 ```typescript
-import { api, CHAIN_IDS } from '@1money/ts-sdk/api';
+import { api, CHAIN_IDS } from '@1money/protocol-ts-sdk/api';
 
 // Initialize the API client (defaults to testnet)
 const apiClient = api();
@@ -166,7 +166,7 @@ Here's a simplified example of creating and submitting a payment transaction usi
 
 ```typescript
 // Import required libraries
-const { api, CHAIN_IDS } = require('@1money/ts-sdk/api');
+const { api, CHAIN_IDS } = require('@1money/protocol-ts-sdk/api');
 const ethers = require('ethers');
 
 // Initialize API client

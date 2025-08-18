@@ -6,7 +6,7 @@ The `safePromiseAll` function is used to handle an array of promises concurrentl
 
 ### Usage
 ```typescript
-import { safePromiseAll } from '@1money/ts-sdk/utils';
+import { safePromiseAll } from '@1money/protocol-ts-sdk/utils';
 
 async function fetchData() {
   try {
@@ -29,7 +29,7 @@ The `safePromiseLine` function is used to execute an array of promise-returning 
 
 ### Usage
 ```typescript
-import { safePromiseLine } from '@1money/ts-sdk/utils';
+import { safePromiseLine } from '@1money/protocol-ts-sdk/utils';
 
 async function processTasks() {
   const results = await safePromiseLine([
@@ -58,7 +58,7 @@ The `_typeof` utility function extends the functionality of JavaScript's native 
 
 ### Usage
 ```typescript
-import { _typeof } from '@1money/ts-sdk/utils';
+import { _typeof } from '@1money/protocol-ts-sdk/utils';
 
 console.log(_typeof('Hello, World!')); // Output: 'string'
 console.log(_typeof(42));              // Output: 'number'

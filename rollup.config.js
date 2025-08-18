@@ -59,7 +59,7 @@ module.exports = function (getConfig) {
   config.push({
     input: 'src/index.ts',
     output: {
-      file: 'umd/1money-ts-sdk.min.js',
+      file: 'umd/1money-protocol-ts-sdk.min.js',
       format: 'umd',
       name: '$1money',
       exports: 'named',

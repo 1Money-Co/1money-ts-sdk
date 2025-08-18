@@ -5,7 +5,7 @@ The Transactions API provides access to transaction-related endpoints.
 ## Usage
 
 ```typescript
-import { api } from '@1money/ts-sdk/api';
+import { api } from '@1money/protocol-ts-sdk/api';
 
 // Initialize the API client
 const apiClient = api();
