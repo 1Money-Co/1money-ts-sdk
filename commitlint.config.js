@@ -7,7 +7,7 @@ const Configuration = {
     */
   rules: {
     'type-enum': [2, 'always', [
-      '[1MONEY-TS-SDK]',
+      '[1MONEY-PROTOCOL-TS-SDK]',
       'feat',
       'feature',
       'fix',

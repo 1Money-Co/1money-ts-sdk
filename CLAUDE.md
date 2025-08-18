@@ -60,7 +60,7 @@ Each API module (accounts, tokens, etc.) has:
 - **Rollup** for bundling with multiple output formats:
   - CommonJS (`lib/`)
   - ES Modules (`es/`)
-  - UMD bundle (`umd/1money-ts-sdk.min.js`)
+  - UMD bundle (`umd/1money-protocol-ts-sdk.min.js`)
 - **tsc-alias** for path alias resolution
 - External dependencies: axios, viem, @ethereumjs/rlp (peer dependencies)
 

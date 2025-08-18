@@ -4,7 +4,7 @@ The `client` module is a comprehensive wrapper around `axios` for handling HTTP 
 ### Usage
 #### Configuration
 ```typescript
-import { setInitConfig } from '@1money/ts-sdk';
+import { setInitConfig } from '@1money/protocol-ts-sdk';
 
 setInitConfig({
   isSuccess: (res = {}, status) => status === 200 && res?.code == 0,
@@ -14,7 +14,7 @@ setInitConfig({
 
 #### Basic
 ```typescript
-import { get, post } from '@1money/ts-sdk';
+import { get, post } from '@1money/protocol-ts-sdk';
 
 get('/api/data')
   .success(response => {
@@ -46,7 +46,7 @@ post('/api/data', { key: 'value' }, {
 The module also supports `PUT`, `PATCH`, and `DELETE` methods in a similar manner:
 
 ```typescript
-import { put, patch, del } from '@1money/ts-sdk/utils';
+import { put, patch, del } from '@1money/protocol-ts-sdk/utils';
 
 put(url, data, options);
 

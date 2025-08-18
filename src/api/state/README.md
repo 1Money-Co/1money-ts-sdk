@@ -28,7 +28,7 @@ interface EpochCheckpointResponse {
 ## Usage
 
 ```typescript
-import { api } from '@1money/ts-sdk';
+import { api } from '@1money/protocol-ts-sdk';
 
 const apiClient = api({ network: 'testnet' });
 

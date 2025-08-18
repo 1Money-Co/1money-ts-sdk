@@ -1,6 +1,6 @@
 {
-  "name": "@1money/ts-sdk",
-  "version": "1.0.13",
+  "name": "@1money/protocol-ts-sdk",
+  "version": "1.0.14",
   "description": "ts sdk for 1Money protocol network",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -27,7 +27,7 @@
     },
     "./package.json": "./package.json"
   },
-  "unpkg": "umd/1money-ts-sdk.min.js",
+  "unpkg": "umd/1money-protocol-ts-sdk.min.js",
   "scripts": {
     "test": "nyc mocha --config .mocharc.js",
     "lint": "npm run lint:prettier && npm run lint:es",

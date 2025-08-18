@@ -1,10 +1,10 @@
-# @1money/ts-sdk
+# @1money/protocol-ts-sdk
 <img src="./public/logo.png" alt="1Money Logo" width="200"/> 
 
 The TS-SDK for 1Money Network Protocol
 
-[![Build Status](https://github.com/1Money-Co/1money-ts-sdk/actions/workflows/cicd-npm.yml/badge.svg)](https://github.com/1Money-Co/1money-ts-sdk/actions/workflows/cicd-npm.yml)
-[![NPM downloads](http://img.shields.io/npm/dm/%401money%2Fts-sdk.svg?style=flat-square)](https://www.npmjs.com/package/@1money/ts-sdk)
+[![Build Status](https://github.com/1Money-Co/1money-protocol-ts-sdk/actions/workflows/cicd-npm.yml/badge.svg)](https://github.com/1Money-Co/1money-protocol-ts-sdk/actions/workflows/cicd-npm.yml)
+[![NPM downloads](http://img.shields.io/npm/dm/%401money%2Fts-sdk.svg?style=flat-square)](https://www.npmjs.com/package/@1money/protocol-ts-sdk)
 [![npm version](https://badge.fury.io/js/%401money%2Fts-sdk.svg)](https://badge.fury.io/js/%401money%2Fts-sdk)
 [![install size](https://packagephobia.now.sh/badge?p=%401money%2Fts-sdk)](https://packagephobia.now.sh/result?p=%401money%2Fts-sdk)
 [![license](http://img.shields.io/npm/l/%401money%2Fts-sdk.svg)](https://github.com/1money/tpls/blob/master/packages/ts-sdk/LICENSE)
@@ -12,17 +12,17 @@ The TS-SDK for 1Money Network Protocol
 ## Quick start
 ### Install
 ```shell
-npm i -S @1money/ts-sdk axios viem @ethereumjs/rlp
+npm i -S @1money/protocol-ts-sdk axios viem @ethereumjs/rlp
 # or
-yarn add @1money/ts-sdk axios viem @ethereumjs/rlp
+yarn add @1money/protocol-ts-sdk axios viem @ethereumjs/rlp
 # or
-pnpm i @1money/ts-sdk axios viem @ethereumjs/rlp
+pnpm i @1money/protocol-ts-sdk axios viem @ethereumjs/rlp
 ```
 
 ### Initialize the API Client
 
 ```typescript
-import { api } from '@1money/ts-sdk';
+import { api } from '@1money/protocol-ts-sdk';
 
 // Initialize with default settings (mainnet)
 const apiClient = api();
@@ -65,7 +65,7 @@ const checkpoint = await apiClient.checkpoints.getByNumber(1)
 
 ## CDN
 ```html
-<script src="https://unpkg.com/@1money/ts-sdk@latest/umd/1money-ts-sdk.min.js"></script>
+<script src="https://unpkg.com/@1money/protocol-ts-sdk@latest/umd/1money-protocol-ts-sdk.min.js"></script>
 
 <script>
   const apiClient = window.$1money.api({
@@ -91,7 +91,7 @@ All API methods return a promise-like object with `.success()`, `.timeout()`, `.
 4. `.rest()`: A final handler that runs after any of the above handlers complete
 
 ```typescript
-import { api } from '@1money/ts-sdk';
+import { api } from '@1money/protocol-ts-sdk';
 
 const apiClient = api();
 
@@ -121,7 +121,7 @@ apiClient.someMethod()
 #### Async/Await
 You also can use async/await to handle the response:
 ```typescript
-import { api } from '@1money/ts-sdk';
+import { api } from '@1money/protocol-ts-sdk';
 
 const apiClient = api();
 
@@ -136,7 +136,7 @@ try {
 #### Promise
 You also can use standard `promise` to handle the response:
 ```typescript
-import { api } from '@1money/ts-sdk';
+import { api } from '@1money/protocol-ts-sdk';
 
 const apiClient = api();
 
@@ -225,7 +225,7 @@ apiClient.tokens.getTokenMetadata(tokenAddress)
 
 #### Issue New Token
 ```typescript
-import { signMessage, toHex } from '@1money/ts-sdk';
+import { signMessage, toHex } from '@1money/protocol-ts-sdk';
 
 // Your private key (DO NOT share or commit your private key)
 const privateKey = 'YOUR_PRIVATE_KEY';
@@ -278,8 +278,8 @@ apiClient.tokens.issueToken(issuePayload)
 
 #### Manage Token Blacklist/Whitelist
 ```typescript
-import { signMessage, toHex } from '@1money/ts-sdk';
-import type { ManageListAction } from '@1money/ts-sdk/api';
+import { signMessage, toHex } from '@1money/protocol-ts-sdk';
+import type { ManageListAction } from '@1money/protocol-ts-sdk/api';
 
 // Your private key (DO NOT share or commit your private key)
 const privateKey = 'YOUR_PRIVATE_KEY';
@@ -338,7 +338,7 @@ apiClient.tokens.manageWhitelist(manageListPayload)
 
 #### Burn Tokens
 ```typescript
-import { signMessage, toHex } from '@1money/ts-sdk';
+import { signMessage, toHex } from '@1money/protocol-ts-sdk';
 
 // Your private key (DO NOT share or commit your private key)
 const privateKey = 'YOUR_PRIVATE_KEY';
@@ -385,8 +385,8 @@ apiClient.tokens.burnToken(burnPayload)
 
 #### Grant Token Authority
 ```typescript
-import { signMessage, toHex } from '@1money/ts-sdk';
-import type { AuthorityType, AuthorityAction } from '@1money/ts-sdk/api';
+import { signMessage, toHex } from '@1money/protocol-ts-sdk';
+import type { AuthorityType, AuthorityAction } from '@1money/protocol-ts-sdk/api';
 
 // Your private key (DO NOT share or commit your private key)
 const privateKey = 'YOUR_PRIVATE_KEY';
@@ -478,7 +478,7 @@ apiClient.transactions.estimateFee(fromAddress, value, tokenAddress)
 
 #### Submit Payment Transaction
 ```typescript
-import { signMessage, toHex } from '@1money/ts-sdk';
+import { signMessage, toHex } from '@1money/protocol-ts-sdk';
 
 // Your private key (DO NOT share or commit your private key)
 const privateKey = 'YOUR_PRIVATE_KEY';
@@ -530,7 +530,7 @@ apiClient.transactions.payment(paymentPayload)
 
 ### Calculate Transaction Hash
 ```typescript
-import { calcTxHash } from '@1money/ts-sdk';
+import { calcTxHash } from '@1money/protocol-ts-sdk';
 
 // Create the payload array
 const payload = [
@@ -555,7 +555,7 @@ console.log('Transaction hash:', hash);
 
 ### Derive Token Address
 ```typescript
-import { deriveTokenAddress } from '@1money/ts-sdk';
+import { deriveTokenAddress } from '@1money/protocol-ts-sdk';
 
 const walletAddress = '0xA634dfba8c7550550817898bC4820cD10888Aac5';
 const mintAddress = '0x8E9d1b45293e30EF38564582979195DD16A16E13';
@@ -567,7 +567,7 @@ console.log('Token account address:', tokenAddress);
 
 ### Convert to Hex
 ```typescript
-import { toHex } from '@1money/ts-sdk';
+import { toHex } from '@1money/protocol-ts-sdk';
 
 // Convert different types to hex
 const boolHex = toHex(true); // '0x01'
@@ -578,7 +578,7 @@ const arrHex = toHex([1, 2, 3]); // '0x010203'
 
 ### Sign Message
 ```typescript
-import { signMessage } from '@1money/ts-sdk';
+import { signMessage } from '@1money/protocol-ts-sdk';
 
 // Your private key (DO NOT share or commit your private key)
 const privateKey = 'YOUR_PRIVATE_KEY';
